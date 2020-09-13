@@ -1,10 +1,10 @@
-1) Fibanocci Series
-Calculate nth fibanocci number. 
-fib series is 0 1 1 2 3 5 8 13 21 34
-here first number is 0, so we start with it and find the nth element
+//1) Fibanocci Series
+//Calculate nth fibanocci number. 
+//fib series is 0 1 1 2 3 5 8 13 21 34
+//here first number is 0, so we start with it and find the nth element
 
-Recursive approach - we use Memoization to improve the time complexity
-O(n) Time and O(n) space
+//Recursive approach - we use Memoization to improve the time complexity
+//O(n) Time and O(n) space
 private static int calFibRecursiveMemoization(int n, Map<Integer,Integer> cache) {
 		if(n==2)
 			return 1;
@@ -20,8 +20,8 @@ private static int calFibRecursiveMemoization(int n, Map<Integer,Integer> cache)
 		}
 	}
  
-Iterative approach - 
-O(n) time but O(1) space - we just need the last 2 fib to calculate the current fib
+//Iterative approach - 
+//O(n) time but O(1) space - we just need the last 2 fib to calculate the current fib
 private static int calculateFibIterative(int n) {
 		if(n==2)
 			return 1;
