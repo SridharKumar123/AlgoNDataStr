@@ -69,10 +69,48 @@ private static int productSum(List<Object> array, int multiplier) {
 **************************************************************************************************************************************************************************
 
 // take an array of integers and return array of permutations 
+//Upper Max : //T O(n^2 * n!)  S O(n * n!)
+//T O(n * n!)  S O(n * n!)
+private void permWithoutSwap(List<Integer> input, List<Integer> permutation, List<List<Integer>> output) {
+		if(input.size()==0) {
+			output.add(new ArrayList<>(permutation));
+		}else {
+			for(int i=0; i<input.size();i++) {
+				List<Integer> removedHalf = new ArrayList<>(input);
+				removedHalf.remove(i);
+				List<Integer> newPerm = new ArrayList<>(permutation);
+				newPerm.add(input.get(i));
+				permWithoutSwap(removedHalf, newPerm, output);
+			}
+		}
+	}
+
+// the below is permutation using swap
+//T O(n * n!)  S O(n * n!)
+private void perm(int index, List<Integer> input, List<List<Integer>> output) {
+		if(index==input.size()-1)
+			output.add(new ArrayList<>(input));
+		else {
+			for(int j=index; j<input.size(); j++) {
+				swap(index,j,input);
+				perm(index+1,input,output);
+				swap(index,j,input);				
+			}
+		}		
+	} 
+	
+	private void swap(int i, int j, List<Integer> input) {
+		int temp = input.get(i);
+		input.set(i,input.get(j));
+		input.set(j, temp);
+	}
+**************************************************************************************************************************************************************************
+                                                                            4.  Subsets
+**************************************************************************************************************************************************************************
 
 
-
-
-
+**************************************************************************************************************************************************************************
+                                                                            5.  Interleaving Strings
+**************************************************************************************************************************************************************************
 
 
