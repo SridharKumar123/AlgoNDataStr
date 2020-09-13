@@ -1,1 +1,187 @@
 Different DS and their importance:
+
+Memory can be represented as below canvas
+|_|_|_|_|_|
+|_|_|_|_|_|
+|_|_|_|_|_|
+|_|_|_|_|_|
+|_|_|_|_|_|
+|_|_|_|_|_|
+Memory memory canvas - bounded canvas which can store data
+if a memory adddress is given, accessing the slot is very easy.
+
+information is stored in base 2 or binary format. 1 byte can store 8 bits.
+integer can be a 32 or 64 or 16 or 8 bits.
+1 memory slot will hold 1 byte.
+so for storing 32 bits, we need to have 4 back to back memory slots.
+we store no in 32 bit format. so 1 will be stored as 00000001 00000000 00000000 00000000
+we can store list of inte in continous memory slots.
+
+string 
+ASCII
+A - 65, will be stored as a list of numbers
+
+We can store pointers in memory slot, meaning address of other memory slots.
+
+
+Array:
+[1,2,3] - lets store integer as 64 bits - 8 bytes - 8 slots
+OS will find a series of back to back memory slots that are free which have enough space to allocate 24 memory slots ( 8 memory slots * 3 = 24)
+
+so for array of length n - n*8 - continous memory slots are needed
+
+Static Array and Dynamic Array
+Static Array - So in java if we delcare array, we specify the length of array. so OS will find space only for the specified no of slots
+And allocate the slots for the array. it will never change
+
+accessing array using index  - arr[2] - constant time. OS knows the start address of memory address. 
+and every int of the array has a fixed width. so we know every int will hold 8 memory slots
+so we can know that first will start at memory slot n. second will start at n+8. and goes on.
+OS will find the start memory address of array and cchck of memory of element, and calculate the address of index given
+address of index = start address + (memory slots size of element * index)
+this will be a constant time operation. O(1)
+This is same for setting/overriding an element based on index. 
+Traversing array - O(n) time 
+copy array to new array - O(n) time and O(n) space, we traverse full array and copy it to new array
+so copying array inside for loop or often is bad, as every time we do a O(n) space and time operation
+Insering - this is inseting in an arry. not setting/overriding existing slot. - bad operation
+ this will ideally be a copy of array. as even if we add in end, if there is no extra space in end, we need to copy all to a new space. 
+ it will O(n) in time, but for space, it will delete existing and move to a new space
+
+Dynamic Array
+can change in size. ArrayList - faster inseting at end of array
+initial size is based on capacity. if we dont specify capacity - default 10.
+adding element beyond size will double its size - O(n) for that time and again O(1) untill it reaches limit again. 
+every time we double the memory. so if it reaches limit, it will be a costly operation
+
+Amotized analysis - for edge cases it might take less time or it might take more time
+like in dynamic array, inseting in start or end of size will be O(n), otherwise its O(1)
+
+delete - if remove in start or middle, its O(n). but pop in end is fine. 
+so if we pop in start, we need to be careful on it.
+
+Linked List:
+differes in memory storage than arraylist
+[2,1,5,6]
+array - looks for back to back memory slot locations 
+
+3-> 1 -> 2 -> 5
+link list can store anywhere in memory. 
+each node in linkedlist will have a value and pointer to next node in linked list. so 2 memory slots for each node
+so for each node, we have 2 back to back slots - one for its value and next slot for pointer (memory location of the next node)
+this continue and last node will have its next pointer pointing to null.
+
+element at 3rd index - this is not as easy as in array, we cannot directly go to that inex. we need to start from first and traverse every element untill the index.
+so O(i) time complexity, where i is the index. O(1) for space.
+get - O(i)  T, O(1) S
+set - O(i)  T, O(1) S
+init - O(n) ST
+copy - O(n) ST
+
+insert - 
+  head - O(1) T - constant time
+  at begin - head - create a new head node and points its memmory pointer point to previous head
+  in middle - 
+   create new node, 
+   traverse untill required index
+   make previous point to this
+   make this point to next
+delete - same as insert
+
+Doubly linked list:
+2 links between 2 nodes. front and back called as prev and next.
+so it has 3 continous memory slots. 2 pointer slots and one for value.
+head's prev will point to null and next will point to next element
+
+HashTable:
+key maps to value. we can access value with key. 
+insertion / deletion / searching are all contant time O(1)
+hashtables are built on top of array. 
+while insterigng a key, we use a hash function, to transform key into an index which fits in the array
+
+hash - transform key to an index, 
+lets say we have an array of size 3, and we want to inster key of string foo.
+lets say for string foo - lets get ASCII for each letter and sum it , lets say we get 301 as answer. 
+now we take module 301%3, where 3 is size of array, we get a value between 0 and 2. as we do modulo.
+301%3 = 1, key maps to index 1, so we put the value of this key into index 1.
+lets say if 2 strings (keys) get same hash result, collision. 
+so each array element, will point to a linked list. so we add the value into the linked list. 
+now for 2 keys which haave same hash, we put them in linked list of erray element, each node will have its value and point bak to the key.
+it will not store key but point to it.
+so we can do equals with key and find the element. 
+
+Time O(1) in average O(n) worst case due to collision
+resizing, when underlying array has to many values in each linkedlist
+first lets say underlying array is length 10, once we inset key value pairs, when underlying array get fills 3/4, hashtable resize itself. 
+it will pass it to a new array whcih has new size, meaning new modulo, so a new position and rehashing for each element
+as the giant linked list is not good, it resize
+
+
+Stack and Queue - list of elements which follow below principle
+Stack LIFO - books on a table
+Queue FIFO - standing in line
+
+Constant time and space - insertion and deletion
+stack - dynamic array - all we do is append element in end or remove last element. 
+	push pop
+queue - linkedlist - -- we cannot implement using dynamic array as inserting in start of it is O(n) - bad
+   so we need to choose linkedlist which allows O(1) insert in head and tail.
+   enqueue dequeue
+insert/delete O(1) ST
+search - O(N) T, O(1) S
+Max stack or Min stack - tracks the largest and smallest element
+priority queue - heap - keeps track of element with high priority
+
+String
+Stored in ASCII encoded format
+ASCII - 1 byte
+Chinese char - diff enconding - diff size
+traverse - O(N) T, O(1) S
+copy - O(N) ST
+get - O(1) ST
+append - not O(1). as string is immutable
+immutable - creates a brand new string if we change
+foobar = "this is"
+foobar + "x" - creates a new string - not a contant time operation 
+
+Graph:
+collection of nodes which may or may not be connected to each other
+nodes are vertex and connection are edges
+a graph is connected if we can reach any other node form another node.
+arrows point direction. meaning directed. edges have direction
+cycle - 3 or more nodes which form an infinite loop
+  mark nodes as visited to not get into infinite loop when cycle is there
+
+  element and surrounding it are edges
+  string and swapping letter in sting
+represented as adjacency list
+Storage - O(V + E)
+T - O(V + E)
+Traversing - 
+DFS - we go to depth for each nodes to another - in diag we go from  - 1 -2 -7 - 2 
+BFS  - 1 - 2- 8 - 4 - 9
+
+
+Tree
+type of graph
+root node -> all other are child nodes of it
+connected, directed, acyclic 
+each node can have 1 parent
+
+Binary tree - every node has atmost 2 child nodes
+Ternary tree - atmost 3 children
+k array tree - every node has k child nodes
+BST - 
+Heap - Min and Max Heap - 
+Tries - tree like DS which stores strings in nodes
+every node will point to its parent node - we can have this
+O(n) - Space
+Traversing - O(N) time for all n nodes
+Traversing - 
+	O(log N) - start from root and go down one path like left side alone, if we deal with balanced binary tree, as we eliminate half of nodes
+	O(N)- if tree is skewed, not balanced, even if we just go to one left or rit side
+red-black tree /  AVL tree - maintain O(log n) traversal for one side
+complete tree - should be filled up from left to right, not missing elemnts
+full - every node has no children or exactly k children - for k array tree
+perfect tree - all leaf nodes have same depth
+depth/height - no nodes from root to leaf  
