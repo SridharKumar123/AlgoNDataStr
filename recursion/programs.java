@@ -47,8 +47,22 @@ private static int calculateFibIterative(int n) {
 // [1, 5,[7,-1], 3, [6, [-13, 8], 4]
 // 1+ 5 + 2(7-1) +3 + 2(6 + 3(-13+8) + 4)
 // for every inner array, we increment the multiplier value and multiply this value with its sum
+// multiplier must be updated by one for each internal step and not ++. This ensures that once it returns to the previous stack call, it retains its old value
 
-
+private static int productSum(List<Object> array, int multiplier) {
+		if(array==null || array.size()==0)
+			return 0;
+		int sum = 0;		
+		for(Object obj : array) {
+			if(obj instanceof ArrayList<?>) {				
+			sum +=productSum((List<Object>)obj, multiplier+1);
+			}else {
+				sum+= (int) obj;
+			}
+		}
+		sum = sum * multiplier;
+		return sum;
+	}
 
 
 
