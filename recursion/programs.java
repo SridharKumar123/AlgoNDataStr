@@ -112,6 +112,14 @@ private void perm(int index, List<Integer> input, List<List<Integer>> output) {
 // we start with [], then match it with 1 and we get [],[1]. we match this with 2 to get [],[1],[2],[1,2] and so on
 // during the second iteration, we add in the same outer list, so we get its size before addinng new elements
 
+List<List<Integer>> op = new ArrayList<>();
+op.add(new ArrayList<>());
+List<Integer> inner1 = new ArrayList<>();
+		inner1.add(1);
+		inner1.add(2);
+		inner1.add(3);
+subsets(inner1, op);
+
 private static void subsets(List<Integer> inputs, List<List<Integer>> op) {
 
 		for(int i=0; i<inputs.size();i++) {
