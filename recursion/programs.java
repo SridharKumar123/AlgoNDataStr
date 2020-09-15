@@ -217,7 +217,22 @@ private static boolean interStrings(String first,
                                                                             6.  Lowest Common Manager
 **************************************************************************************************************************************************************************
 
-
+private TreeNode getCommon(TreeNode root, TreeNode child1, TreeNode child2) {
+		if(root==null)
+			return null;
+		if(root.value==child1.value || root.value ==child2.value)
+			return root;
+			
+		TreeNode leftNode = getCommon(root.leftSide, child1, child2);
+		TreeNode rightNode = getCommon(root.rightSide, child1, child2);
+		if(leftNode!=null && rightNode!=null)
+			return root;
+		if(leftNode!=null)
+			return leftNode;
+		if(rightNode!=null)
+			return rightNode;
+		return null;
+	}
 
 **************************************************************************************************************************************************************************
                                                                             7.  No of Binary Trees Possible 
