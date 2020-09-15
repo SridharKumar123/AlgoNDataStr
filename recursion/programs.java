@@ -115,9 +115,7 @@ private void perm(int index, List<Integer> input, List<List<Integer>> output) {
 List<List<Integer>> op = new ArrayList<>();
 op.add(new ArrayList<>());
 List<Integer> inner1 = new ArrayList<>();
-		inner1.add(1);
-		inner1.add(2);
-		inner1.add(3);
+		inner1.add(1); inner1.add(2); inner1.add(3);
 subsets(inner1, op);
 
 private static void subsets(List<Integer> inputs, List<List<Integer>> op) {
@@ -132,6 +130,26 @@ private static void subsets(List<Integer> inputs, List<List<Integer>> op) {
 		}		
 	}
 
+// recursive approach for subsets
+List<Integer> inner1 = new ArrayList<>();
+		inner1.add(1); inner1.add(2); inner1.add(3);
+		List<List<Integer>> op = new ArrayList<>();
+		recursiveSubsets(inner1.size()-1, inner1, op);
+		System.out.println(op);
+private static void recursiveSubsets(int index, List<Integer> inputs, List<List<Integer>> op) {
+		if(index<0) {
+			op.add(new ArrayList<>());
+		}else {
+			recursiveSubsets(index-1, inputs, op);
+			int size = op.size();
+			for(int i=0; i<size; i++) {
+				List<Integer> temp = new ArrayList<>(op.get(i));
+				temp.add(inputs.get(index));
+				op.add(temp);
+			}
+		}
+			
+	}
 **************************************************************************************************************************************************************************
                                                                             5.  Interleaving Strings
 **************************************************************************************************************************************************************************
@@ -195,4 +213,41 @@ private static boolean interStrings(String first,
 		return false;	
 	}
 
+**************************************************************************************************************************************************************************
+                                                                            6.  Lowest Common Manager
+**************************************************************************************************************************************************************************
 
+
+
+**************************************************************************************************************************************************************************
+                                                                            7.  No of Binary Trees Possible 
+**************************************************************************************************************************************************************************
+
+		int length = 5;
+		int[] aray = new int[length+1];
+		recursiveNoOfBinaryTree(length,aray);
+		System.out.println(aray[length]);
+		System.out.println(iterativeNoOfBinaryTree(length));
+
+private static int recursiveNoOfBinaryTree(int n, int[] array) {
+		if(n<0)
+			return 1;
+		array[n] = recursiveNoOfBinaryTree(n-1,array);
+		for(int j=0; j<n;j++) {
+			array[n] += array[j] * array[n-1-j];
+		}
+		return 0;
+	}
+	
+
+private static int iterativeNoOfBinaryTree(int n) {
+		int[] array = new int[n+1];
+		array[0] = 1;
+		array[1] = 1;
+		for(int i=2; i<=array.length-1; i++) {
+			for(int j=0; j<i; j++) {
+				array[i]+= array[j] * array[i-1-j];
+			}
+		}
+		return array[n];
+	}
