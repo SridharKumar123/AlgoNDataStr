@@ -262,14 +262,94 @@ Given binary tree [3,9,20,null,null,15,7],
    15   7
 return its depth = 3.*/
 
-
-
+public int maxDepth(TreeNode root) {
+        return height(root);
+    }
+    
+    private int height(TreeNode root){
+        if(root==null)
+            return 0;
+        int left = height(root.left);
+        int right = height(root.right);
+        int height = Math.max(left,right)+1;
+        return height;
+    }
+ public int maxDepth(TreeNode root) {
+        return iterativeHeight(root);
+    }
+    
+ private int iterativeHeight(TreeNode root){
+        if(root==null)
+            return 0;
+        int count = 0;
+        Queue<TreeNode> que = new LinkedList<>();
+        que.offer(root);
+        while(!que.isEmpty()){
+            int size = que.size();
+            for(int i=0; i<size;i++){
+                TreeNode node = que.poll();
+                if(node.left!=null)
+                    que.offer(node.left);
+                if(node.right!=null)
+                    que.offer(node.right);                
+            }
+            count++;
+        }
+        return count;
+    }
 **************************************************************************************************************************************************************************
-                                                                            3.  Symmetric Tree
+                                                                            5.  construct-binary-tree-from-preorder-and-inorder-traversal
 **************************************************************************************************************************************************************************
+/*Given preorder and inorder traversal of a tree, construct the binary tree.
+Note:
+You may assume that duplicates do not exist in the tree.
+For example, given
+preorder = [3,9,20,15,7]
+inorder = [9,3,15,20,7]
+Return the following binary tree:
+    3
+   / \
+  9  20
+    /  \
+   15   7*/
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
+ 
+//The basic idea is here:
+//Say we have 2 arrays, PRE and IN.
+//Preorder traversing implies that PRE[0] is the root node.
+//Then we can find this PRE[0] in IN, say it's IN[5].
+//Now we know that IN[5] is root, so we know that IN[0] - IN[4] is on the left side, IN[6] to the end is on the right side.
+//Recursively doing this on subarrays, we can build a tree out of it
 
-
-
+  Map<Integer,Integer> cache = new HashMap<>();
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        if(preorder==null || inorder==null || inorder.length==0 ||preorder.length==0)
+            return null;
+        for(int i=0; i<inorder.length;i++){
+            cache.put(inorder[i],i);
+        }
+        return buildTreeHelper(0,0,inorder.length-1,preorder,inorder);
+    }
+    
+    private TreeNode buildTreeHelper(int preStart, int inStart, int inEnd,
+                                     int[] preorder, int[] inorder){
+        
+        if(preStart>preorder.length || inStart > inEnd)
+            return null;
+       
+        TreeNode root = new TreeNode(preorder[preStart]);
+        int indexInInorder = cache.get(root.val);
+        int leftRemaining = indexInInorder - inStart;
+        root.left = buildTreeHelper(preStart+1,inStart,indexInInorder-1,preorder,inorder);
+        root.right = buildTreeHelper(preStart+leftRemaining+1,indexInInorder+1,inEnd, preorder,inorder);
+        return root;
+    }
 **************************************************************************************************************************************************************************
                                                                             3.  Symmetric Tree
 **************************************************************************************************************************************************************************
