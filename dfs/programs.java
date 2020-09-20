@@ -351,31 +351,194 @@ Return the following binary tree:
         return root;
     }
 **************************************************************************************************************************************************************************
-                                                                            3.  Symmetric Tree
+                                                                            6.  construct-binary-tree-from-inorder-and-postorder-traversal
 **************************************************************************************************************************************************************************
+/*Given inorder and postorder traversal of a tree, construct the binary tree.
+Note:
+You may assume that duplicates do not exist in the tree.
+For example, given
+inorder = [9,3,15,20,7]
+postorder = [9,15,7,20,3]
+Return the following binary tree:
+    3
+   / \
+  9  20
+    /  \
+   15   7*/
 
-
-
+public TreeNode buildTree(int[] inorder, int[] postorder) {
+        if(inorder==null || postorder==null || inorder.length==0 || postorder.length==0)
+            return null;
+        Map<Integer,Integer> cache = new HashMap<>();
+        for(int i=0; i<inorder.length;i++){
+            cache.put(inorder[i],i);
+        }
+        return buildTreeHelper(postorder.length-1,0,inorder.length-1,inorder,postorder,cache);
+    }
+    
+    private TreeNode buildTreeHelper(int postStart, int inStart,
+                int inEnd, int[] inorder, int[] postorder, Map<Integer,Integer> cache){
+        
+        if(postStart < 0 || inStart>inEnd)
+            return null;
+        TreeNode root = new TreeNode(postorder[postStart]);
+        int indexInInorder = cache.get(root.val);
+        int rightRemaining = inEnd - indexInInorder;
+        root.left = buildTreeHelper(postStart-rightRemaining-1,
+                            inStart, indexInInorder-1,inorder,postorder,cache);
+        root.right = buildTreeHelper(postStart-1,indexInInorder+1,
+                             inEnd,inorder,postorder,cache);
+        return root;
+    }
 
 **************************************************************************************************************************************************************************
-                                                                            3.  Symmetric Tree
+                                                                            7.  Convert Sorted Array to Binary Search Tree
 **************************************************************************************************************************************************************************
+/*Given an array where elements are sorted in ascending order, convert it to a height balanced BST.
+For this problem, a height-balanced binary tree is defined as a binary tree in which the depth of the two subtrees of every node never differ by more than 1.
+Example:
+Given the sorted array: [-10,-3,0,5,9],
+One possible answer is: [0,-3,9,-10,null,5], which represents the following height balanced BST:
+      0
+     / \
+   -3   9
+   /   /
+ -10  5*/
 
+int mid = low + (high-low)/2; // avoids integer overflow
 
-
+ public TreeNode sortedArrayToBST(int[] nums) {
+        if(nums==null || nums.length==0)
+            return null;
+        return sortedArrayToBSTHelper(nums, 0,nums.length-1);
+    }
+    
+    private TreeNode sortedArrayToBSTHelper(int[] nums, int start, int end){
+        if(start>end )
+            return null;
+        int mid = (start + end)/2;
+        TreeNode root = new TreeNode(nums[mid]);
+        root.left = sortedArrayToBSTHelper(nums, start, mid-1);
+        root.right = sortedArrayToBSTHelper(nums, mid+1,end);
+        return root;
+    }
 
 **************************************************************************************************************************************************************************
-                                                                            3.  Symmetric Tree
+                                                                            8.  Convert Sorted List to Binary Search Tree
 **************************************************************************************************************************************************************************
+/*Given a singly linked list where elements are sorted in ascending order, convert it to a height balanced BST.
+For this problem, a height-balanced binary tree is defined as a binary tree in which the depth of the two subtrees of every node never differ by more than 1.
+Example:
+Given the sorted linked list: [-10,-3,0,5,9],
+One possible answer is: [0,-3,9,-10,null,5], which represents the following height balanced BST:
+      0
+     / \
+   -3   9
+   /   /
+ -10  5*/
+ 
+ /*
+Since we are given a linked list and not an array, we don't really have access to the elements of the list using indexes.
+We want to know the middle element of the linked list.
+We can use the two pointer approach for finding out the middle element of a linked list. Essentially, we have two pointers called slow_ptr and fast_ptr.
+The slow_ptr moves one node at a time whereas the fast_ptr moves two nodes at a time. By the time the fast_ptr reaches the end of the linked list, 
+the slow_ptr would have reached the middle element of the linked list. For an even sized list, any of the two middle elements can act as the root of the BST.
+Once we have the middle element of the linked list, we disconnect the portion of the list to the left of the middle element.
+The way we do this is by keeping a prev_ptr as well which points to one node before the slow_ptr i.e. prev_ptr.next = slow_ptr. 
+For disconnecting the left portion we simply do prev_ptr.next = None
+We only need to pass the head of the linked list to the function that converts it to a height balances BST.
+So, we recurse on the left half of the linked list by passing the original head of the list and on the right half by passing slow_ptr.next as the head.
 
-
-
-
+Time Complexity: O(NlogN)
+Space Complexity: O(logN)
+*/
+ public TreeNode sortedListToBST(ListNode head) {        
+        
+        return sortedListToBstHelper(head);
+    }
+    
+    
+    
+    private TreeNode sortedListToBstHelper(ListNode head){
+        if(head==null)
+            return null;
+        int i=1;
+        ListNode fastPtr = head;
+        ListNode slowPtr = head;
+        ListNode prevPrt = null;        
+        while(fastPtr!=null){
+            fastPtr = fastPtr.next;
+            
+            if(i==0 || i%2 ==0){                
+                prevPrt = slowPtr;
+                slowPtr = slowPtr.next;                
+            }
+            i++;
+        }
+        // here we break the array by setting the next of pre to null      
+        if(prevPrt!=null)
+            prevPrt.next = null;
+        // this will be the mid element of the list
+        TreeNode root = new TreeNode(slowPtr.val);
+        if(head==slowPtr)
+            return root;
+        // we get the right half by picking the right of slow
+        ListNode rightPrt = slowPtr.next;
+        
+        root.left = sortedListToBstHelper(head);
+        root.right = sortedListToBstHelper(rightPrt);
+        return root;        
+    }
+/*
+Approach 2: 
+Convert the given linked list into an array. Let's call the beginning and the end of the array as left and right
+the remaining can be solved using above problem. Here time complexity is reduced, but space complexity increases as we are using a new array.
+Time Complexity: O(N)
+Space Complexity: O(N)
+*/
 **************************************************************************************************************************************************************************
-                                                                            3.  Symmetric Tree
+                                                                            9.  Balanced Binary Tree
 **************************************************************************************************************************************************************************
+/*Given a binary tree, determine if it is height-balanced.
+For this problem, a height-balanced binary tree is defined as:
+a binary tree in which the left and right subtrees of every node differ in height by no more than 1.
+ 
+Example 1:
+Given the following tree [3,9,20,null,null,15,7]:
+    3
+   / \
+  9  20
+    /  \
+   15   7
+Return true.
+Example 2:
+Given the following tree [1,2,2,3,3,null,null,4,4]:
+       1
+      / \
+     2   2
+    / \
+   3   3
+  / \
+ 4   4
+Return false.*/
 
-
+boolean isBalanced = true;
+    public boolean isBalanced(TreeNode root) {
+        isBalancedHelper(root);
+        return isBalanced;
+    }
+    
+    private int isBalancedHelper(TreeNode root){
+        if(root==null)
+            return 0;
+        int leftMax = isBalancedHelper(root.left);
+        int rightMax = isBalancedHelper(root.right);
+        if(isBalanced){
+            if(Math.abs(leftMax-rightMax) > 1)
+                isBalanced = false;
+        }
+        return Math.max(leftMax,rightMax)+1;
+    }
 
 
 **************************************************************************************************************************************************************************
