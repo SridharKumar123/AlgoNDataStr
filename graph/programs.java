@@ -119,6 +119,10 @@ There are 2 bridges:
 If we remove these edges, then the graph will be disconnected.
 If we remove any of the remaining edges, the graph will remain connected.
 
+Note:
+when you do this for amazon OA, 2 test cases will fail. For these to pass, 
+you r result should contain edges such that for an edge (a, b) a < b.
+i.e. if you have a critical edge (2,1), change it to (1, 2) when adding to resultant list
 
 https://leetcode.com/discuss/interview-question/372581
 https://leetcode.com/problems/critical-connections-in-a-network/
@@ -129,10 +133,105 @@ Bridge Algo:
   Start at any node and do DFS traversal labelling nodes with increasing id values. Keep track if the above mentioned id and smallest low-link value for each node.
   During DFS bridges will be found when, id of the node where edge is coming is less than the low-link value of the node where edge is going to.
   Note: low-link value of a node is smallest id reachable from that node when doing a DFS(including node itself).
+  The id can be considered like a rank for each node.
   
+Time Complexity : O(V+E)
 
+	int height = 0;
+	public List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+		// construct graph using input data
+		Graph graph = new Graph(n,connections);		
+		List<List<Integer>> result = new ArrayList<>();
+		for(int i=0; i<n;i++){
+		// this is useful, if the given graph has more than one connected group
+		// in our case, this dfs will be called only for 0th element as others will be visited in first call itself and we have only 1 connected element
+			if(!graph.map.get(i).isVisited){				
+				dfs(i,-1,result,graph);
+			}
+		}
+		return result;
+	}
+
+	private void dfs(int i, int parent, List<List<Integer>> result, Graph graph){
+		// get each node and make it as visited, update low and id values
+		GraphNode currentNode = graph.map.get(i); 
+		height = height+1;
+		currentNode.travelId = height;
+		currentNode.lowVal = height;
+		currentNode.isVisited = true;
+		for(GraphNode item : currentNode.neighbours){
+			GraphNode neighbour = graph.map.get(item.id);
+			// if parent, do not traverse as we just came from there
+			if(neighbour.id == parent){
+				continue;
+			}
+			if(!neighbour.isVisited){
+				// if node is not visited, call dfs
+				dfs(neighbour.id, currentNode.id, result,graph);
+				// after dfs, we know the neighbours lowVal, now backtrack and update current node if neighbour has lesser values(meaning its able to 
+				// reach ancestors via diff route) 
+				currentNode.lowVal = Math.min(currentNode.lowVal,neighbour.lowVal);
+				if(currentNode.travelId < neighbour.lowVal){
+					List<Integer> values = new ArrayList<>();
+					values.add(Math.min(currentNode.id,neighbour.id));
+                    			values.add(Math.max(currentNode.id,neighbour.id));
+					result.add(values);   
+				}
+			}else{
+				// if node is already visited, just check if it has a lesser id value, and if so update it with lowVal
+				currentNode.lowVal = Math.min(currentNode.lowVal,neighbour.travelId);
+			}
+		}
+	}
+
+	static class Graph{
+		List<GraphNode> nodes;
+		Map<Integer,GraphNode> map;
+		public Graph(int n, List<List<Integer>> connections){
+			nodes = new ArrayList<>();
+			map = new HashMap<>();
+			constructGraph(n,connections);
+		}
+
+		public void constructGraph(int n, List<List<Integer>> connections){
+			for(int i=0; i<n;i++){
+				GraphNode node = new GraphNode(i);
+				nodes.add(node);
+				map.put(i,node);
+			}
+			for(List<Integer> values : connections){
+				int left = values.get(0);
+				int right = values.get(1);
+				map.get(left).neighbours.add(new GraphNode(right));
+				map.get(right).neighbours.add(new GraphNode(left));
+			}
+		}
+	}
+
+	static class GraphNode{
+		int id;
+		int travelId;
+		int lowVal;
+		boolean isVisited = false;
+		List<GraphNode> neighbours = new ArrayList<>();
+		
+		public GraphNode(int id){
+			this.id= id;
+		}
+	}
   
+**************************************************************************************************************************************************************************
+                                                                            3. Find Articulation points
+**************************************************************************************************************************************************************************
   
+1) With bridge : On a connected component with 3 or more vertices, if there is a edge(u,v) which is a bridge, either u or v is an articulation point.
+2) Without bridge: cycle indicates that there is an articulation point. in previous algo, if (id(e.from) == lowlink(e.to)) - this condition is for cycle.
+     - the above condition of cycle fails only for STARTING NODE, if it has just 0 or 1 outgoing edge. 
+       so if starting node has more than 1 outgoing edge, it is also articulation point.
+
+
+
+
 
 
 
