@@ -128,7 +128,11 @@ https://leetcode.com/discuss/interview-question/372581
 https://leetcode.com/problems/critical-connections-in-a-network/
 
 Brute force approach:
-We can form a grap with data and we can try removing every edge one by one, 
+We can form a grap with data. 
+Remove an edge, perform DFS/BFS and try to see if we are able to reach all other nodes, if so, then its not a bridge
+if while reving a edge, the connections increase, then its a bridge.
+Do this for every edge in the gaph and we can identify all bridges.
+This is a very costly operation, as we are perforing the BFS for every edge.
 
 https://www.youtube.com/watch?v=aZXi1unBdJA
 
