@@ -127,7 +127,11 @@ i.e. if you have a critical edge (2,1), change it to (1, 2) when adding to resul
 https://leetcode.com/discuss/interview-question/372581
 https://leetcode.com/problems/critical-connections-in-a-network/
 
+Brute force approach:
+We can form a grap with data and we can try removing every edge one by one, 
+
 https://www.youtube.com/watch?v=aZXi1unBdJA
+
 
 Bridge Algo:
   Start at any node and do DFS traversal labelling nodes with increasing id values. Keep track if the above mentioned id and smallest low-link value for each node.
