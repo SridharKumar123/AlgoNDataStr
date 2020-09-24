@@ -159,8 +159,7 @@ Time Complexity : O(V+E)
 		currentNode.travelId = height;
 		currentNode.lowVal = height;
 		currentNode.isVisited = true;
-		for(GraphNode item : currentNode.neighbours){
-			GraphNode neighbour = graph.map.get(item.id);
+		for(GraphNode neighbour : currentNode.neighbours){			
 			// if parent, do not traverse as we just came from there
 			if(neighbour.id == parent){
 				continue;
@@ -202,8 +201,9 @@ Time Complexity : O(V+E)
 			for(List<Integer> values : connections){
 				int left = values.get(0);
 				int right = values.get(1);
-				map.get(left).neighbours.add(new GraphNode(right));
-				map.get(right).neighbours.add(new GraphNode(left));
+				// make sure to get the value from map and re add it
+				map.get(left).neighbours.add(map.get(right));
+				map.get(right).neighbours.add(map.get(left));				
 			}
 		}
 	}
