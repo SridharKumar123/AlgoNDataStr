@@ -248,6 +248,8 @@ Example:
 Input: numNodes = 7, numEdges = 7, edges = [[0, 1], [0, 2], [1, 3], [2, 3], [2, 5], [5, 6], [3, 4]]
 Output: [2, 3, 5]
 
+https://www.youtube.com/watch?v=aZXi1unBdJA
+
 Articulation Algorithm:
 1) With bridge : On a connected component with 3 or more vertices, if there is a edge(u,v) which is a bridge, either u or v is an articulation point.
 2) Without bridge: cycle indicates that there is an articulation point. in previous algo, if (id(e.from) == lowlink(e.to)) - this condition is for cycle.
@@ -255,7 +257,98 @@ Articulation Algorithm:
        so if starting node has more than 1 outgoing edge, it is also articulation point.
 
 
-
+	int outgoingEdge = 0;
+	int height;
+	public List<Integer> criticalNodes(List<List<Integer>> edges, int numLinks, int numRouters) {
+		List<Integer> result = new ArrayList<>();
+		Graph graph = new Graph(numRouters, edges);
+		for(int i=0; i<numRouters; i++) {
+			GraphNode node = graph.map.get(i);
+			if(!node.isVisited) {
+				// initialize outgoinedge for every starting node of each connection. here it will be invoked just once for our use case
+				outgoingEdge = 0;
+				dfs(i,-1,graph,result);
+				// ideally, if outgoingEdge was greater then one, we must add to result, if outgoingEdge was less than 1 it must not be added (removed)
+				// (remove -  even if it was wrongly added as part of cycle)
+				if(outgoingEdge>1) {
+					result.add(node.id);
+				}else {
+					// call remove method using object to invoked removal of object, else it considers the input as index(primitive int)
+					result.remove((Integer)node.id);
+				}
+			}
+		}
+		
+		return result;	
+	}
+	
+	private void dfs(int id, int parent, Graph graph, List<Integer> result) {
+		if(id==parent) {
+			outgoingEdge++;
+		}
+		height = height + 1;
+		GraphNode currentNode = graph.map.get(id);		
+		currentNode.isVisited = true;
+		currentNode.travelId = height;
+		currentNode.lowId= height;
+		
+		for(GraphNode neigh : currentNode.neighbours) {
+			if(neigh.id == parent) {
+				continue;
+			}
+			if(!neigh.isVisited) {
+				dfs(neigh.id, currentNode.id, graph, result);
+				currentNode.lowId = Math.min(currentNode.lowId, neigh.lowId);
+				// condition of cycle
+				if(currentNode.travelId == neigh.lowId) {
+					result.add(currentNode.id);
+				}
+				// normal condition where id lesser than lowid   
+				// above and this could have been combined as <=, just splitted for more understanding
+				if(currentNode.travelId < neigh.lowId) {
+					result.add(currentNode.id);
+				}
+			}else {
+				currentNode.lowId = Math.min(currentNode.lowId, neigh.travelId);
+			}
+		}
+	}
+	
+	
+	static class Graph{
+		List<GraphNode> nodes;
+		Map<Integer,GraphNode> map; 
+		public Graph(int numRoutes, List<List<Integer>>  edges) {
+			nodes = new ArrayList<>();
+			map = new HashMap<>();
+			constructGraph(numRoutes, edges);
+		}
+		
+		public void constructGraph(int numRoutes, List<List<Integer>> edges) {
+			for(int i=0; i<numRoutes; i++) {
+				GraphNode node = new GraphNode(i);
+				nodes.add(node);
+				map.put(i,node);
+			}
+			for(List<Integer> edge : edges) {
+				int left = edge.get(0);
+				int right = edge.get(1);
+				map.get(left).neighbours.add(map.get(right));
+				map.get(right).neighbours.add(map.get(left));
+			}
+		}
+	}
+	
+	static class GraphNode {
+		int id;
+		int travelId;
+		int lowId;
+		boolean isVisited;
+		List<GraphNode> neighbours = new ArrayList<CriticalResourcesLinkedList.GraphNode>();
+		public GraphNode(int id) {
+			this.id = id;
+		}
+	}
 
 
 
