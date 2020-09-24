@@ -84,11 +84,75 @@ Input: grid = [
 Output: 3
 */
 
-
-
-
-
-
+class Solution {
+    
+    public int numIslands(char[][] grid) {
+        if(grid==null || grid.length==0)
+            return 0;
+        boolean[][] visited = new boolean[grid.length][grid[0].length];
+        List<Integer> islands = new ArrayList<>();
+        for(int i=0; i<grid.length;i++){
+            for(int j=0; j<grid[0].length;j++){                
+                if(!visited[i][j]){
+		    if(grid[i][j]=='1'){
+		    	// bfs to collect all neighbours
+                      helper(i, j,grid,visited, islands);
+		    }
+                }
+            }
+        }
+        return islands.size();
+    }
+    
+    private void helper(int i, int j, char[][] board, 
+                                       boolean[][] visited, List<Integer> islands){
+        
+        int count = 0;
+        Queue<GraphNode> que = new LinkedList<>();
+        que.offer(new Members(i,j));
+        while(!que.isEmpty()){                        
+            Members mem = que.poll();
+	    // if already visited, we just continue
+            if(visited[mem.i][mem.j])
+                continue;
+            visited[mem.i][mem.j] = true;            
+            count++;
+            List<Members> neighbours = getNeighbours(mem.i, mem.j,board,visited);
+            for(Members member : neighbours){
+                que.offer(new Members(member.i,member.j));
+            }
+        }
+	// double check to use count greater than 0
+        if(count>0){
+            islands.add(count);
+        }            
+    }
+    
+    private List<Members> getNeighbours(int i, int j, char[][] board, 
+                                       boolean[][] visited){
+        List<Members> list = new  ArrayList<>();
+	//int[][] directions = {{1,0},{-1,0},{0,1},{0,-1}};
+        int[] first = {0, -1, 0 , 1};
+        int[] second = {-1 , 0, 1, 0};
+        for(int n=0; n<first.length; n++){            
+            int one = first[n] + i;
+            int two = second[n] + j;
+            if(one >= 0 && two >= 0 && one <= board.length-1 && two <= board[0].length-1 &&
+              !visited[one][two] && board[one][two]!='0'){
+             list.add(new Members(one,two));   
+            }
+        }
+        return list;
+    }
+    static class Members{
+        int i;
+        int j;
+        public Members(int i, int j){
+            this.i = i;
+            this.j = j;
+        }
+    }
+}
 
 
 **************************************************************************************************************************************************************************
