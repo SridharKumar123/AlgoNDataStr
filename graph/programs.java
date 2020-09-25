@@ -301,9 +301,62 @@ Output: 3
 Explanation:
 You can start from (0,0), (0, 3) or (0, 4). The treasure locations are (2, 4) (3, 0) and (4, 0). Here the shortest route is (0, 3), (1, 3), (2, 3), (2, 4).
 
-Similar to above probem, we add all the S items to the queue, and then 
+Similar to above probem, we add all the S items to the queue, and then continue the bfs.
+
+private int getMinDistance(char[][] grid) {
+		Queue<GraphNode> que = new LinkedList<TreasureIsland3.GraphNode>();
+		for(int i=0; i<grid.length; i++) {
+			for(int j=0; j<grid[0].length; j++) {
+				if(grid[i][j]=='S') {
+					que.offer(new GraphNode(i, j));
+					grid[i][j]='D';
+				}
+			}
+		}
+		int count = 1;
+		while(!que.isEmpty()) {
+			int size = que.size();
+			for(int i=0; i<size;i++) {
+				GraphNode node = que.poll();
+				List<GraphNode> neighbours = getNeighbours(node.i, node.j, grid);
+				for(GraphNode neig : neighbours) {
+					if(grid[neig.i][neig.j]=='X')
+						return count;
+					que.offer(neig);
+					grid[neig.i][neig.j]='D';
+				}
+			}
+			count++;
+		}
+		return -1;
+	}
+	
+	private List<GraphNode> getNeighbours(int i, int j , char[][] grid){
+		List<GraphNode> list = new ArrayList<TreasureIsland3.GraphNode>();
+		int[][] directions = {{1,0},{-1,0},{0,1},{0,-1}};
+		for(int n=0; n<directions.length;n++) {
+			int[] dir = directions[n];
+			int left = i + dir[0];
+			int right = j + dir[1];
+			if(left>=0 && right>=0 && left<grid.length && right<grid[0].length
+					&& !(grid[left][right]=='D')) {
+				list.add(new GraphNode(left, right));
+			}
+		}
+		return list;
+	}
+	
+	static class GraphNode{
+		int i;
+		int j;
+		public GraphNode(int i, int j) {
+			this.i = i;
+			this.j = j;
+		}
+	}
+
 **************************************************************************************************************************************************************************
-                                                                            3. Find Bridges
+                                                                            6. Find Bridges
 **************************************************************************************************************************************************************************
 Given an underected connected graph with n nodes labeled 1..n. A bridge (cut edge) is defined as an edge which, when removed, 
 makes the graph disconnected (or more precisely, increases the number of connected components in the graph). 
@@ -440,7 +493,7 @@ Time Complexity : O(V+E)
 	}
   
 **************************************************************************************************************************************************************************
-                                                                            3. Find Articulation points
+                                                                            7. Find Articulation points
 **************************************************************************************************************************************************************************
   
 You are given an undirected connected graph. An articulation point (or cut vertex) is defined as a vertex which, when removed along with associated edges,
