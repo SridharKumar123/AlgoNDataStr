@@ -155,7 +155,7 @@ class Solution {
 }
 
 **************************************************************************************************************************************************************************
-                                                                            3. Number of Islands 2 
+                                                                            4. Number of Islands 2 
 **************************************************************************************************************************************************************************
 You have a map that marks the location of a treasure island. Some of the map area has jagged rocks and dangerous reefs. Other areas are safe to sail in. 
 There are other explorers trying to find the treasure. So you must figure out a shortest route to the treasure island.
@@ -221,13 +221,87 @@ Starting from the top-left corner, the truck traversed the cell
 (0, 0)-> (1,0)->(2,0)->(2,1)
 The truck traversed the total distance 3 to deliver the order, so the output is 3.
 
-
+Time complexity: O(r * c).
+Space complexity: O(r * c).
 
 Can be solved in BFS and DFS. BFS is much better in time complexity.
 
 https://www.youtube.com/watch?v=KiCBXu4P-2Y
 
+private int getMinDistance(char[][] grid) {
+		int depth = 1;		
+		Queue<GraphNode> que = new LinkedList<>();
+		que.offer(new GraphNode(0, 0));
+		grid[0][0]='D';
+		
+		while(!que.isEmpty()) {
+			int size= que.size();
+			for(int val = 0; val<size; val++) {
+				GraphNode node = que.poll();
+				
+				List<GraphNode> neighbours = getNeighbours(node.i, node.j,grid);
+				for(GraphNode neig: neighbours) {
+					if(grid[neig.i][neig.j]=='X')
+						return depth;
+					que.offer(neig);					
+					grid[node.i][node.j] = 'D';
+				}
+			}
+			depth++;
+		}
+		return depth;
+	}
 
+	private List<GraphNode> getNeighbours(int i, int j, char[][] grid){
+		List<GraphNode> list = new ArrayList<TreasureIsland2.GraphNode>();
+		int[][] directions = {{1,0},{-1,0},{0,1},{0,-1}};
+		for(int[] side : directions) {
+			int first = i + side[0];
+			int sec = j+ side[1];
+			if(first>=0 && sec>=0 && first<grid.length && sec <grid[0].length 
+					 && !(grid[first][sec]=='D')) {
+				list.add(new GraphNode(first, sec));
+			}
+		}
+		return list;
+	}
+
+
+	static class GraphNode{
+		int i;
+		int j;
+
+		public GraphNode(int i, int j) {
+			this.i = i;
+			this.j = j;
+		}
+	}
+
+**************************************************************************************************************************************************************************
+                                                                            5. Number of Islands 3 
+**************************************************************************************************************************************************************************
+You have a map that marks the locations of treasure islands. Some of the map area has jagged rocks and dangerous reefs. Other areas are safe to sail in. 
+There are other explorers trying to find the treasure. So you must figure out a shortest route to one of the treasure islands.
+
+Assume the map area is a two dimensional grid, represented by a matrix of characters. You must start from one of the starting point (marked as S) of the map 
+and can move one block up, down, left or right at a time. The treasure island is marked as X. Any block with dangerous rocks or reefs will be marked as D. 
+You must not enter dangerous blocks. You cannot leave the map area. Other areas O are safe to sail in. Output the minimum number of steps to get to any of the 
+treasure islands.
+
+Example:
+
+Input:
+[['S', 'O', 'O', 'S', 'S'],
+ ['D', 'O', 'D', 'O', 'D'],
+ ['O', 'O', 'O', 'O', 'X'],
+ ['X', 'D', 'D', 'O', 'O'],
+ ['X', 'D', 'D', 'D', 'O']]
+
+Output: 3
+Explanation:
+You can start from (0,0), (0, 3) or (0, 4). The treasure locations are (2, 4) (3, 0) and (4, 0). Here the shortest route is (0, 3), (1, 3), (2, 3), (2, 4).
+
+Similar to above probem, we add all the S items to the queue, and then 
 **************************************************************************************************************************************************************************
                                                                             3. Find Bridges
 **************************************************************************************************************************************************************************
