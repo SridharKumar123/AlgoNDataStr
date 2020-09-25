@@ -233,7 +233,9 @@ private int getMinDistance(char[][] grid) {
 		Queue<GraphNode> que = new LinkedList<>();
 		que.offer(new GraphNode(0, 0));
 		grid[0][0]='D';
-		
+		// we mark it as D so next time wont pick it
+		//In multi source BFS, if paths overlap it means 
+		// there is a faster path that already visited that spot.
 		while(!que.isEmpty()) {
 			int size= que.size();
 			for(int val = 0; val<size; val++) {
