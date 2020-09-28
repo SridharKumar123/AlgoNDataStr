@@ -436,5 +436,261 @@ we would skip these edges.
 
 Union find classes and Heap node are same as above problem
 
+**************************************************************************************************************************************************************************
+                                                                            4. Subtree with Maximum Average
+**************************************************************************************************************************************************************************
+Given an N-ary tree, find the subtree with the maximum average. Return the root of the subtree.
+A subtree of a tree is the node which have at least 1 child plus all its descendants. The average value of a subtree is the sum of its values, divided by the number of nodes.
+
+Example 1:
+
+Input:
+        20
+       /   \
+     12     18
+  /  |  \   / \
+11   2   3 15  8
+
+Output: 18
+Explanation:
+There are 3 nodes which have children in this tree:
+12 => (11 + 2 + 3 + 12) / 4 = 7
+18 => (18 + 15 + 8) / 3 = 13.67
+20 => (12 + 11 + 2 + 3 + 18 + 15 + 8 + 20) / 8 = 11.125
+
+18 has the maximum average so output 18.
+	
+https://leetcode.com/problems/maximum-average-subtree
+
+	double max = Integer.MIN_VALUE;
+	static int maxNode = Integer.MIN_VALUE;
+private double[] dfs(BinaryTreeNode node) {
+		if(node.childs==null || node.childs.size()==0)
+			return new double[] {node.value,1}; 
+		
+		double sum = node.value;
+		int count = 1;
+		for(BinaryTreeNode treeNode : node.childs) {
+			double[] childData = dfs(treeNode);
+			sum += childData[0];
+			count += childData[1];
+		}		
+		if(count >1 && (sum/count)> max) {
+			max = (sum/count);
+			maxNode = node.value;
+		}
+		return new double[] {sum,count};
+	}
+
+	static class BinaryTreeNode {
+		int value;
+		List<BinaryTreeNode> childs;
+		public int getValue() {
+			return value;
+		}
+		public void setValue(int value) {
+			this.value = value;
+		}
+		public List<BinaryTreeNode> getChilds() {
+			return childs;
+		}
+		public void setChilds(List<BinaryTreeNode> childs) {
+			this.childs = childs;
+		}
+		public BinaryTreeNode(int val) {
+			this.value = val;
+		}
+		
+	}
+
+**************************************************************************************************************************************************************************
+                                                                            5. Distance Between Nodes in BST
+**************************************************************************************************************************************************************************
+Given a list of unique integers nums, construct a BST from it (you need to insert nodes one-by-one with the given order to get the BST) and find the distance between two nodes node1 and node2. Distance is the number of edges between two nodes. If any of the given nodes does not appear in the BST, return -1.
+
+Example 1:
+
+Input: nums = [2, 1, 3], node1 = 1, node2 = 3
+Output: 2
+Explanation:
+     2
+   /   \
+  1     3
+https://leetcode.com/problems/insert-into-a-binary-search-tree/
+https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/
+
+Build BST
+Ensure Both nodes are present, else return -1
+Find LCA
+Find Distance from LCA to given points
+
+	static TreeNode lowestCommonAncestor;
+	public int distance(int[] treeArray, int i, int j) {
+		// create BST using array
+		// ensure both nodes are present
+		// find Lowest common ancestor of 2 nodes
+		// find distance btw nodes to lcm and sum them
+		TreeNode root = null;
+		for(int len=0; len<treeArray.length;len++) {
+			root = constructBST(root, treeArray[len]);
+		}
+		// if any node is not in BST, we return -1
+		if(isNodePresent(root, i) && isNodePresent(root, j)) {
+			findLowestCommonAncestor(root, i, j);
+		}else {
+			return -1;
+		}
+		
+		int totalDistance = findDistance(lowestCommonAncestor, i, 0) 
+				+ findDistance(lowestCommonAncestor, j, 0);
+		
+		return totalDistance;
+	}
+
+	public int findDistance(TreeNode lcm, int i, int level) {
+		//base case
+		if(lcm==null)
+			return Integer.MIN_VALUE;
+		//return level if node is found
+		if(lcm.value==i)
+			return level;
+		// search node in left subtree
+		int left = findDistance(lcm.leftSide, i, level+1);
+		// if node is found in left subtree, return
+		if(left!=Integer.MIN_VALUE) {
+			return left;
+		}
+		// else continue the search in right subtree
+		return findDistance(lcm.rightSide, i, level+1);
+	}
+
+	// we go over dfs to each node. for leaf, we return 0
+	// this will be popped above
+	// if at any point, we see one of the nodes, we increment the total by 1
+	// once we see the other node we increment by 1
+	// at ever node, total is  - node's val && nodes left sub tree && rit sub tree
+	// if total is 2, meaning, we found both nodes. set it as LowestCommonAncestor . return
+	public int findLowestCommonAncestor(TreeNode root, int i, int j) {
+		if(root==null)
+			return 0;
+
+		int left = findLowestCommonAncestor(root.leftSide, i, j);
+		int right = findLowestCommonAncestor(root.rightSide, i, j);
+		int total = 0;
+		if(root.value == i || root.value==j) {
+			total +=1;
+		}		
+		total = total + left + right;
+		if(total==2) {			
+			lowestCommonAncestor = root;
+			return Integer.MAX_VALUE;
+		}
+		return total;
+	}
+
+	public TreeNode constructBST(TreeNode root, int i) {
+		if(root==null) {
+			root = new TreeNode(i);
+			return root;
+		}
+		if(root.value < i) {			
+			if(root.rightSide ==null) {
+				root.rightSide = new TreeNode(i);
+			}else {
+				constructBST(root.rightSide, i);
+			}
+		}else if (root.value > i) {
+			if(root.leftSide==null) {
+				root.leftSide = new TreeNode(i);
+			}else {
+				constructBST(root.leftSide, i);
+			}
+		}
+		return root;
+	}
+
+	public boolean isNodePresent(TreeNode root, int val) {
+		if(root==null)
+			return false;
+		// if node is found, return true
+		if(root.value==val) {
+			return true;
+		}
+		// return true if node is found in the left subtree or right subtree
+		boolean left = isNodePresent(root.leftSide, val);
+		boolean right = isNodePresent(root.rightSide, val);
+		return left || right;
+	}
+
+**************************************************************************************************************************************************************************
+                                                                            6. Subtree of Another Tree
+**************************************************************************************************************************************************************************
+Given two non-empty binary trees s and t, check whether tree t has exactly the same structure and node values with a subtree of s. 
+A subtree of s is a tree consists of a node in s and all of this node's descendants. 
+The tree s could also be considered as a subtree of itself.
+Example 1:
+Given tree s:
+
+     3
+    / \
+   4   5
+  / \
+ 1   2
+Given tree t:
+   4 
+  / \
+ 1   2
+Return true, because t has the same structure and node values with a subtree of s.
+ 
+
+Example 2:
+Given tree s:
+
+     3
+    / \
+   4   5
+  / \
+ 1   2
+    /
+   0
+Given tree t:
+   4
+  / \
+ 1   2
+Return false.
+	
+Time complexity : O(m*n). In worst case(skewed tree) traverse function takes O(m*n) time.
+
+Space complexity : O(n). The depth of the recursion tree can go upto nn. nn refers to the number of nodes in ss.
+	
+we make use a function traverse(s,t) which traverses over the given tree ss and treats every node as the root of the subtree currently being considered.
+https://leetcode.com/problems/subtree-of-another-tree/
+class Solution {    
+    
+    private boolean checkIfSame(TreeNode s, TreeNode t){
+        if(s==null && t==null)
+            return true;
+        if(s==null || t==null)
+            return false;
+        if(s.val!=t.val){           
+            return false;
+        }
+        
+        boolean left = checkIfSame(s.left,t.left);
+        boolean right = checkIfSame(s.right,t.right);
+        return left && right;
+    }
+    
+    private boolean traverse(TreeNode s, TreeNode t){
+        return s!=null && (checkIfSame(s,t) || traverse(s.left,t) || traverse(s.right,t));
+    }
+    public boolean isSubtree(TreeNode s, TreeNode t) {
+        if(s==null || t==null)
+            return false;
+        return traverse(s,t);        
+    }
+}
+
+
 
 
