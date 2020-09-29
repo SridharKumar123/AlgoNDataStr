@@ -665,7 +665,6 @@ Space complexity : O(n). The depth of the recursion tree can go upto nn. nn refe
 	
 we make use a function traverse(s,t) which traverses over the given tree ss and treats every node as the root of the subtree currently being considered.
 https://leetcode.com/problems/subtree-of-another-tree/
-class Solution {    
     
     private boolean checkIfSame(TreeNode s, TreeNode t){
         if(s==null && t==null)
@@ -689,7 +688,7 @@ class Solution {
             return false;
         return traverse(s,t);        
     }
-}
+
 
 **************************************************************************************************************************************************************************
                                                                             7. Subtree with Maximum Average
@@ -704,7 +703,7 @@ https://leetcode.com/discuss/interview-question/782606/
 // create a max heap of keys of map and lexo first string of list 
 // Create a custom class to add in heap, implement comparable to sort based on the count and if same, use lexo string order
   
-public class LargestItemAssociation {
+//public class LargestItemAssociation {
 
 	public static void main (String args[]) {
 		
