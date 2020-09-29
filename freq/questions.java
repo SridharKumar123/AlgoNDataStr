@@ -853,7 +853,86 @@ https://leetcode.com/discuss/interview-question/782606/
 		}
 	}
 	
+**************************************************************************************************************************************************************************
+                                                                            8. Most Common Word
+**************************************************************************************************************************************************************************
+Given a paragraph and a list of banned words, return the most frequent word that is not in the list of banned words.  
+It is guaranteed there is at least one word that isnt banned, and that the answer is unique.
 
+Words in the list of banned words are given in lowercase, and free of punctuation.  Words in the paragraph are not case sensitive.
+The answer is in lowercase.
+Example:
 
+Input: 
+paragraph = "Bob hit a ball, the hit BALL flew far after it was hit."
+banned = ["hit"]
+Output: "ball"
+Explanation: 
+"hit" occurs 3 times, but it is a banned word.
+"ball" occurs twice (and no other word does), so it is the most frequent non-banned word in the paragraph. 
+Note that words in the paragraph are not case sensitive,
+that punctuation is ignored (even if adjacent to words, such as "ball,"), 
+and that "hit" isnt the answer even though it occurs more because it is banned.
 
+// iterate the item, convery to char array
+// if valid character, add in a string buffer and loop in
+// if some other char or shape, we know its end of word
+// create a set of banned words. ensure that this word is never added to map below
+// add it to a map, string key and count value
+// create a max heap based on count
+// poll the first value
+// Use Character.isLetter method to check if the element is a character
+// Use paragraph.toCharArray() to convert string to char array
 
+public String mostCommonWord(String paragraph, String[] banned) {
+        if(paragraph==null || paragraph.length()==0)
+            return null;
+        // maintaining set to easily check for duplicate
+        Set<String> bannedSet = new HashSet<>();
+        if(banned!=null){
+            for(String ban : banned){
+                bannedSet.add(ban);
+            }
+        }
+        char[] charArray = paragraph.toCharArray();
+        StringBuilder builder = new StringBuilder();
+        Map<String,Integer> map = new HashMap<>();
+        for(int i=0; i<charArray.length;i++){
+		// Character.isLetter method to check if the element is a character
+            if(Character.isLetter(charArray[i])){
+                builder.append(charArray[i]);
+		    // if we have not reached end, continue to keep looping back without executing below
+		    // if we have reached end, we must not loop to start again as we will miss to add the last string
+                if(i!=charArray.length-1){
+                    continue;
+                }
+            }
+            if(builder.length()>0){
+		    // make sure to convert to lowercase
+                String word = builder.toString().toLowerCase();
+                if(!bannedSet.contains(word)){
+                    map.put(word,map.getOrDefault(word,0)+1);
+                }
+                builder = new StringBuilder();
+            }            
+        }
+	// maxheap to pick the max element. override the comparable use a custom class
+        PriorityQueue<Counter> maxHeap = new PriorityQueue<>();
+        for(Map.Entry<String,Integer> entry : map.entrySet()){
+            maxHeap.offer(new Counter(entry.getKey(),entry.getValue()));
+        }
+        return maxHeap.poll().word;
+        
+    }
+    
+    static class Counter implements Comparable<Counter>{
+        int count;
+        String word;
+        public Counter(String word, int count){
+            this.word = word;
+            this.count = count;
+        }
+        public int compareTo(Counter c){
+            return Integer.compare(c.count,this.count);
+        }
+    }
