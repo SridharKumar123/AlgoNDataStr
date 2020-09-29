@@ -691,6 +691,170 @@ class Solution {
     }
 }
 
+**************************************************************************************************************************************************************************
+                                                                            7. Subtree with Maximum Average
+**************************************************************************************************************************************************************************
+
+Given a list of item associations, write an algorithm that outputs the largest item association group. If two groups have ssame length, select group which
+appears first based on lexicographic order.
+https://leetcode.com/discuss/interview-question/782606/
+
+// union find - form all groups
+// create a map- key will be parent - iterate veery element, takes its parent and add in the obj as list
+// create a max heap of keys of map and lexo first string of list 
+// Create a custom class to add in heap, implement comparable to sort based on the count and if same, use lexo string order
+  
+public class LargestItemAssociation {
+
+	public static void main (String args[]) {
+		
+		List<PairString> itemAssociation = new ArrayList<>();
+		PairString s1 = new PairString("Item1","Item2");
+		PairString s2 = new PairString("Item9","Item4");
+		PairString s3 = new PairString("Item4","Item5");
+		PairString s4 = new PairString("Item6","Item7");
+		PairString s5 = new PairString("Item7","Item8");
+			itemAssociation.add(s1); itemAssociation.add(s4); itemAssociation.add(s5); itemAssociation.add(s2); itemAssociation.add(s3);
+		LargestItemAssociation assoc = new LargestItemAssociation();
+		List<String> largestResult = assoc.largestItemAssociation(itemAssociation);
+		for(String n : largestResult) {
+			System.out.println(n);
+		}
+	}
+
+	public List<String> largestItemAssociation(List<PairString> itemAssociation) {
+		// create UF, using the String as key
+		UF uf = new UF(itemAssociation);
+		// Using TreeSet to sort the strings based on lexographic order. If using list, we need to manually call Collections.Sort to sort
+		// But Tree set does it by defaut during insertion
+		Map<String,TreeSet<String>> cache = new HashMap<String, TreeSet<String>>();
+		for(String name : uf.names) {
+			Node node = uf.find(name);
+			if(!cache.containsKey(node.name)) {
+				TreeSet<String> list = new TreeSet<>();
+				list.add(name);
+				cache.put(node.name, list);
+			}else {
+				cache.get(node.name).add(name);
+			}
+		}
+		// to find the max count and lexo order at same time, implement the compare method
+		PriorityQueue<Counter> maxHeap = new PriorityQueue<>();
+		for(Map.Entry<String, TreeSet<String>> entry : cache.entrySet()) {
+			maxHeap.offer(new Counter(entry.getValue().size(),entry.getKey(),entry.getValue().first()));
+		}		
+
+		Counter topCounter = maxHeap.poll();
+		return new ArrayList<String>(cache.get(topCounter.name));
+
+	}	
+
+	static class Counter implements Comparable<Counter>{
+		String name;
+		int count;
+		String firstName;
+		public Counter(int count, String name) {
+			this.count = count;
+			this.name = name;
+		}
+		public Counter(int count, String name, String firstName) {
+			this.count = count;
+			this.name = name;
+			this.firstName = firstName;
+		}
+		// if count is diff, we just sort using count
+		// if count is same, we consider the string lexo order
+		public int compareTo(Counter c) {
+			int nameCompare =  Integer.compare(c.count,this.count);
+			if(nameCompare!=0)
+				return nameCompare;
+			if(firstName==null || c.firstName==null)
+				return nameCompare;
+			return this.firstName.compareTo(c.firstName);
+		}
+	}
+
+	static class PairString {
+		String first;
+		String second;
+
+		public PairString(String first, String second) {
+			this.first = first;
+			this.second = second;
+		}
+	}
+
+	static class UF {
+		Map<String,Node> map = new HashMap<>();
+		Set<String> names = new HashSet<>();
+
+		public UF(List<PairString> itemAssociation) {
+			
+			// Key is string for map
+			
+			for(PairString keyPair : itemAssociation) {
+
+				if(!names.contains(keyPair.first)) {
+					Node node = new Node(keyPair.first);
+					node.parent = node;
+					map.put(keyPair.first,node);
+					names.add(keyPair.first);
+
+				}
+				if(!names.contains(keyPair.second)) {
+					Node node = new Node(keyPair.second);
+					node.parent = node;
+					map.put(keyPair.second,node);
+					names.add(keyPair.second);
+
+				}
+			}
+
+			for(PairString keyPair : itemAssociation) {
+				union(keyPair.first, keyPair.second);
+			}
+
+		}
+
+		public Node find(String p) {
+			Node node = map.get(p);
+			if(node.name.equals(node.parent.name)) {
+				return node;
+			}
+			return find(node.parent.name);
+		}
+
+		public boolean union(String p, String q) {
+			Node pParent = find(p);
+			Node qParent = find(q);
+			if(pParent.name.equals(qParent.name)) {
+				return false;
+			}			
+			if(pParent.rank==qParent.rank) {
+				pParent.rank++;
+				qParent.parent = pParent;
+			}else if(pParent.rank>qParent.rank) {
+				qParent.parent = pParent;
+			}else if(qParent.rank>pParent.rank) {
+				pParent.parent = qParent;
+			}
+			
+			return true;
+		}
+	}
+
+	static class Node{
+
+		int rank;
+		String name;
+		Node parent;
+
+		public Node(String name) {			
+			this.name = name;
+		}
+	}
+	
+
 
 
 
