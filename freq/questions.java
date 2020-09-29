@@ -518,7 +518,7 @@ Explanation:
   1     3
 https://leetcode.com/problems/insert-into-a-binary-search-tree/
 https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/
-
+https://www.techiedelight.com/distance-between-given-pairs-of-nodes-binary-tree/
 Build BST
 Ensure Both nodes are present, else return -1
 Find LCA
