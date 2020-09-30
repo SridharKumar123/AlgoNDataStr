@@ -936,3 +936,181 @@ public String mostCommonWord(String paragraph, String[] banned) {
             return Integer.compare(c.count,this.count);
         }
     }
+
+**************************************************************************************************************************************************************************
+                                                                            9. Top K Frequently Mentioned Keywords
+**************************************************************************************************************************************************************************
+Given a list of reviews, a list of keywords and an integer k. Find the most popular k keywords in order of most to least frequently mentioned.
+
+The comparison of strings is case-insensitive.
+Multiple occurances of a keyword in a review should be considred as a single mention.
+If keywords are mentioned an equal number of times in reviews, sort alphabetically.
+
+Example 1:
+
+Input:
+k = 2
+keywords = ["anacell", "cetracular", "betacellular"]
+reviews = [
+  "Anacell provides the best services in the city",
+  "betacellular has awesome services",
+  "Best services provided by anacell, everyone should use anacell",
+]
+
+Output:
+["anacell", "betacellular"]
+
+Explanation:
+"anacell" is occuring in 2 different reviews and "betacellular" is only occuring in 1 review.
+Example 2:
+
+Input:
+k = 2
+keywords = ["anacell", "betacellular", "cetracular", "deltacellular", "eurocell"]
+reviews = [
+  "I love anacell Best services; Best services provided by anacell",
+  "betacellular has great services",
+  "deltacellular provides much better services than betacellular",
+  "cetracular is worse than anacell",
+  "Betacellular is better than deltacellular.",
+]
+
+Output:
+["betacellular", "anacell"]
+
+Explanation:
+"betacellular" is occuring in 3 different reviews. "anacell" and "deltacellular" are occuring in 2 reviews, but "anacell" is lexicographically smaller.
+https://leetcode.com/problems/top-k-frequent-words/
+https://leetcode.com/problems/top-k-frequent-elements/
+
+	// create a trie using the keywords
+	// create a hashmap consisting of count and keyword
+	// iterate the reviwes and match in trie. if found, check if its already added
+	// using a hashset. if not added, add in map.  remember to clear hashset after every loop
+	// maxheap - comparable for count and if same, compare string
+
+public class TopKKeywords {
+	
+	public static void main(String args[]) {
+		List<String> keywords = new ArrayList<>();
+		keywords.add("anacell");
+		keywords.add("cetracular");
+		keywords.add("betacellular");
+		keywords.add("deltacellular");
+		keywords.add("eurocell");
+		List<String> reviews = Arrays.asList("I love anacell Best services; Best services provided by anacell",
+				"betacellular has great services",
+				"deltacellular provides much better services than betacellular",
+				"cetracular is worse than anacell",
+				"Betacellular is better than deltacellular.");
+		TopKKeywords words = new TopKKeywords();
+		List<String> re = words.getTopK(reviews, keywords,2);
+		for(String res : re)
+			System.out.println(res);
+	}
+
+	public List<String> getTopK(List<String> reviews, List<String> keywords, int k) {
+		if(keywords!=null) {
+			for(String s : keywords) {
+				initTrieStructure(s.toLowerCase());
+			}
+		}
+		Map<String,Integer> map = new HashMap<>();
+		Set<String> valuesInSentence = new HashSet<>();
+		PriorityQueue<Counter> maxHeap = new PriorityQueue<>();
+		for(String val : reviews) {
+			String lowerVal = val.toLowerCase();
+			StringBuilder builder = new StringBuilder();
+			// better to traverse each char as we can handle "., etc" at one shot without regex
+			for(int i=0; i<lowerVal.length();i++) {				 
+				char c = lowerVal.charAt(i);
+				if(Character.isLetter(c)) {
+					builder.append(c);
+					// handle last word of string
+					if(i!=lowerVal.length()-1)
+						continue;
+				}
+				if(builder.length()>0) {
+					String smallString = builder.toString();
+					if(valuesInSentence.contains(smallString)) {
+						continue;
+					}
+					valuesInSentence.add(smallString);
+					boolean present = isPresent(smallString);
+
+					if(present) {
+						map.put(smallString, map.getOrDefault(smallString, 0)+1);
+					}
+					// clear the stringBuilder after every word
+					builder = new StringBuilder();
+				}
+
+			}
+			// clear hashmap after every string in the reviews
+			valuesInSentence = new HashSet<>();
+		}
+		
+		// instead we could use min heap and check for size and keep polling if size is greater than k
+		for(Map.Entry<String,Integer> entry : map.entrySet()) {			
+			maxHeap.offer(new Counter(entry.getKey(), entry.getValue()));
+		}
+		List<String> topTwoWords = new ArrayList<String>();
+		// make sure heap is not empty before poll
+		while(!maxHeap.isEmpty() && k>0) {
+			topTwoWords.add(maxHeap.poll().name);
+			k--;
+		}
+
+		return topTwoWords;
+
+	}
+	// class for maxHeap comparison
+	static class Counter implements Comparable<Counter> {
+		int count;
+		String name;
+		public Counter(String name, int count) {
+			this.count = count;
+			this.name = name;
+		}
+		public int compareTo(Counter c) {
+			int diff = Integer.compare(c.count, this.count);
+			if(diff!=0)
+				return diff;
+			return this.name.compareTo(c.name);
+		}
+	}
+	TrieNode root = null;
+	public TopKKeywords() {
+		root = new TrieNode();
+	}
+	// trie impl
+	public void initTrieStructure(String word) {
+		TrieNode node = root;		
+		for(int i=0; i<word.length();i++) {
+			char c = word.charAt(i);
+			if(!node.childs.containsKey(c)) {
+				TrieNode tempNode = new TrieNode();
+				node.childs.put(c,tempNode);
+			}
+			node = node.childs.get(c);
+		}
+		node.finalWord = word;
+	}
+
+	public boolean isPresent(String input) {
+		TrieNode node = root;
+		for(int i=0; i<input.length();i++) {
+			char c = input.charAt(i);
+			if(!node.childs.containsKey(c)) {
+				return false;
+			}
+			node = node.childs.get(c);
+		}
+		return input.equals(node.finalWord);
+	}
+
+	static class TrieNode{
+		Map<Character,TrieNode> childs = new HashMap<>();
+		String finalWord ;
+	}
+
