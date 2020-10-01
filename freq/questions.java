@@ -1114,3 +1114,122 @@ public class TopKKeywords {
 		String finalWord ;
 	}
 
+**************************************************************************************************************************************************************************
+                                                                            10. Product Suggestions
+**************************************************************************************************************************************************************************
+Given an array of strings products and a string searchWord. We want to design a system that suggests at most three product names from products after each character of searchWord is typed. Suggested products should have common prefix with the searchWord. If there are more than three products with a common prefix return the three lexicographically minimums products.
+
+Return list of lists of the suggested products after each character of searchWord is typed. 
+
+ 
+
+Example 1:
+
+Input: products = ["mobile","mouse","moneypot","monitor","mousepad"], searchWord = "mouse"
+Output: [
+["mobile","moneypot","monitor"],
+["mobile","moneypot","monitor"],
+["mouse","mousepad"],
+["mouse","mousepad"],
+["mouse","mousepad"]
+]
+Explanation: products sorted lexicographically = ["mobile","moneypot","monitor","mouse","mousepad"]
+After typing m and mo all products match and we show user ["mobile","moneypot","monitor"]
+After typing mou, mous and mouse the system suggests ["mouse","mousepad"]
+Example 2:
+
+Input: products = ["havana"], searchWord = "havana"
+Output: [["havana"],["havana"],["havana"],["havana"],["havana"],["havana"]]
+Example 3:
+
+Input: products = ["bags","baggage","banner","box","cloths"], searchWord = "bags"
+Output: [["baggage","bags","banner"],["baggage","bags","banner"],["baggage","bags"],["bags"]]
+Example 4:
+
+Input: products = ["havana"], searchWord = "tatiana"
+Output: [[],[],[],[],[],[],[]]
+
+// trie - on click of word we need to get 3 suggestions, in lexo order
+// either we save in lexo order or we sort at last
+// save in lexo order - TreeSet
+// have a for loop to get size or max 3. Or for optimization, we can choose to store only top 3 string in lexo order
+// Once we reach a case where match is not found, it means, we must not search for matches in pending string
+// handle this flow specifically 
+class Solution {
+    
+    TrieNode root = new TrieNode();
+    public List<List<String>> suggestedProducts(String[] products, String searchWord) {
+        List<List<String>> result = new ArrayList<>();
+        if(products==null || products.length==0 || searchWord==null || searchWord.length()==0)
+            return result;
+        // init the trie
+        for(String s : products){
+            init(s);
+        }        
+        return getAllChars(searchWord);        
+    }
+    
+    public List<List<String>> getAllChars(String searchWord){
+        TrieNode node = root;        
+        List<List<String>> result = new ArrayList<>();
+        // basic search with little modification
+        boolean matchfailied = false;
+        for(int i=0; i<searchWord.length();i++){
+            char c = searchWord.charAt(i);            
+            if(node!=null && !matchfailied){
+                if(node.children.containsKey(c)){                
+                    TrieNode innerNode = node.children.get(c);                
+                    List<String> data = getTopLexo(innerNode.treeSet);                 
+                    result.add(data);                 
+                    node = node.children.get(c);
+                }else{
+                    // once if a match fails, means rest of the string will never match
+                    matchfailied = true;
+                    // return empty list for no macthes
+                    result.add(new ArrayList<String>());
+                }            
+            }else{
+                    // return empty list for no macthes
+                    result.add(new ArrayList<String>());
+                }
+        }
+        return result;
+    }
+    
+    public List<String> getTopLexo(Set<String> lexoOrder){
+        List<String> topLexo = new ArrayList<>();            
+        // pick the top 3 elements from the lexo sorted set       
+        int i = 0;
+        for(String s : lexoOrder){
+            if(i==3){
+                break;
+            }
+            i++;
+            topLexo.add(s);
+        }
+        return topLexo;        
+    }
+    
+    public void init(String s){
+        TrieNode node = root;
+        for(int i=0; i<s.length();i++){
+            char c = s.charAt(i);
+            if(!node.children.containsKey(c)){
+                TrieNode dummy = new TrieNode();
+                node.children.put(c,dummy);
+            }
+            node = node.children.get(c);
+            // we add possible string at each char
+            node.treeSet.add(s);            
+        }
+        //node.treeSet.add(s);
+        //Collections.sort(node.treeSet);
+    }
+    
+    static class TrieNode{
+        // trie to track char and its possibilities
+        Map<Character, TrieNode> children = new HashMap<>();
+        // Using TreeSet which stores string in lexo order. for each position we store all possibilities
+        Set<String> treeSet = new TreeSet<>();
+    }
+}
