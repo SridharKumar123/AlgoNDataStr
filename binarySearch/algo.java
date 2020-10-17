@@ -129,6 +129,39 @@ if L > M : (means this left part of M is not sorted - we have mix of front and b
 time O(log N)
 space O(1) - iterative, recurisve O(log N) due to stack calls.
 
+class Solution {
+    public int search(int[] nums, int target) {
+        // take start and end
+        // if left is less than right, it means that left position is sorted
+        // else other wise. so use comparison for shortest portion
+        
+        int first = 0;
+        int end = nums.length-1;
+        while(first <= end){
+            int mid = (first+end)/2;
+            if(nums[mid]==target){
+                return mid;
+            }
+            if(nums[first] <= nums[mid]){  // corner case, for 2 elements , first will be mid, so we add <=.
+                // left side is sorted
+                if(target < nums[mid] && target >=nums[first]){
+                    end = mid -1;
+                }else{
+                    first = mid +1;
+                }
+                
+            }else {
+                //right side is sorted
+                if(target > nums[mid] && target <= nums[end]){
+                    first = mid +1;
+                }else{
+                    end = mid -1;
+                }
+            }
+        }
+        return -1;
+    }
+}
 	  
 	  
 	  
