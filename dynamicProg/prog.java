@@ -78,5 +78,55 @@ class Program {
   }
 }
 
+=======================================================================================================================================================================
+No of ways to make change:
+Given an array of int representing coins, find the diff no of ways we can form the denomination
+[1,5]  denomination - 6
+2 ways  = 1 * 1 + 1 *5 , 1 * 6
+
+We need to approach this problems using a ways[].
+For the size of the denomination, we construct an array starting from 0 ... until denomination.
+now for each size, we need to find the combination of no of ways in which it can be formed with all elements.
+We start with every element in array and first find the ways in which we can form the denomination and then use this to add it to the next element and so on.
+If the size of denomination is less than the coin, then we can ignore it.
+if size is >=, then we apply ways[i] = ways[i] + ways[i-coniSize]
+Base case - ways[0] = 1. We assume that there is only 1 way to form 0 denomination. i.e not use any coin. 
+
+Now we iterate through each coin and apply the above eq.
+The idea here is, every time we loop through, we pick the current value = which is the no of ways in which we were able to form previous denomination + ways[denomination-coin] - no of ways we formed it withoout this denomination.
+
+no of ways[new coin] = ways[exclude new coin] + ways[include new coin]
+ways[i] = ways[i] + ways[i-coniSize]
+
+here exclude the coin matches to ways i, because, if we dont consider this coin, the current ways will have the ways to form the denomination excluding this coin
+Now include coin, tricky,if we include the coin, then the remaining amount to make the total will be (denomination-new coin) 
+lets say denomination is 5, coin is 2.
+Now 2 + 3 = 5  => to make 5, if we include 2, then we need to find the no of ways to make 3 using the new coin.
+In our ways array, we always start from 0. so by the time we use this logic, we will already have the ways for the logic to find the above.
+see vivek video for above explanation.
+
+space - O(N) 
+time - O(Nd) - where d is no of denomination. we are iterating through each of denomination.
+
+import java.util.*;
+
+class Program {
+  public static int numberOfWaysToMakeChange(int n, int[] denoms) {
+   int[] ways = new int[n+1];
+		ways[0] = 1;
+	 
+		 for(int j=0; j<denoms.length;j++){
+			 for(int i=1; i<=n;i++){
+			 if(denoms[j] <= i){				 
+				 ways[i] = Math.max(ways[i], ways[i - denoms[j]] + ways[i]);
+			 }
+		 }
+	 }
+		return ways[n];
+  }
+}
+
+=======================================================================================================================================================================
+Min num of coins for change
 
 
