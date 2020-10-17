@@ -288,6 +288,71 @@ class Program {
 }
 
 	
-=	
+=======================================================================================================================================================================	
+Max sum increasing sub sequence
+
+A sub sequence need not be adjacent in array, but in same order. 
+10, 70, 20 ,30, 50, 11, 30
+Op - 110 - logic - 10,20,30,50
+
+
+logic - 
+for every index, we start from begening of array and see if we have a number lesser than the current num.
+if so, we add the max sum of that num to our current num and see if its greater than current max sum, if grt then update. else continue to next index untill our value.
+
+The question also asks the values which are used for adding. To get that, we can track them in diff DS, but we can do it effecientluy in a new array
+This sequence arrray elements will point to the previous index which was used to add to this index to make the max sum. if no prev was added it will be null.
+initially, we start by cloning the max sum from input array. this allows us to handle negative use cases.
+input 	  =>  [8, 12, 2, 3, 15, 5, 7] 
+max sum   =>  [8, 20, 2, 5, 35, 10, 17] 
+sequence  =>  [Nul, 0, Non, 2, 1, 3, 5] 
+For any index, if we pick the element in sequence it will point to the previous element of that sequence, we can go untill we reach null.
+
+currentNum = array[i]
+otherNum = array[j] 0<= j < i
+
+if otherNum < currentNum && if sum[j] + currentNum >= sum[i]
+  update sum[i] = sum[j] + currentNum
+  sequence[i] = j
+time : O(N^2) - we do kind of a 2 for loops
+space: O(N)
 	
+import java.util.*;
+
+class Program {
+  public static List<List<Integer>> maxSumIncreasingSubsequence(int[] array) {
+    
+		int[] max = array.clone();  // this is key, we must not start with 0 initialized values // this help us to hanle negative use cases
+		int[] seq = new int[array.length];
+		Arrays.fill(seq, Integer.MIN_VALUE);
+		int currentMaxIndex = 0;		
+		for(int i=0; i< array.length; i++){
+				for(int j=0; j<i;j++){
+					if(array[j] < array[i] && max[j] + array[i] >= max[i]){
+						max[i] = max[j] + array[i];						
+						seq[i] = j;
+					}					
+				}
+			if(max[i]>=max[currentMaxIndex]){
+				currentMaxIndex = i;
+			}
+		}
+		return buildSeque(currentMaxIndex, array, seq, max);    
+  }
 	
+	private static List<List<Integer>> buildSeque(int index, int[] array, int[] seq, int[] max){
+		List<List<Integer>> op = new ArrayList<>();
+		List<Integer> sum = new ArrayList<>();
+		sum.add(max[index]);
+		op.add(sum);
+		List<Integer> indices = new ArrayList<>();
+		while(index!=Integer.MIN_VALUE){
+			indices.add(array[index]);
+			index = seq[index];
+		}
+		Collections.reverse(indices);
+		op.add(indices);
+		return op;
+	}
+}
+
