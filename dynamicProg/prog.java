@@ -56,6 +56,27 @@ class Program {
 		return maxUntill;
   }
 }
+---
+import java.util.*;
+
+class Program {
+  public static int maxSubsetSumNoAdjacent(int[] array) {
+		if(array==null || array.length==0)
+			return 0;
+		if(array.length==1)
+			return array[0];    
+		int prev = array[0];
+		int current = Math.max(array[0],array[1]);
+		int maxUntill = Math.max(prev, current);
+    for(int i=2; i< array.length; i++){
+			int next = Math.max(current, prev+array[i]);
+			prev = current;
+			current = next;
+			maxUntill = Math.max(current, maxUntill);
+		}
+		return maxUntill;
+  }
+}
 
 
 
