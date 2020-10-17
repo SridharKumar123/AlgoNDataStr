@@ -163,7 +163,36 @@ class Solution {
     }
 }
 	  
-	  
+======================================================================================================================================================================
+
+Find First and Last Position of Element in Sorted Array
+Given an array of integers nums sorted in ascending order, find the starting and ending position of a given target value.
+
+If target is not found in the array, return [-1, -1].
+
+Follow up: Could you write an algorithm with O(log n) runtime complexity?
+
+we have a sorted array and duplicate values are given. we need to find our target and see if its dulicated.
+if duplicate exists, return start and end index of duplicates.
+
+we must use Binary search.
+take first and last and find middle. same formula (start+end)/2
+we continue untill we find our target number as middle.
+Once we find it, we need to find left and right extreme if the target.
+if( mid value == target , then continue below - else continue Binary search)
+if (mid==0) OR (check if front of mid, if it has diff value than target. if value is diff, we found the left extreme),
+ - we found left extreme 
+ - if not, then we need to perform Binary search in left portion untill we find a mid, where min-1 Not eql to mid, which is the left exrememe.
+same applies to right extreme.
+if (mid==endOfArray) OR (check if next of mid, if it has diff value than target. if value is diff, we found the left extreme),
+ - we found right extreme 
+ - if not, then we need to perform Binary search in right portion untill we find a mid, where min+1 Not eql to mid, which is the right exrememe.
+
+time O(log N) - 2 times O(log N)
+space O(1) iterative, O(log N) recurisve
+
+
+
 	  
 	  
 	  
