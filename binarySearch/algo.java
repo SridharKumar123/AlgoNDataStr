@@ -191,7 +191,48 @@ if (mid==endOfArray) OR (check if next of mid, if it has diff value than target.
 time O(log N) - 2 times O(log N)
 space O(1) iterative, O(log N) recurisve
 
-
+public int[] searchRange(int[] nums, int target) {
+        if(nums==null || nums.length==0)
+            return new int[]{-1,-1};
+        int start = 0;
+        int end = nums.length-1;
+        int f = binarySearch(start,end, nums,target,true);
+        int s = binarySearch(start,end, nums,target,false);
+        
+        return new int[]{f,s};
+    }
+    
+    private int binarySearch(int start, int end, int[] nums, int target, boolean flag){
+            if(start > end) 
+                {
+                    return -1;
+                }
+            int mid = (start + end)/2;
+            if(nums[mid]==target){
+                if(flag){
+                if(mid==0 || nums[mid-1] != nums[mid]){
+                    return mid;                    
+                }else{
+                    return binarySearch(start, mid -1, nums, target,flag);
+                    
+                }
+                }
+                else{
+                if(mid==nums.length-1 || nums[mid+1]!=nums[mid]){
+                    return mid;
+                }else{
+                    return binarySearch(mid+1, end, nums, target,flag);
+                    
+                }
+                }
+            }
+            if(target < nums[mid]){
+                return binarySearch(start, mid -1, nums, target,flag);                
+            }else{
+                return binarySearch(mid+1, end, nums, target,flag);                
+            }
+            
+        }
 
 	  
 	  
