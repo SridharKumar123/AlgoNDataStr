@@ -128,5 +128,59 @@ class Program {
 
 =======================================================================================================================================================================
 Min num of coins for change
+find the smallest number of coins needed to form the target. this is similar to above, but we need to find the min no of coins.
+
+[1,5]  denomination - 6
+1 * 1 + 1 *5 , 1 * 6 
+2 coins using 1 and 5, wheras 6 coins using 1.
+so we choose 2.
+
+
+build array of length of target+1, like before prblm.
+for 0 dollar, we dont need any coin. so its base case 0.
+now for each coin, we need to find the no of coins needed to reach it. 
+we fill the array with Math.max value.
+we see if coin value is greater than current denomination, else we skip those values untill we reach value <= denomination.
+for doing this, we subtract the value with coin - meaning we are using 1 new coin, and we see if its 0, if 0 its just 1 coin.
+if we have reminder, we see the min num for this reminder in array and take the min no of its coins.
+we add 1 + min no of the reminder. This gives min no for that value. we take min of this vs current value.
+we continue, for every value of n.
+we start with each denomination and iterate all n elements. and loop for all denomination.
+final result will be the value for nth denomination.
+
+
+if denomination <= amount:
+   nums[amount] = Min( nums[amount], 1+nums[amount-denomination])
+
+time - O(ND) - d is no of denomination. 
+space - O(N)
+	   
+import java.util.*;
+
+class Program {
+  public static int minNumberOfCoinsForChange(int n, int[] denoms) {
+		if(denoms.length==0){
+			return -1;
+		}
+		Arrays.sort(denoms);
+    		int[] min = new int[n+1];
+		for(int i=0; i<=n; i++){
+			min[i] = n+10;
+		}
+		min[0] = 0;
+		for(int j = 0; j<denoms.length; j++){
+		  for(int i=1; i<=n; i++){
+		    if(denoms[j] <=i){
+		       min[i] = Math.min(min[i], 1 + min[i-denoms[j]]);
+		    }
+		  }
+		}
+		if(min[n]==n+10){
+		  return -1;
+		}else{
+		  return min[n];
+		}    
+  }
+}
 
 
