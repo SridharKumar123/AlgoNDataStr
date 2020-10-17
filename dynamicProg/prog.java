@@ -245,3 +245,49 @@ class Program {
   }
 }
 
+-------
+import java.util.*;
+
+class Program {
+  public static int levenshteinDistance(String str1, String str2) {
+		String small = str1.length() < str2.length() ? str1 : str2;
+		String big = str1.length() >= str2.length() ? str1 : str2;
+		int[] even = new int[small.length() +1 ];
+		int[] odd = new int[small.length() +1 ];
+		for(int i=0; i<small.length()+1;i++){
+			even[i] = i;
+		}
+		int[] currentEdits = odd;
+		int[] prevEdits = even;
+		for(int i=1; i<big.length()+1;i++){			
+				if(i%2 == 1){
+					currentEdits = odd;
+					prevEdits = even;
+					
+				}else{
+					currentEdits = even;
+					prevEdits = odd;
+				}
+			currentEdits[0] = i;
+			for(int j=1; j<small.length()+1;j++){
+				if(small.charAt(j-1)==big.charAt(i-1)){
+					currentEdits[j] = prevEdits[j-1]; 
+				}else{
+					currentEdits[j] = Math.min(currentEdits[j-1], prevEdits[j-1]);
+					currentEdits[j] = 1 + Math.min(currentEdits[j], prevEdits[j]);
+				}
+			}
+		}
+		if(big.length()%2==0){
+			return 	even[small.length()];
+		}else{
+			return odd[small.length()];
+		}
+    
+  }
+}
+
+	
+=	
+	
+	
