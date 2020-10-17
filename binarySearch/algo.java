@@ -79,3 +79,59 @@ space - O(1) - no new ds for input.
 }
 
 ======================================================================================================================================================================
+
+Search in sorted matrix
+we pick the top right most element, if its grt thn our value, then we can eliminate that column.
+we come one step left and pick value before it, we check if with value,
+  - if its less then value, we eliminae the whole row before it
+  - if its grt then value, we eliminae the whole col below it
+  - we keep moving left utill we find the value
+time - O(n+m) - worst case can take time. but works better for other solns.
+space - O(1)
+	  
+public boolean searchMatrix(int[][] matrix, int target) {
+        if(matrix==null || matrix.length==0)
+            return false;
+        int i = 0;
+        int j = matrix[0].length-1;
+        while(i<matrix.length && j >=0){            
+            if(matrix[i][j]==target){
+                return true;
+            }
+            if(matrix[i][j] > target){
+                j -= 1;
+            }else{
+                i +=1;
+            }
+        }
+        return false;
+    }
+	  
+======================================================================================================================================================================
+	
+shifted binary search:
+given sorted array is shiftet by some elements. we need to find the target int.
+We can traverse every element and find ours, but it will be O(N).
+we know its sorted, so we can use binary search. But its shifted, so we cannot directly start by taking first and last.
+
+take first and last and find middle. same formula (start+end)/2
+if middle ==  target , return
+if L <= M : (means all nos to left of M are sorted order)
+  if Target < M && Target >= L: (target lies in between L and M)
+	explore left side of middle.
+  else :
+    explore right of M (move L to one position left of M - continue)
+if L > M : (means this left part of M is not sorted - we have mix of front and back parts - but right part is sorted)	
+   if Target > M && Target <=R   (we do exact opposite of above inner if condition)
+     explore right of M.
+   else
+     explore left of M   
+time O(log N)
+space O(1) - iterative, recurisve O(log N) due to stack calls.
+
+	  
+	  
+	  
+	  
+	  
+	  
