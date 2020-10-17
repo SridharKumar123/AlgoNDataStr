@@ -183,4 +183,65 @@ class Program {
   }
 }
 
+=======================================================================================================================================================================
+Levenshtein distance:
+takes in 2 strings and returns min number of edit operations that needs to be performed on first string to obtain other.
+Insert/Delete/Update are edit operations.
+We need to build a matrix with chars in one string in cols and another in rows.
+For every element in it, we find the number of operations for the row header to form the column positions until now.
+
+
+str1 = "abc"
+str2 = "yabd"
+
+   "" y a b d
+"" 0  1 2 3 4 
+a  1  1 1 2 3
+b  2  2 2 1 2
+c  3  3 3 2 2
+We start with empty strings. how many edits ? 0 edits.
+Then we move to next item, y - with empty string, we need one insert to form y. then one more insert to form a-so 1 +1 =2 for a
+this continues for first row.
+same applies for first column.
+Now from second row, we see how many edit for a to become "". - 1
+how many edit for a to become y - 1 - substitute. this goes on. and we take the value in the last row,column.
+By building this we can arrive at below formula. 
+If the char of 2 strings are equal, then we can pick the diagonal left value, meaning the last operations needed for its before char. 
+If chars are diff, we pick the min of (up, left, diag left) +1. Meaning, we can take any min route out of previous chars value and make one change to it, as they both are not same.
+here we used r-1, c-1 in string, as we added extra "" in the matrix.
+
+if(str1[r-1]==str2[c-1]):
+   E[r][c] = E[r-1][c-1]
+else:
+   E[r][c] = 1 + min ( E[r][c-1], E[r-1][c], E[r-1][c-1])
+
+Time O(MN) - M and N are length of 2 strings.
+Space O(MN)
+we can reduce space by picking only last 2 rows, as in formula we just depend on only the last 2 rows for finding values
+Space O(min(M,N)) - we pick the min string to form the row.
+
+import java.util.*;
+
+class Program {
+  public static int levenshteinDistance(String str1, String str2) {
+    int[][] matrix = new int[str1.length()+1][str2.length()+1];
+		for(int i=0,j=0; j<matrix[0].length;j++){
+			matrix[i][j] = j;
+		}
+		for(int i=0,j=0; i<matrix.length;i++){
+			matrix[i][j] = i;
+		}
+		for(int i=1; i<matrix.length;i++){
+		  for(int j=1; j<matrix[0].length; j++){
+		    if(str1.charAt(i-1)==str2.charAt(j-1)){
+			matrix[i][j] = matrix[i-1][j-1];
+		    }else{
+			matrix[i][j] = Math.min(matrix[i-1][j], matrix[i-1][j-1]);
+			matrix[i][j] = 1 + Math.min(matrix[i][j], matrix[i][j-1]);
+		      }
+		   }
+		}
+    return matrix[str1.length()][str2.length()];
+  }
+}
 
