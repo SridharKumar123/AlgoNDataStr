@@ -434,11 +434,25 @@ if (arrays[j]+j >= i)
 time O(N^2) - we iterate throguh each index. and for each index, we iterate through all index before it.
 space O(N)
 
-We can do it in O(N) time and O(1) space.
-
 For every index, we store the maxReach and we maintain a steps and jump variable and tweak it.
 See code for more understanding.
-	
+At each point we know what is the maxReach from the point. its basically the element at that index + index.
+ maxReach = arrays[i] + i
+steps - when at index 0, we know that we can take no of steps=arrays[0], untill we have to take a step.
+while iterating array, we update maxReach and steps.
+3, 4, 2, 1, 2, 3, 7, 1, 1, 3
+   maxReach = arrays[0]   - initially it will be the max steps available at start index
+   steps = arrays[0] - we know we have these much steps to take untill we run out of steps.
+   jump = 0
+  for 1 <= i < len
+    maxReach = max( maxReach , arrays[i] + i) 
+	  // maxReach will always be max position which can be reached using any of before index elements
+	steps -=1
+    if(steps ==0)   // when we run out of steps, we have to make a jump.
+	  jumps +=1
+	  steps = maxReach - i // we know that we can still go to maxReach index without making jumps. so we change positions.
+	  return jumps+1 - by time we reach final index, we still need one more jump.
+	    
 class Solution {
     public int jump(int[] nums) {
         System.out.println(nums.length);
@@ -456,7 +470,27 @@ class Solution {
     }
 }
 
-
+--
+	
+class Solution {
+    public int jump(int[] nums) {
+        if(nums.length==1)
+            return 0;
+        int jumps = 0;
+        int maxReach = nums[0];
+        int steps = nums[0];
+        for(int i=1; i<nums.length-1;i++){
+            maxReach = Math.max(maxReach, i+ nums[i]);
+            steps -=1;
+            if(steps==0){
+                jumps +=1;
+                steps = maxReach - i;
+            }
+        }
+        
+        return jumps+1;        
+    }
+}
 	
 	
 	
