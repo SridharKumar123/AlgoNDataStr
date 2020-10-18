@@ -553,4 +553,103 @@ class Solution {
 	
 =======================================================================================================================================================================	
 
+Knapsack
+given array of arrays, each sub holds 2 items, 1) items value 2) items weight
+we have a max capacity of knapsack.
+fit items into knapsack, maximing value but within capacity. we only have 1 of each item.
+
+[1,2][4,3][5,6][6,7]
+10
+
+return max value you achieved and the items used
+10 - [4,3][6,7]
+
+create 2d array of the capacity values from 0 - capacity in rows
+the combination subarray in column
+
+now we need to fill the matrix fiels with the max values sum which can fir that capacity.
+1) base case is 0. 0 value as we dont have any item.
+2) for each item, can we fit all the items until now for the given capacity.
+	- if we cannot, we retain the previous rows value(value of items until previous item)
+	- if we can fit, we need to put the corresponds value in the cell.
+	  - but we need some calculation here,
+	    - lets say we have 2 items in our logic, which can fit for the capacity. which one do we choose or do we choose both ?
+		- if collective of both weights exceeds capacity, we know we cannot put both.
+		- take the current weight in picture, go to previous row, find cell value of ->( current capacity - weight)- old val
+		- add current value to this old val - we get a sum.
+		- compare this sum with the - max value we would have if we did not add the new value. 
+		 - if we did not add this, it just the value above the current cell.
+		- we compare these 2 values and pick max of it.
+		- this is similar to include + exclude in coin change problem.
+		
+      0  1  2  3  4  5  6  7  8  9  10
+[] 	  0  0  0  0  0  0  0  0  0  0  0 
+[1,2] 0  0  1  1  1  1  1  1  1  1  1
+[4,3] 0  0  1  4  4  5  5  5  5  5  5
+[5,6] 0  0  1  4  4  5  5  5  6  9  9
+[6,7] 0  0  1  4  4  5  5  6  6  9  10
+
+we get 10 as the answer.
+we need to backtrack to get the items.
+  we take final cell and compare it with previous cell, if they both are same, means we did not pick the current item.
+  if they are diffeent, then we picked current item. (if we dont pick an item, the previous cells value will be same)
+  Now go to above row, and minus the previous capacity w, value and pick the cell.(meaning we exclude this item)
+  if we had not picked the item, we will just go to above cell.
+  apply same logic. 
+we can form the items using this logic.
+we start at 10, 10!=9, so we add 6,7 
+Now go to current capacity - w, 10-7 , we go to 3rd cell in before row.
+compare its value with previous cell, 4==4, so we did not add this item. go one row ahead in same cell
+1!=4, we added this item. 4,3
+go up, 3 cells before, capacity becomes 0, we can stop. 
+  
+To form 4, we take max(1, 0+4) = 4
+
+Let v be value of item and w be weight of item, we form the values[][] matrix
+if w <= j
+  values[i][j] = max (values[i-1][j] , values[i-1][j-w] + v )
+else 
+  values[i][j] = values[i-1][j]
+  
+time - O(Nc) - N is number of items, c is capacity
+space - O(Nc)
+	
+import java.util.*;
+
+class Program {
+  public static List<List<Integer>> knapsackProblem(int[][] items, int capacity) {
+    int[][] matrix = new int[items.length+1][capacity+1];
+		
+		for(int i=1; i<matrix.length; i++){
+			for(int j=1; j< matrix[0].length; j++){
+				int weight = items[i-1][1];
+				if(weight > j){
+					matrix[i][j] = matrix[i-1][j];
+				}else {
+					matrix[i][j] = Math.max(matrix[i-1][j], items[i-1][0] + matrix[i-1][j-weight]);
+				}				
+			}
+		}
+		List<Integer> indices = new ArrayList<>();
+		int row = items.length;
+		int col = capacity;
+		//indices.add(row);
+		while(matrix[row][col]!=0){			
+			if(matrix[row][col]==matrix[row-1][col]){
+				row -=1;
+			}else{
+				indices.add(row-1);				
+				col = col - items[row-1][1];
+				row -=1;
+			}
+		}
+    List<Integer> totalValue = Arrays.asList(matrix[items.length][capacity]);
+    //List<Integer> finalItems = Arrays.asList(1, 2);
+    var result = new ArrayList<List<Integer>>();
+    result.add(totalValue);
+    result.add(indices);
+    return result;
+  }
+}
+
 
