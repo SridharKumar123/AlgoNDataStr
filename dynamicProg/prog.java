@@ -356,3 +356,74 @@ class Program {
 	}
 }
 
+=======================================================================================================================================================================	
+Longest Common Subsequence
+
+take 2 strings and get the longest common subsequence.
+subsequence need not be adjacent, it needs to be in same order.
+
+if we have 2 string ABC and AC, to find LCS, we first check from the end of the 2 strings and start removing chars
+C==C, so C is part of LCS.
+Now we take this C and prepend it to the LCS of previous LCS. Here this is our first LCS, so ignore.
+Next remaining are AB and A. now we must remove last letter from first and second and see which gives longest LCA and pick it.
+1)remove A from second string. But then there wont be any LCS for this portion as second string became empty.
+2)remove B from first string, A==A. prepend A to LCS, AC. so we get LCS as AC. we found this by removing char from either strings and see which gives max LCS.
+So at ant point, we try removing last char from the 2 strings and pick the bigger LCS of two.
+
+   ""  x   k   y    k   z  p   w
+"" ""  ""  ""  ""  ""  ""  ""  ""
+z  ""  ""  ""  ""  ""  z   z   z
+x  ""  x   x   x    x  x   x   x
+v  ""  x   x   x    x  x   x   x
+v  ""  x   x   x    x  x   x   x
+y  ""  x   x   xy   xy xy  xy  xy
+z  ""  x   x   xy   xy xyz xyz xyz
+w  ""  x   x   xy   xy xyz xyz xyzw
+
+1) In the start we pick empty char. so anything with empty will result in empty
+2  We travese through fields, if there is a match in row/col, then we pick iys left diagonal in previous row and append new char to it. Meaning, we pick the last LCS withoout this char and append new char to form new LCS.
+3) If there is no match, then as mentioned earlier, we need to remove 1 char from both strings, find LCS for them, pick the LCS which has longest length.
+4) Meaning, check right and top of char, pick LCS with bigger length.
+We arive at the formula using this.
+
+time : O(NM * min(N,M)) 
+   - O(NM) - for forming the matrix. 
+     min(N,M) - for every LCS, when we concat its another time involved.
+space: O(NM * min(N,M))
+
+1) We can improve space complexity by having only the last 2 rows of the matrix. We just need current and previous rows.
+2) Much better way would be to not store LCS in matrix, rather store pointers to backtrack to form LCS.
+
+class Solution {
+    public int longestCommonSubsequence(String text1, String text2) {
+        String[][] matrix = new String[text1.length()+1][text2.length()+1];
+        for(int i=0,j=0; j<matrix[0].length;j++){
+            matrix[i][j] = "";
+        }
+        for(int i=0,j=0; i<matrix.length;i++){
+            matrix[i][j] = "";
+        }
+        for(int i=1; i<matrix.length;i++){
+            for(int j=1; j<matrix[0].length;j++){
+                if(text1.charAt(i-1)==text2.charAt(j-1)){
+                    String diag = matrix[i-1][j-1];
+                    String chars = String.valueOf(text1.charAt(i-1));
+                    matrix[i][j] = diag + chars;
+                }else{
+                    String before = matrix[i-1][j];
+                    String up = matrix[i][j-1];
+                    matrix[i][j] = before.length() > up.length() ? matrix[i-1][j] : matrix[i][j-1];
+                }
+            }
+        }
+        return matrix[text1.length()][text2.length()].length();
+    }
+}
+
+	
+=======================================================================================================================================================================	
+
+
+	
+	
+	
