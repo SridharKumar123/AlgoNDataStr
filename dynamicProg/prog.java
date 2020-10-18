@@ -423,6 +423,39 @@ class Solution {
 	
 =======================================================================================================================================================================	
 
+Min number of jumps
+
+given array of int, the int at each position is the max no of nums can be made.
+find the min no of jumps to reach last position.
+
+if (arrays[j]+j >= i)
+   jumps[i] = mins(jumps[i], jumps[j]+1)
+   
+time O(N^2) - we iterate throguh each index. and for each index, we iterate through all index before it.
+space O(N)
+
+We can do it in O(N) time and O(1) space.
+
+For every index, we store the maxReach and we maintain a steps and jump variable and tweak it.
+See code for more understanding.
+	
+class Solution {
+    public int jump(int[] nums) {
+        System.out.println(nums.length);
+        int[] jumps = new int[nums.length];
+        Arrays.fill(jumps,Integer.MAX_VALUE);
+        jumps[0] = 0;
+        for(int i=0; i<nums.length;i++){
+            for(int j=0; j<i;j++){
+                if( j + nums[j] >=i){
+                    jumps[i] = Math.min(jumps[i] , 1 + jumps[j]);
+                }
+            }
+        }
+        return jumps[nums.length-1];        
+    }
+}
+
 
 	
 	
