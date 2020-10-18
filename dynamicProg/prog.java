@@ -652,4 +652,96 @@ class Program {
   }
 }
 
+=======================================================================================================================================================================	
+Disk stacking:
+we have list of disks, where  disk - [1,1,1] - first int - width, 2nd int - depth, 3rd - height
+we need to keep one on top of another and get max height. case is, for any disk, all disks below it must have strictly lesser, width, depth and height.
+
+to make this problem easier, we can sort the disks by any dimension. We pick height.
+we sort disks based on height.
+Nowe we create array of same length as tower. 
+For each index, we assume that this disk is at the bottom of tower and we find the max height we can reach by keeping this disk as the bottom.
+
+for every index, the min height will be the height of the disk at that index. we can just put tht disk and we get the height.
+we initialize the array with corresponding heights of disks at that position.
+
+we need to update this array and see if we can get to greater heights.
+Now for any disk in cunter position, we know all disks after it will have bigger height than this as we sorted based on height. so we can add only disks before it.
+
+so for the first disk the max height will be its height.
+for second, we look all disks to left of it, we check if its width, depth and height are smaller than current.  (height still could be same duplicate)
+  if smaller, 
+    - we add the max height of other index to max height of current index. if this sum is greater than current max, we update.
+  if not smaller, we ignore.
+
+array - [2,2,1][2,1,2][3,2,3][2,3,4][4,4,5][2,2,8]
+
+maxHeight - initialized - [1,2,3,4,5,8]
+
+[1,2,3,4,5,8]
+         6
+		 7
+		 10
+		 9 - 9 is small than 10 , so 10 stays.
+
+  currentDisk = array[i] for 0<= i <length
+  otherDisk = array[j]  for 0<= j < i
+  
+  if ( otherDisk.width < currentDisk.width && otherDisk.depth < currentDisk.depth && otherDisk.height < currentDisk.height)
+		maxHeight[i] = Max( maxHeight[i] , maxHeight[j] + currentDisk.height)
+
+Using this we can form the maxHeight array, we need tp pick the max value in this array.
+
+we can have sequence array to track the disks which are added.
+in every position i of the sequence array, we have index of the previous disk which was added on top of it.
+time - O(N^2)
+space - O(N)
+
+import java.util.*;
+
+class Program {
+  public static List<Integer[]> diskStacking(List<Integer[]> disks) {
+    int[] max = new int[disks.size()];
+		int[] seq = new int[disks.size()];
+		int maxIndex = 0;
+		
+		Arrays.fill(seq,Integer.MIN_VALUE);
+		Collections.sort(disks,(a,b)->a[2].compareTo(b[2]));
+		for(int i=0; i<max.length;i++){			
+			max[i] = disks.get(i)[2];
+		}
+		for(int i=1; i<disks.size(); i++){
+			Integer[] current = disks.get(i);
+			for(int j=0; j<i;j++){
+				Integer[] mutated = disks.get(j);
+				if(current[0] > mutated[0]
+					 && current[1] > mutated[1] && current[2] > mutated[2]){
+						 if(current[2] + max[j] >= max[i]){  // this extra check is need to fix the seq array. else its breaking
+							 // math.max will provide right result for max[] but seq[] is not maintained
+					   max[i] = current[2] + max[j];
+					   seq[i] = j;
+						 }
+				}
+			}
+			if(max[i]>max[maxIndex]){
+				maxIndex = i;
+			}
+			
+		}
+		System.out.println(maxIndex + "---    ");
+    return buildSequ(disks,seq,maxIndex);
+  }
+	private static List<Integer[]> buildSequ(List<Integer[]> disks, int[] seq, int max){
+		List<Integer[]> op = new ArrayList<Integer[]>();
+		
+		while(max!=Integer.MIN_VALUE){
+			System.out.println(max);
+			op.add(disks.get(max));
+			max = seq[max];
+		}
+		Collections.reverse(op);
+		return op;
+	}
+}
+
 
