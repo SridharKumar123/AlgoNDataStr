@@ -492,5 +492,65 @@ class Solution {
     }
 }
 	
+=======================================================================================================================================================================	
+water trapped
+in a container where pillars are present, we need to find the water stored between the pillars.
+
+For each index we can calculate the water stored above it.
+for any index, we need to find the tallest pillar to its left and tallest pillar to its right. the water will be trapped in between the 2 pillars. 
+leftPillar , rightPillar are the tallest in left and right.
+Now we find the smaller of these 2. Any water can be stored until this smaller level.
+We see the height of any pillar at the current position. if there is a pillar, we minus it with smaller value.
+
+we build leftMax and rightMax arrays. At any position, leftMax will hold the tallest pillar to left of this position.
+
+input - [0,8,0,0,5,0,0,10,0,0,1,1,0,3]
+we go from left to right and calculate this,
+leftMax - [0,0,8,8,8,9,8,8,10,10,10,10,10,10]
+we go from right to left and calculate this,
+rightMax - [10,10,10,10,10,10,10,3,3,3,3,3,3,0]
+water - [0,0,8,8,3,8,8,0,3,3,2,2,3,0] - we sum up the values to get result. 48
+
+minHeight = min(leftMax,rightMax)
+if(height < minHeight){
+	w = minHeight - height;
+}else 
+   w = 0
+
+time O(N)
+space O(N)
+
+class Solution {
+    public int trap(int[] height) {
+     // we move from left to right and find the largest to its left
+     // we move from right to left anf find the largest to right
+     // max = minof(left,right) - value
+       int[] leftMax = new int[height.length];
+       int[] rightMax = new int[height.length];
+       int currentMax = 0;
+       for(int i=0; i<height.length; i++){
+         leftMax[i] = Math.max(currentMax,height[i]);
+         currentMax = leftMax[i];
+       }
+      currentMax = 0;
+      for(int i=height.length-1; i>=0; i--){
+          rightMax[i] = Math.max(currentMax,height[i]);
+          currentMax = rightMax[i];
+      }
+      int[] total = new int[height.length];
+      for(int i=0; i<height.length;i++){
+          total[i] = Math.min(leftMax[i],rightMax[i]) - height[i];
+      }
+    int sum = 0;
+        for(int i=0; i<height.length;i++){
+          sum = sum + total[i]; 
+      }
+     return sum;
+        
+    }
+}
+
 	
-	
+=======================================================================================================================================================================	
+
+
