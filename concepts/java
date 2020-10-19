@@ -1,0 +1,194 @@
+JDK
+Java Development Kit aka JDK is the core component of Java Environment and provides all the tools, executables, and binaries required to compile, debug, 
+and execute a Java Program.
+JDK is a platform-specific software and that’s why we have separate installers for Windows, Mac, and Unix systems.
+We can say that JDK is the superset of JRE since it contains JRE with Java compiler, debugger, and core classes.
+
+JRE
+JRE is the implementation of JVM. It provides a platform to execute java programs. JRE consists of JVM, Java binaries, and other classes 
+to execute any program successfully.
+JRE doesn’t contain any development tools such as Java compiler, debugger, JShell, etc.
+If you just want to execute a java program, you can install only JRE. You don’t need JDK because there is no development or compilation of java source code is required.
+
+JVM
+JVM is the heart of Java programming language. When we execute a Java program, JVM is responsible for converting the byte code
+to the machine-specific code.
+JVM is also platform-dependent and provides core java functions such as memory management, garbage collection, security, etc.
+JVM is customizable and we can use java options to customize it. For example, allocating minimum and maximum memory to JVM.
+JVM is called virtual because it provides an interface that does not depend on the underlying operating system and machine hardware.
+This independence from hardware and the operating system makes java program write-once-run-anywhere.
+
+Just-in-time Compiler (JIT)
+JIT is part of the JVM that optimizes the process of converting byte code to machine-specific language. 
+It compiles similar byte codes at the same time and reduces the overall time taken for the compilation of byte code to machine-specific language.
+https://www.journaldev.com/546/difference-jdk-vs-jre-vs-jvm
+https://beginnersbook.com/2013/05/jvm/
+
+Source Code(.java)  -> Compiler(javac)  -> Byte Code(.class file)  -> JVM (specific to windows/mac - converts byte code to machine specific language)
+
+Compiling a Java application does not result in a binary file, but in a bytecode – a portable, yet compact representation of the program – which will be converted 
+to platform-specific machine code at the time of execution. Due to the high cost of translation from bytecode to machine code, JVM’s just-in-time (JIT) compiler 
+only compiles frequently accessed code paths. Blocks executed only once (ex: during application startup) might be interpreted as inefficient, but are not compiled
+as it wouldn’t provide relevant performance improvements.
+Thereby, Java source code must be “compiled” twice before it can be executed:
+1) Source code is compiled to bytecode (Main.java to Main.class).
+2) The JIT compiler converts the Main.class (bytecode) file to native machine code.
+
+
+JVM
+Method Area: There is only one method area in a JVM which is shared among all the classes. This holds the class level information of each .class file.
+Heap: Heap is a part of JVM memory where objects are allocated. JVM creates a Class object for each .class file.
+Stack: Stack is a also a part of JVM memory but unlike Heap, it is used for storing temporary variables.
+PC Registers: This keeps the track of which instruction has been executed and which one is going to be executed. 
+              Since instructions are executed by threads, each thread has a separate PC register.
+Native Method stack: A native method can access the runtime data areas of the virtual machine.
+
+Heap is part of RAM or hard disk ?
+The RAM is the physical memory of your computer. Heap memory is the (logical) memory reserved for the heap.
+So, only part of the RAM is used as heap memory and heap memory doesn't have to be fully loaded into RAM (e.g. part of it may be swapped to disc by the OS).
+It's a question of OS paging, aka virtual memory. You computer can take some of the data in RAM and write it to disk, temporarily.
+The data paged out could be your application data, or even parts of the application itself, or simply other applications in their data, 
+which are running in the backgroun.
+Algorithm.Well as far as i know it depends which data OS will place temporarily in disk.It may place,
+1: The data which is used just recently.
+2: The data which will be not used frequently(in future)
+3: The data which is used heavily.
+
+Java Heap Space vs. Stack Memory: How Java Applications Allocate Memory
+Java applications need a certain amount of RAM on a computer to run. Each time an object or variable is declared, it needs more RAM. 
+Simply designating enough memory to hold every value declared and run each method would lead to a bloated application.
+To keep application memory requirements lean, it is partitioned in ways that require less memory and allows the application to run more quickly.
+The Java Virtual Machine (JVM) divides memory between Java Heap Space and Java Stack Memory in a way that only uses memory that’s needed.
+
+What is Java Stack Memory?
+This is the temporary memory where variable values are stored when their methods are invoked.  Stack will also use physical memory blocks.
+After the method is finished, the memory containing those values is cleared to make room for new methods.
+When a new method is invoked, a new block of memory will be created in the Stack. 
+This new block will store the temporary values invoked by the method and references to objects stored in the Heap that are being used by the method.
+Any values in this block are only accessible by the current method and will not exist once it ends.
+This “last in, first out” method makes it easy to find the values needed and allows fast access to those values.
+
+https://docs.oracle.com/cd/E13150_01/jrockit_jvm/jrockit/geninfo/diagnos/garbage_collect.html
+HEAP
+The Heap and the Nursery
+Java objects reside in an area called the heap. The heap is created when the JVM starts up and may increase or decrease in size while the application runs. 4
+When the heap becomes full, garbage is collected. During the garbage collection objects that are no longer used are cleared, thus making space for new objects.
+Note that the JVM uses more memory than just the heap. For example Java methods, thread stacks and native handles are allocated in memory separate from the heap, 
+as well as JVM internal data structures.
+Heap size can be configured using the JVM parameters: Xms and Xmx, which define the initial and maximal size respectively.
+Once the application exceeds the upper limit, a java.lang.OutOfMemoryError exception is thrown.
+
+The heap is sometimes divided into two areas (or generations) called the nursery (or young space) and the old space. 
+The nursery is a part of the heap reserved for allocation of new objects. When the nursery becomes full, garbage is collected by running a special young collection,
+where all objects that have lived long enough in the nursery are promoted (moved) to the old space, thus freeing up the nursery for more object allocation.
+When the old space becomes full garbage is collected there, a process called an old collection.
+The reasoning behind a nursery is that most objects are temporary and short lived. A young collection is designed to be swift at finding newly allocated objects
+that are still alive and moving them away from the nursery. Typically, a young collection frees a given amount of memory much faster than an old collection
+or a garbage collection of a single-generational heap (a heap without a nursery).
+
+In R27.2.0 and later releases, a part of the nursery is reserved as a keep area. The keep area contains the most recently allocated objects in the nursery and 
+is not garbage collected until the next young collection. This prevents objects from being promoted just because they were allocated right before a young collection
+started.
+
+Object Allocation
+During object allocation, the JRockit JVM distinguishes between small and large objects. The limit for when an object is considered large depends on the JVM version,
+the heap size, the garbage collection strategy and the platform used, but is usually somewhere between 2 and 128 kB. Please see the documentation
+for -XXtlaSize and -XXlargeObjectLimit for more information.
+Small objects are allocated in thread local areas (TLAs). The thread local areas are free chunks reserved from the heap and given to a Java thread for exclusive use.
+The thread can then allocate objects in its TLA without synchronizing with other threads. When the TLA becomes full, the thread simply requests a new TLA. 
+The TLAs are reserved from the nursery if such exists, otherwise they are reserved anywhere in the heap.
+Large objects that don’t fit inside a TLA are allocated directly on the heap. When a nursery is used, the large objects are allocated directly in old space. 
+Allocation of large objects requires more synchronization between the Java threads, although the JRockit JVM uses a system of caches of free chunks of different
+sizes to reduce the need for synchronization and improve the allocation speed.
+
+Garbage Collection
+Garbage collection is the process of freeing space in the heap or the nursery for allocation of new objects. 
+This section describes the garbage collection in the JRockit JVM.
+
+The Mark and Sweep Model
+Generational Garbage Collection
+Dynamic and Static Garbage Collection Modes
+Compaction
+
+The Mark and Sweep Model
+The JRockit JVM uses the mark and sweep garbage collection model for performing garbage collections of the whole heap. 
+A mark and sweep garbage collection consists of two phases, the mark phase and the sweep phase.
+During the mark phase all objects that are reachable from Java threads, native handles and other root sources are marked as alive, as well as 
+the objects that are reachable from these objects and so forth. This process identifies and marks all objects that are still used, 
+and the rest can be considered garbage.
+During the sweep phase the heap is traversed to find the gaps between the live objects. These gaps are recorded in a free list and are made available for new
+object allocation.
+The JRockit JVM uses two improved versions of the mark and sweep model. One is mostly concurrent mark and sweep and the other is parallel mark and sweep. 
+You can also mix the two strategies, running for example mostly concurrent mark and parallel sweep.
+
+Dynamic and Static Garbage Collection Modes
+By default, the JRockit JVM uses a dynamic garbage collection mode that automatically selects a garbage collection strategy to use, aiming at optimizing the 
+application throughput. You can also choose between two other dynamic garbage collection modes or select the garbage collection strategy statically. 
+The following dynamic modes are available:
+
+throughput, which optimizes the garbage collector for maximum application throughput. This is the default mode.
+pausetime, which optimizes the garbage collector for short and even pause times.
+deterministic, which optimizes the garbage collector for very short and deterministic pause times. This mode is only available as a part of Oracle JRockit Real Time.
+The major static strategies are:
+
+singlepar, which is a single-generational parallel garbage collector (same as parallel)
+genpar, which is a two-generational parallel garbage collector
+singlecon, which is a single-generational mostly concurrent garbage collector
+gencon, which is a two-generational mostly concurrent garbage collector
+
+Compaction
+Objects that are allocated next to each other will not necessarily become unreachable (“die”) at the same time. This means that the heap may become fragmented after 
+a garbage collection, so that the free spaces in the heap are many but small, making allocation of large objects hard or even impossible. Free spaces that are smaller
+than the minimum thread local area (TLA) size can not be used at all, and the garbage collector discards them as dark matter until a future garbage collection frees 
+enough space next to them to create a space large enough for a TLA.
+
+To reduce fragmentation, the JRockit JVM compacts a part of the heap at every garbage collection (old collection). Compaction moves objects closer together and
+further down in the heap, thus creating larger free areas near the top of the heap. The size and position of the compaction area as well as the compaction method
+is selected by advanced heuristics, depending on the garbage collection mode used.
+Compaction is performed at the beginning of or during the sweep phase and while all Java threads are paused.
+
+Does Java pass by reference or pass by value?
+Pass by Value: The method parameter values are copied to another variable and then the copied object is passed, that’s why it’s called pass by value.
+Pass by Reference: An alias or reference to the actual parameter is passed to the method, that’s why it’s called pass by reference.
+
+https://www.infoworld.com/article/3512039/does-java-pass-by-reference-or-pass-by-value.html
+
+PASS BY VALUE
+Object references are passed by value
+All object references in Java are passed by value. This means that a copy of the value will be passed to a method. 
+But the trick is that passing a copy of the value also changes the real value of the object. The reason is that Java object variables are simply references
+that point to real objects in the memory heap. Therefore, even though Java passes parameters to methods by value, if the variable points to an object reference,
+the real object will also be changed.
+
+Are primitive types passed by value?
+Like object types, primitive types are also passed by value.
+Primitive types are allocated in the stack memory, so only the local value will be changed. In this case, there is no object reference.
+
+Passing immutable object references
+What if we did the same test with an immutable String object?
+The JDK contains many immutable classes. Examples include the wrapper types Integer, Double, Float, Long, Boolean, BigDecimal, and String class.
+Now if we try modfying the string in a method it wont change. That happens because a String object is immutable, which means that the fields inside the 
+String are final and can’t be changed.
+
+Passing mutable object references
+Unlike String, most objects in the JDK are mutable, like the StringBuilder class. Now the value will be changed if we modify in the other method. You could expect
+the same behaviour from any other mutable object in Java.
+
+What to remember about object references
+Java always passes parameter variables by value.
+Object variables in Java always point to the real object in the memory heap.
+A mutable object’s value can be changed when it is passed to a method.
+An immutable object’s value cannot be changed, even if it is passed a new value.
+“Passing by value” refers to passing a copy of the value.
+“Passing by reference” refers to passing the real reference of the variable in memory.
+
+JAVA MEMORY PROFILING
+
+https://bitmovin.com/finding-memory-leaks-java-p1/
+https://bitmovin.com/finding-memory-leaks-java-p2/
+
+
+
+
+
+
