@@ -744,4 +744,87 @@ class Program {
 	}
 }
 
+=======================================================================================================================================================================	
+	
+Max Profit with k Transactions
+given array of positive int, representing prices of stocks in different days, and max number of transactions allowed to make using them. One transaction refers to buying a stock on a day and selling on another later day. find max profit which can be made.
 
+we can hold only one stock at a time. 
+
+prices[]  - [5 , 11, 3, 50 , 60 , 90]
+k = 2
+
+We represent this as a 2D array, profit[]
+
+   5  11  3  50  60  90
+0  0   0  0   0   0   0
+1  0   6  6  47  57  87
+2  0   6  6  53  63  93
+
+for any day, we can either sell a stock or not. 
+if we dont sell, then the max profit will be the max profit on previous day. we can get this using profit[]
+now if we sell it, we need to take the ( price of current day from prices []  + Max ( - price of [x] + profit[t-1][x]) ) where 0 <= x < d
+
+profit[t][d]  = Max ( profit[t][d-1] (no transaction on day) ,  prices[d] + Max(-prices[x] + profit[t-1][x]) (transaction made ) )) , 0<=x<d
+
+ 90 + 
+ x=0: -5+0 = -5
+ x=1: -11+6=-5
+ x=2: -3+6=3
+ x=3: -50+47 = -3
+ x=4: -60+57=-3
+ 
+ Here 3 is the max, so 90+3 = 93.
+ 
+ time : O(N^2 * k) - for forming the 2d matrix it takes NK. but for each cell, we perform another O(n^2) operation to calculate max of each of the value. 
+ space : O(nk)
+ 
+ Now can we do better in time complexity ?
+ try to see if we are doing any calculation multiple times.
+ We calculated untill x=4 for 93. what would have we done for its previous 63 ? 
+ we would have done untill x=3 to get it. so we had been doing this same calculation multiple times.
+ x=0: -5+0 = -5
+ x=1: -11+6=-5
+ x=2: -3+6=3
+ x=3: -50+47 = -3
+ Max would have been 3. so we took 60+3 = 63.
+ we could have stored the greates max untill every cell. so by the time we had calculated for 63, greatest max would have been 3.
+ Now we just calculate for x=4. when we get to 93, we get max as -> -3, we then take max of (3,-3) here which is 3. 
+ we can reduce the no of operations. we have changed he O(N) into a O(1) operation.
+ 
+ time O(NK)
+ space O(NK)
+ 
+ for(int i=1; i<=k;i++){
+			int maxThisFar = Integer.MIN_VALUE;
+			for(int j=1; j<prices.length;j++){				
+					maxThisFar = Math.max(maxThisFar,  matrix[i-1][j-1] - prices[j-1]);
+					matrix[i][j] = Math.max(matrix[i][j-1] , maxThisFar + prices[j]);				
+			}			
+		}
+		
+ can we reduce space complexity ? yes, we could have just used the last 2 rows instead of holding the whole matrix.
+ 
+ time O(NK)
+ space O(N) - 2 rows of N length
+ 
+ 
+ import java.util.*;
+
+class Program {
+  public static int maxProfitWithKTransactions(int[] prices, int k) {
+		if(prices.length==0){
+			return 0;
+		}
+    int[][] matrix = new int[k+1][prices.length];
+		
+		for(int i=1; i<=k;i++){
+			int maxThisFar = Integer.MIN_VALUE;
+			for(int j=1; j<prices.length;j++){				
+					maxThisFar = Math.max(maxThisFar,  matrix[i-1][j-1] - prices[j-1]);
+					matrix[i][j] = Math.max(matrix[i][j-1] , maxThisFar + prices[j]);				
+			}			
+		}
+		return matrix[k][prices.length-1];
+  }
+}
