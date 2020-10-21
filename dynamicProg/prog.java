@@ -828,3 +828,114 @@ class Program {
 		return matrix[k][prices.length-1];
   }
 }
+
+=======================================================================================================================================================================	
+
+Palindrome partiotioning with Min cuts
+Given non-empty string write a function that returns min no of cuts needed to perform on string, such that each remaining string is a palindrome.
+noonabbad
+
+noon abba d
+2 cuts
+
+create a 2d matrix, for each index in both row and column. 
+1) now for every index, we do a palindrom check based on the row and column numbers. 
+  - meaning, for index 0 - just n - its a palindrome
+  - for index 1 in row 1, we start from 0 to 1, no - not a palindrome
+  - for index 2 in row 1, we start from 0 to 2,noo - not a palindrome
+  - for index 3 in row 1, we start from 0 to 3,noon - it is a palindrome
+if its palindrome ,it strue, we put T. else we put F for false.
+The diagonal will always be True. as for them, we start with that letter and end with that letter.single letter is palindrome. 
+noonabbad
+for second row, we start at index 1 of j and we do as if its the start of the string.
+palindrome[]
+   0 1 2 3 4 5 6 7 8
+0  T F F T F F F F F
+1    T T F F F F F F
+2      T F F F F F F
+3        T F F F F F
+4          T F F T F   
+5            T T F F
+6              T F F
+7                T F
+8                  T
+
+for 0<=i < length(string)
+  for i<=j < length(string)
+     palindrome[i][j] = isPalindrome(string[i:j+1])
+
+now we form an array of same length of string, where each index holds the min number of cuts required, starting at index 0 until its index.
+like - fist index will have min no of splits for string "n". The second index will be for string "no" ...
+we initia with max value
+
+cuts[]
+[ max max max max max max max max max] 
+we start at first string and see if its a palindrome.
+[ 0 max max max max max max max max] 
+is "no" a palindrome ? we can get this info from palindrome[]. 
+ if its not a palindrome, the cuts will be cuts of earlier char + 1,
+[ 0 1 max max max max max max max]  
+now from now on, for each char, we see from 0th to ith position if its palindrome and get a value,
+ then we start from 1st position to ith and see if its a palindrome and get a value. 
+ now we compare it with earlier value and take min of it.
+1) Lets take noo - we know noo is not a palindrome. so default value will be 1(prev value)+1 = 2.
+2) can we form a palindrome somewhere in between this ?
+3) if we take no | o - it will not form palindrome , but if we remove n like n | oo - we can reduce number of cuts via oo.
+4) so it comes down to 1 cut. min(1,2) - 1.
+[ 0 1 2 max max max max max max]  - we get 2 by start from 0
+[ 0 1 1 max max max max max max]  - we get 1 by n | oo - so we choose min of these , which is 1.
+
+
+
+time  : O(N^3)
+  1) palindrome[] - we do a double for loop O(N^2), but for each computation, we do a string slice which is O(N) - O(N^3)
+  2) cuts[] - we do O(n^2) in forming the min value for each index
+space : O(N^2) - palindrome[] size
+
+can we do better ?
+in palindrome[] , every time we call the isPalindrome - which makes it N^3.
+ in each entry, we can decide id next chars forms a palindrome based on previous values.
+ for every string, if first and last are same, then we need to see if letters in middle form a palindrome.
+ if we already have this info of letters in middle in matrix, we can use it. this is the approach.
+	 
+
+import java.util.*;
+
+class Program {
+  public static int palindromePartitioningMinCuts(String str) {
+    boolean[][] matrix = new boolean[str.length()][str.length()];
+		for(int i=0; i<matrix.length;i++){
+			for(int j=i; j<matrix[0].length;j++){
+				matrix[i][j] = isPalindrome(str,i,j);
+			}
+		}
+		int[] mincuts = new int[str.length()];
+	  // remember to initialize this with max
+		Arrays.fill(mincuts,Integer.MAX_VALUE);
+		for(int i=0; i<mincuts.length; i++){
+			if(matrix[0][i]){
+				mincuts[i]=0;
+			}else{
+				mincuts[i]= mincuts[i-1] + 1 ;
+				for(int j=1; j<i; j++){
+					// we start from j untill i, see if its palindrome
+					if(matrix[j][i] && mincuts[j-1]+1 < mincuts[i]){
+						mincuts[i]= mincuts[j-1] + 1 ;
+					}	
+				}				
+			}
+		}
+		return mincuts[str.length()-1];
+  }
+	private static boolean isPalindrome(String str, int i, int j){
+		while(i<j){	
+		if(str.charAt(i)!=str.charAt(j)){
+				return false;
+			}else{
+				i+=1;
+				j-=1;
+			}
+		}
+		return true;
+	}
+}
