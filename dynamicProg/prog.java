@@ -939,3 +939,72 @@ class Program {
 		return true;
 	}
 }
+
+=======================================================================================================================================================================	
+	
+Longest Increasing Subsequence
+return the longest increasing subsequence in array.
+5, 7, -24, 12, 10, 2, 3, 12, 5, 6, 35
+
+
+we use 2 arrays.
+
+length[] - each index i, we store the length of the longest increasing subsequence that ends until with element in input[] at this index.
+  - initialize the array to all 1
+  - look all the numbers that come before the index i, if the number is less than element at i,
+     - if smaller than i'th element, we can add it to count
+	    - take the length[j] and add 1 to it, and see if its greater then length[i], if so update
+		- update the sequence[] as well
+	 - if smaller, ignore 
+  - keep incrementing the count, we will finally store the count at the length'index
+sequence[] - 
+    - initialize to all None
+	- at each index, we store the index of the input that comes before this index.
+
+length -   [ 1 ,  2, 1,    3, 3, 2, 3, 4, 4, 5, 6 ]
+sequence - [None, 0, None, 1, 1, 2, 5, 6, 6, 8 ,9 ]
+
+  for 0<= i < length
+    for 0<= j < i
+	  if(input[j] < input[i])
+	     length[i] = max( length[i] , length[i] + length[j])
+		 sequence[i] = j
+		 
+   we can backtrack in sequence[] to find the input in the input[]
+   
+time : O(N^2) 
+space : O(N) 
+
+we can do better . time can become O (N log N)
+we can apply binary search which id log N operation.
+	
+class Solution {
+    public int lengthOfLIS(int[] nums) {
+        if(nums.length==0)
+            return 0;
+        int[] maxArray = new int[nums.length];
+        int max = 0;
+        Arrays.fill(maxArray,1);
+        int[] sequence = new int[nums.length];
+        Arrays.fill(sequence,Integer.MIN_VALUE);
+        for(int i=0; i<maxArray.length;i++){
+            int currentElement = nums[i];
+            for(int j=0; j<i;j++){
+                int presentElement = nums[j];
+                if(presentElement < currentElement && maxArray[j] + 1 > maxArray[i]){
+                    maxArray[i] = maxArray[j] +1;
+                    sequence[i] = j;
+                }
+            }
+            if(maxArray[i] > maxArray[max]){
+                max = i;
+            }
+        }
+        int count = 0;
+        while(max!=Integer.MIN_VALUE){
+            count++;
+            max = sequence[max];
+        }
+        return count;
+    }
+}	
