@@ -86,5 +86,43 @@ class Program {
 	}
 }
 
-	
-	
+======================================================================================================================================================================
+
+Selection Sort:
+ 
+ 8 5 2 9 5 6 3
+
+ we divide it into 2 seperate lists within this list. one sublist represents unsorted numbers and other sublist represents sorted numbers.
+ in begening, entire list represents unsorted numbers.
+ 1) we iterate list a bunch of times, and each time we find the smallest number in the list. 
+ 2) once we have the smallest number, we swap it to front and append it to the sorted set which is in front.
+ 3) we continue until unsorted sublist becomes empty list.
+ 
+ time - O(N^2) - if array was already sorted, it would have been O(N) which is best case scenario
+ space : O(1)
+	 
+import java.util.*;
+
+class Program {
+  public static int[] selectionSort(int[] array) {
+    
+	for(int i=0; i<array.length;i++){
+		int smallest = array[i];
+		int index = i;
+		for(int j=i; j<array.length;j++){
+			if(array[j] <= smallest){
+			   smallest =	array[j];
+				 index = j;
+			}				
+		}
+		swap(i,index,array);
+	}
+    return array;
+  }
+	private static void swap(int i, int j, int[] array){
+		int temp = array[i];
+		array[i] = array[j];
+		array[j] = temp;
+	}
+}
+
