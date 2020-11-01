@@ -126,3 +126,111 @@ class Program {
 	}
 }
 
+======================================================================================================================================================================
+	
+Quick Sort:
+
+we pick one value to be our pivot. This can be picked random or like first number in array.
+we iterate through rest of the array, we sort every other number just with respect to the pivot.
+ - every number smaller than pivot, will be moved to left of pivot. 
+ - every number greater than pivot, will be moved to right of pivot. 
+at the end of the iteration, pivot will be in the final sorted position in the array.
+now we can pick the list left of pivot, and perform the above of picking a pivot and sorting.
+the same applies to right of pivot. 
+we do this untill entore array is sorted
+we start with pivot as first number, we have a Left and Right pointers.
+  	
+ 8 5 2 9 5 6 3
+ P L         R
+ we continue until r<l, 
+ if num[l] > pivot && num[r] < pivot -> then we swap the 2 numbers. 
+ if num[l] < pivot, l++  (as we know its in sorted portion)
+ if num[r] > pivot, r--  (as we know its in sorted portion)
+ 8 5 2 9 5 6 3
+ P   L       R
+ 
+ 8 5 2 9 5 6 3
+ P     L     R
+ we need to swap,
+ 8 5 2 3 5 6 9
+ P     L     R
+ 
+ 8 5 2 3 5 6 9
+ P         R
+           L
+ 8 5 2 3 5 6 9
+ P         R L
+ we stop as R<L. Once R<L, we swap pivot with R.
+ 
+ 6 5 2 3 5 8 9
+ P         R L
+ 8 here is perfectly sorted and in final sorted position. all numbers to left of 8 are smaller than it, and vice versa.
+we continue the same on the lists to the left and right of pivot.
+we pick the smaller sub array first. 
+9 is only number to right. so its already sorted.
+we pick numbers to left of 8 and start. 
+ 6 5 2 3 5 8 9
+ P L     R 
+ 
+time: 
+worst case -O(N^2)-  after every iteration, if our array is split as 0 element on one sub array and rest all in other, for every loop we do, then we do O(N^2). meaning for every element, we do O(N)
+best case -  O(N log N)   - what if pivot divides array exactly into half every time we do sort.
+Average case - O( N log N) - mathematical proof is there.
+
+space : O(log N) - we are applying recursion. frames on call stack will use space. 
+   - so only we mentioned to apply sort first on smaller sub array. 
+   - by applying on smaller of two, we know at most we make O(log N) calls at once. 
+   - we call it on one sub array, then it will split into 2, then we call it on smaler of it,.. this continues. 
+   - if we had called on big, then on small, we might end up with O(N) on call stack.
+
+	   
+import java.util.*;
+
+class Program {
+  public static int[] quickSort(int[] array) {
+    sort(array, 0,array.length-1);
+    return array;
+  }
+	
+	private static void sort(int[] array, int start, int end){
+		// if we have only one element, then we dont need to sort
+		if(start>=end)
+			return;
+		int pivot = start;
+		int left = start + 1;
+		int right = end;
+		while(right >= left){
+			if(array[left] > array[pivot] && array[right] < array[pivot]){
+				   swap(array,left,right);
+			}
+			if(array[left]<=array[pivot]){
+				left++;
+			}
+			if(array[right] >= array[pivot]){
+				right--;
+			}
+		}
+		// we swap once left is larger than right.
+		swap(array,pivot,right);
+		// below 2 arrays are split using the right as middle
+		// start -- right -- end
+		// start -- right -1  ||  right+1  -- end
+		// we first sort on smaller sub array to maintain O(log N) space
+		boolean leftSubArraySmaller = (right - 1 - start) < (end - right + 1);
+		if(leftSubArraySmaller){
+			sort(array,start,right-1);
+			sort(array,right+1,end);
+		}else {			
+			sort(array,right+1,end);
+			sort(array,start,right-1);
+		}
+		
+	}
+	private static void swap(int[] array, int left, int right){
+		int temp = array[left];
+		array[left] = array[right];
+		array[right] = temp;			
+	}
+}
+
+	
