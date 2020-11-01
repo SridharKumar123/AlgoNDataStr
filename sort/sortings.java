@@ -235,3 +235,119 @@ class Program {
 
 ======================================================================================================================================================================
 
+Heap sort:
+ divide array into 2 sub array
+ 1 array will be sorted always, other will be not sorted. we wont create 2 subarray
+ in same array, we have 2 portions. sorted portion and unsorted portion.
+ we need to move sorted portion to back, by removing from first portion
+ 
+ 1) implement max heap for the unsorted array. 
+ 2) start iterating from back,
+    - pick an element and swap it with root 
+    -  last element is biggest now and in right order.
+ 3) call siftdown for the first element. 
+ 4) continue untill the max heap becomes of size 1.
+ 5) finally, the array will be sorted.( as we are removing max element each time and appending from backwards)
+ time - O(N logN) - we build max heap - O(N) - we do siftdown for N elements - nlogn = O(N) + O(Nlogn) = O(nlogn)
+ space - O(1)
+	 
+min heap and mah heap
+
+build:
+// we call siftdown for all parents starting from the last parent
+firstparentindex = (array.length-1)/2    - floor in java is default
+  for( i= firstparentindex; i>=0 ; i--)
+	siftdown(firstparentindex, len-1,  array)
+return array 
+
+sift up(index, list)
+get parent index - i-1/2 floor
+while list(parentindex)!=null && list(parentindex) > list(index)
+		swap(parentindex, index)
+		index = parentindex
+		parentindex = index-1/2 floor
+
+// pick the 2 child and get the one we need to swap.
+sift down(index, endindex, list)
+child1 = index*2 +1
+while child1 index <= endindex 
+	child2 = index*2 +2 <=endindex ? index*2 +2 : -1
+	minchild = 0;
+	if(child1val < child2val) 
+	minchild = child1val
+	else
+	minchild = child2val
+	if(list(index) > list(minchild)
+		swap
+		index = minchild
+		child1 = minchild * 2+1
+	else
+	 return; 	
+ 
+		
+delete
+swap root with last element
+removed elem = pop from heap
+sift down(0,end index, list)
+return removed elem
+ 
+insert
+list.add - add in last 
+sift up(new index, list)
+
+
+parent i 
+child 2i+1, 2i+2
+
+child i 
+parent i-1/2 floor
+
+
+import java.util.*;
+
+class Program {
+  public static int[] heapSort(int[] array) {
+  	// build max heap
+	// swap and call sift down on each num, starting from back
+	buildAMaxHeap(array);
+	for(int i=array.length-1; i>0; i--){
+		swap(0,i,array);
+		siftDown(0,i-1,array);
+	}
+    return array;
+  }
+	
+	private static void buildAMaxHeap(int[] array){
+		int lastParentIndex = (array.length-2)/2;
+		for(int i=lastParentIndex; i>=0; i--){
+			siftDown(i, array.length-1,array);
+		}
+	}
+	
+	private static void siftDown(int startIndex, int endIndex, int[] array){
+		int childOneIndex = startIndex * 2 +1;
+		while(childOneIndex <= endIndex){
+				int childTwoIndex = (startIndex * 2 + 2) <=endIndex ? (startIndex * 2 + 2) : -1;
+				int indexToSwap;
+			  if(childTwoIndex!=-1 && array[childTwoIndex] > array[childOneIndex]){
+					indexToSwap = childTwoIndex;
+				}else{
+					indexToSwap = childOneIndex;
+				}
+			if(array[startIndex] < array[indexToSwap]){
+				swap(startIndex,indexToSwap,array);
+				startIndex = indexToSwap;
+				childOneIndex = startIndex*2 +1;
+			}else{
+				return;
+			}
+		}		
+	}
+	
+	private static void swap(int i, int j, int[] array){
+		int temp = array[i];
+		array[i] = array[j];
+		array[j] = temp;
+	}
+}
+
