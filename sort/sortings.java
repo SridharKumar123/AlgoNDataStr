@@ -28,23 +28,63 @@ space : O(1)
 class Program {
   public static int[] bubbleSort(int[] array) {
   	boolean isModified = false;
-		int totalLength = array.length -1;
-		while(!isModified){
-			isModified = true;
-			for(int i=0; i<totalLength;i++){
-				if(array[i] > array[i+1]){
-					isModified = false;
-					swap(i,i+1,array);
-				}
+	int totalLength = array.length -1;
+	while(!isModified){
+	     isModified = true;
+	     for(int i=0; i<totalLength;i++){
+	        if(array[i] > array[i+1]){
+		isModified = false;
+		swap(i,i+1,array);
+	     }
+	}
+	totalLength--;
+	}
+    return array;
+  }
+private static void swap(int i, int j , int[] array){
+   int temp = array[i];
+   array[i] = array[j];
+   array[j] = temp;
+  }
+}
+
+======================================================================================================================================================================
+	
+Insertion sort:
+
+ 8 5 2 9 5 6 3
+ 
+ 1) we have the sorted portion in the front of the list and compare the rest of the list to this and change the sorted set
+ 2) we make sure, that at any point in time, the front sorted portion is always sorted.
+ 3) lets say we start with 8. now 8 is the front portion, we compare 5 with 8 and swap as 5 is less than 8.
+ 4) now we have 58 as front portion, we compare 2 with 8 and swap, as 2 is smaller, then we compare 2 with 5 and swap
+ 5) it becomes 258 and we ensured that this portion is sorted.
+we loop through array once, and at each position we loop back untill the front portion is sorted.
+
+ time - O(N^2) - if array was already sorted, it would have been O(N) which is best case scenario
+ space : O(1)
+	 
+import java.util.*;
+
+class Program {
+  public static int[] insertionSort(int[] array) {
+    
+		for(int i=1; i<array.length;i++){
+			int j = i;
+			while(j>=1 && array[j-1] > array[j]){
+				swap(j-1,j,array);
+				j--;
 			}
-			totalLength--;
 		}
     return array;
   }
 	
-	private static void swap(int i, int j , int[] array){
+	private static void swap(int i, int j, int[] array){
 		int temp = array[i];
 		array[i] = array[j];
 		array[j] = temp;
 	}
 }
+
+	
+	
