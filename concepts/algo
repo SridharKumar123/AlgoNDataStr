@@ -1,0 +1,1967 @@
+Complexity analysis
+
+we have an integer array  eg., [1,2,3], lets say length of array is N
+f1(a) = 1+a[0] - sum of first element + 1 
+	T - O(1) - same time for any value of N. this accesses a single memory slow in memory(slot increases based on bits size)
+			   this does not have any relation to size of N
+	S - 
+f2(a) = sum of all elements in array 
+	T - O(N) - depends on value of N, as N increases time increases
+	S - 
+f3(a) = pair(a) - generates pair of numbers - [1,1] [1,2] [1,3] [2,1] .......
+	T - O(N^2) - two for loops and it takes N times for each element in N. first number will do N iter and second another N ...
+	S - 
+f(4) = a combination of all 3 above - so it will have
+	T - O(N^2 + N + 1) => O(N^2) - as N value increases, the other 2 values becomes insignificant
+
+The algorathims can have diff comlexity based on scenario. we always refer to worst case.	
+
+O(1) - constant time
+O( log N) - logarathmic time
+O(N) - linear time
+O( N log N) - 
+O(N^2) , O(N^3) - exponential time
+O(2^N) - worst - 2 * 2 * ... N
+O(N!) - worst - N * N-1 * ...
+if we have 2 diff items, we use O(N + M), where N and M are diff lists
+
+log2 (N) = y only if 2^y = N
+we can find binary log using above,
+
+log(1) = 0, meaning 2^0 = 1
+log(4) = 2, 2^2=4
+log(16) = 4, 2^4=16
+Note, if we double the value of N, it just increases the poer of 2 by 1. 
+2^(x+1) = 2^x + 2^x
+so if an algo has log(n) complexity, even if the input doubles, the complexity just increases by 1, which is very good.
+lets say we have an array of length 8, we perform some algo and in it at every step, we cut the array into half. 8--> 4 --> 2
+so we are just looking at a small portion after every step. O(log 8) - we performed 3 oper.
+another example, is binary tree. we just can make sure to see either only leftt or right child and eliminate other half.
+at every step, am i cutting down the input by 2 or even if we double the size, will we be just doing just one extra operation ?
+  then its O(log N) 
+closests value in BST
+
+keep track of last closest. 
+
+check if root is less than or grt than the input, based on that we choose left or right node
+go to that side. pick next node and check if its closer than earlier val, choose based on it
+again check of left and right and go on
+if we get the val in BST return
+or go untill we reach leaf node and then return the last 
+
+Recurisive impl:
+Time O(log n ) - we eliminate half tree every time we explore. so its better
+   But worst case scenario can be O(n), if the entire tree is just one sided and not balanced tree
+Space - same as best and worst above mentioned for time.
+
+Iterative impl:
+But if we solve it iteratively, space comp will be O(1) for both best and worst case, as we wont use space on call stack.
+Time comp will be same.
+
+
+Construct a BST
+insert
+delete
+search 
+
+insert - we start with root and compare value with root and go to left or right. 
+		Time O(log N) - average case
+		worst case - O(N) - unbalanced tree having all nodes in one side as straight line
+		Space - recursively - O(log N) - average - if we do 
+							O(N) - worst case
+				Iterative - If we do it ieratively - O(1) - constant space
+		go untill we reach the leaf node and insert it to left or right of it based on val.
+		it allows us to only exlpore either left or right. this reduces the no of loops.
+		
+
+search: - compare val with root and search as above Time - O(log N) = average case and worst case - O(N) - unbalanced tree having all nodes in one side as straight line
+		Space - recursively - O(log N) - average - if we do recursively
+							  O(N) - worst case
+			ieratively - If we do it ieratively - O(1) - constant space
+		  loop untill we reach the right node. return it.
+		  if the val is not there, we can return false or null
+	
+deletion -uses same as above logic but has edge cases
+		 removing leaf - no children, so we can just delete it
+		 removing node with one child - delete node, grab its child and point it to nodes parent
+			this step is actually tricky as we need to maintain the remaining subtree
+			if our node is left of its parent, we pick its child (left or right which is there) and attach to its parents left
+			if our node is right of its parent, we pick its child (left or right which is there) and attach to its parents right
+			another corner condition - if parent node is null, when root is just havening either right or right, we need to handle it
+			 - because, in above we try to fetch parents left or right and it will throw null pointer
+			   so in this case, we take the current nodes value and replace with its left or right which is not null and remap its children to current node
+		 removing node with 2 children - 
+					search and find node, grab the smallest value in right subtree of tht node
+					successor - left most value in right subtree, take the successor value and delete successor node from tree and replace its value with deleting nodes value. 
+
+
+validate BSTevery node in a BST has a min and max valuebase case must be if node is null trueif treeval <min or treeval >=max ->> return falseif we call on left sub tree,min value is value greater than or equal to its parent - 5 is parentmax to be less than its root - 10 is rootso in code, while caling left, we pass min as integer.Min and max as the current node valwhile calling right, we pass min as current node value and max as max value   10 5           5 - node
+5 <= Node Val  < 10  if we call on rightsub tree,
+10    151310 <= Node val < 15O(N) time com - N is no of nodes - we are traversing every single node, cannot skip any nodeO(d) space - using space on call stack, d is depth of tree. for every depth we use d amount of space and once we go up, we will clear it. if tree has only one deep tree, it will be O(N) as it has only one D.
+
+BST traversalinorder, preorder, post order
+
+time O(N) space O(d). here we store all elements in array, so the space complexity is O(N)
+inorder(tree.left)sysoutinorder(tree.right)
+sysoutpreorder(tre.left)preorder(tree.right)
+postorder(tree.left)postorder(tree.right)sysout
+
+Min Height BST - construct BST from input array. it must have min depth, balanced treefind middle value of array and make it rootkeep appling same logic on both left and right sub tree - middle element of first half for left node and middle of right haf for right, recursive callssame needs to be continued Note- if we get a even no of nodes, we can pick any one from it for to be middleSpace - O(N)Time - if we call insert method of given program, it will naturally position nodes in tree, but that also will run in O(N log N) - as insert will be O(Log N) and we call it N times.
+
+if we manually insert nodes, time will be O(N)
+
+
+Same BST - based on 2 array say if they form the same BST
+first check if their first val for both arre samr and if both array are of same length - if not it does not satisfy BST
+first val is the root of BST
+now take values values which are lesser than root and put in an array
+values greater than root and put in an arry
+now do the above setp  1, to check first val and length,
+then take the value of the root of new array and continue the same process. by taking its left and right and form new arrays
+we check if follow above property
+
+Time O(N^2) - we start wil 2 array, iterate all of it, find values less than root and find values greater than it
+repeat it for the subtree, recursively. we keep doing O(N) N times, so it becomes O(N^2).
+
+Space O(N^2) - we are creating extra array for each loop. if we had not created arrays each time, then it might have been O(D)
+we are creating arrays in diff point in time, but in total we would have used O(n^2) space.
+
+Can we reduce memry ? Yes, we can try to get elemtns from main array, we pass in pointer of roots and compare them.
+this will complicate algo little.
+
+right smaller than : 
+in array, take elements afgter each element which are leaser than it
+naive - we can iterate through array, and in an inner for loop again iterate through elements after the current element and fetch all elements less than it
+Time - O(N^2) - 2 for loops
+Space - O(N) - single array space
+
+but will the question be this simple ? could bee ? 
+can we improve space complexity ? its simple, we cant s we need to hold data
+so can we improve time comlexity ? 
+we cannot do this linear as input is and should not be sorted here. so what can be better than O(N^2) - O(N log N)
+which DS or algo can do N log N ? 
+    1) Sort the aray and it will give O(N log N) for quick and merge sort - but we cannot sort here
+	2) binary tree - can a simple binary tree be useful here ? but we need smallest property
+	3) BST - this allows data to be segregated based on root node to left and right 
+how can we create BST here, we can create tree from left to right or from right to left or sort array and start from first....
+here we choose to go from right to left, as based on the input, we need to get nodes of right of each val
+in this sum, the answer is if we get the no of nodes less than it at the point of nisertion. after inseting all nodes, we might get unwanted nodes which are left to it in arrray.
+so during every insetion of node, store values to its left sub tree.
+O(n log n + n) - O(n log n) - time 
+space - O(n)
+
+
+Branch Sum 
+time - O(N) - we traverse all nodes, and constant time operation in each nodes
+space - list of final values - this is no of leaf nodes - this will be roughly half of nodes N/2 = O(N) - will never be more then N, this is recursive sol,so it takes O(D) = O(log N) at any point in time - 
+Adding both - we can conclude - O(N)
+
+node depths
+time - O(N) - where N is the no of nodes, we are traversing throught every node. and do only constant time operation
+space - best case - O(D) = O(log N) for balanced tree - where D is depth of binary tree at any point in time.
+	- worst case - O(N)- imbalanced tree. we are tracking constant integer so no prob of output
+same applies for recursive and iterative solution.
+for iterate we need to store depth for each node seperately, but for recursive we dont need
+
+Invert Binary tree
+iterate
+t O(N) - exploring every node and constant time operation
+s O(N) - there will be a time where all bottom/leaf nodes will be in queue, so it will be n/2 so O(N)
+
+recursive
+t O(N) - exploring every node and constant time operation
+s O(D) = (log N) for binary tree - we travel to left first and then to right, so at a time our stack will be depth of tree. better than iterate
+
+Max Path Sum:
+Time O(N) -
+S - O(log N) -  
+
+Iterative Inorder traversal
+time - O(n)
+space - O(1)
+
+
+Flatten binary tree
+time - O(n)
+space - O(n) - if we use arraylist, O(d) - if we do recursive without list
+                we need to come up with a little complex logic for O(d)
+
+
+Max sum subarry 
+Kadanes algorathim
+max sum ending here - max ((max sum untill previous index + current number) OR (current number))
+maxsofar = max ( max sum ending here , max so far)
+
+time O(N)
+space O(1)
+
+
+heap - 
+ binary tree - needs to be filled up in all levels - last level must be filled in left to right. it can have missing elements
+min heap - every nodes value, should be smaller than or equal to its childrens value. so root no will be smallest val in heap. so it gets name min heap
+max heap - evry nodes value must be greater than or equal to its childrens value. root node is max val. 
+heap is no way sorted. 
+insert - we insert in end, and we can move up, rearranging order  O - n log n
+delete- delete the root, replcae the last element as root, now adjust from top to bottom. nlogn
+build - take the fist parent index from last. now start performing shift down on every parent ending before it from backward direction. its O(n). we wont perform the operation for leaf nodes and perform check for top nodes only. this has analytical answer. Note - usually we assume that it would have been O(n log n) - but idea is that sift down is not equal for each node. leaf nodes will not be sifted. as we go one level up, we are calling sift down one level only. so every parent elevel calls one level down extra... the hither up in heap, longer sift down runs. for root node it takes O(n logn) for leaf O(0), for last parent O(1). so equating all up, it comes to O(n).
+so build heap using sift up - O(n logn)
+Build heap using sift down O(n)
+
+sift up vs sift down - O(log N), every time we eliminate half of tree.
+
+sort elements - 1) if we arrange all elements as max heap. 2)and we keep deleting root and add the deleted element in the last part of array which is space created due to deleted nodes. the final result will be a sorted array.
+
+priority queue - we use min or max heap as priority queue. in max heap, higher the number higher thr priority.
+in min heap, lower then number higher the priority.
+heap take log n time for insertion and deletion.  heap is best DS for priority queue.
+
+
+contious median -
+  build a continous median handler, receive continous stream of numbers and any time return the current median of all numbers.
+  we could use an array and use sort during insertion and we can retrieve median easily- O(n) - due to sort
+  we can do with better.
+  we can have a min heap(insert here greater half of numbers) and max heap(lower half) containing the lower and greater half of the elements.
+    we can easliy get the min and max at top of heap. 
+		1) for first element - insert element in any heap first (lets say we inserted in lower half - max heap)
+		2) from now on, we check if insert value, if its greater then top of lowe half, we insert it into upper half. else we insert into lower half itself
+		3) we check if it needs rebalancing - if the no of elements in lower and upper have a diff of 2. it needs rebalance
+			if lowe half has more elements, remove root from it and insert into uppper half,else vc=ice versaelement
+		4) update median 
+
+time O(log n)
+space - O(n)		
+
+merge sorted arrays - matrix sort given all elements are sorted in each row
+  constraint - dont do sort
+  the no of elements in the all the arrays will be huge compared to no of arrays
+  if we copy all elements to a new array and try to sort - it will be nlogn
+  this is a hint for not using above approach of sorting above array
+  
+  - we can have an array of size k, where k is the no of arrays
+    in each position of array, we will track the current position in each array
+	compare values in each position and find the smallest value and add it to final array, and incremenet position of the array with smallest element.
+	so in every step, we compare all elements in all arrys with their current position from array and continue.
+	time O(nk) - n comparision of k elements, we iterate all k arrays at each time. and compare those elements
+	space - O(n + K) - n- final array k- index array
+	
+  - can this time complexity still be reduced ?
+	it cannot be reduced to log n, but we can try to make it nlogk + k
+	borh BST and heap gives, logk for insertion and deletion. but fetching smallest or lrgest is not easy.
+	so heap hepls to find the smallest or largest using min and max heap.
+	add all first index elements into min heap - O(k)
+	while its not empty, remove smallest item(root), and add to our final array. o(log k) - removal
+	insert the element at next index of that previously removed array into min heap (if there is an element) - O(log k) - insert
+	min heap will have k values at any point.
+	the above inser and removal is done for all n elements - O(n log k)
+	time total = O(n log K) + O(K)
+	Space - O(n+k)
+
+	
+	- repeatedly asking for smallest/largest/meadina in contant time - use heap.
+
+Heap sort:
+ divide array into 2 sub array
+ 1 array will be sorted always, other will be not sorted. we wont create 2 subarray
+ in same array, we have 2 portions. sorted portion and unsorted portion.
+ we need to move sorted portion to back, by removing from first portion
+ 
+ implement max heap for the unsorted array. 
+ start removing root elements and swap it with last element of array. 
+ code - swap the first element(root) with last. 
+ last element is biggest now and in right order.
+ call siftdown for the first element. 
+ continue untill the max heap becomes of size 1.
+ finally, the array will be sorted( as we are removing max element each time and appending from backwards)
+ time - O(N logN) - we build max heap - O(N) - we do siftdown for N elements - nlogn = O(N) + O(Nlogn) = O(nlogn)
+ space - O(1)
+ 
+Graph:
+DFS:
+for every node, add or print it, call DFS on its child nodes. Go in till leaf and back to top- 
+uses stack iterative - add all left or child elements to stack, pop and print, if queue is empty return, else move to right.
+time O(V+E) - no of vertices + edges
+space O(V) - we are storing arry of v nodes O(V) and queue adds nodes.O(V) (one huge branch like liked list- worst case O(V))
+
+BFS:
+use queue - 
+while queue is not empty, pop it - add/print it, add the children of popped node into queue. continue.
+time O(V+E) - no of vertices + edges
+space O(V) - we are adding frames to call stack. (one huge branch like liked list- worst case O(V))
+
+youngest common ancestor
+O(D) - depth of lowest descendant
+O(1) - iterative algo
+
+boggle board:
+time - O(ws) - build trie 
+	   O(nm) - iterating matrix
+	   O(8^s) - for evry node, we go thrugh all neighbours and for every of its neighbours we go through theirs and so on
+	         most nodes have 8 eight neighbours. for those 8, another 8. untill we reach s letters.
+		O(ws + nm * 8^s)	 
+space - O(ws) - trie- w is no of words, s is length of strings
+        O(nm)- matrix - n*m 
+		O(s) - recursive calls in call stack - at most we will have s recursive calls, s longest length in given strings
+		O(ws + nm + s)
+Trie:
+suffix tree construction
+iterate through string, at each index,
+check if its already stored in map.
+if not, add new key and take the substring from this index to the  take its entire substring and add i
+every node will be a key - values coming after each key will be its value.
+
+finding string, searchinf string - suffix tree
+Creation- time - O(n^2) - double for loop kind of iteration
+		  space - O(n^2) , if a string has just ttttt - it will be a straight line O(n)
+Search - time - O(m) where m is the length of the string we are searching for
+		Space O(1) - not storing any extra space
+
+multi string search
+use strings in the smaller list, to iteratte for each string, the bigger string and see if the string is in the big string
+time- O(bns) n - no of small strings b-length of string s-length of the biggest small string
+		for every small string we iterae
+		for every small string we iterate throught entire big string
+		for every char in big string we compare atmost s chars, where s is the biggest string in small one
+space - O(n) - length of small string - 
+
+using trie
+  build a suffix tree of big string - have a root node pointing to first letter of string. 
+	then build suffic tree for every other letter in the big string . it will be huge branches, 1 branch for every letter
+	time - O(b^2) - where b is the length of the big string - 2 for loop - we iterate through all suffix in string. 
+	abcd  -- bcd -- bd -- d  - this is suffix 
+	space O(b^2)
+    time for searching - for all in small strings we search if its in big string. we dont need to look for *, if string is there
+	                      we end. 
+						  lets say s is the biggest length 
+						 O(S) - for one string
+						 O(ns) - for all strings
+	space for strings - n
+	total time = O(b^2 +ns)
+	total space - O(b^2 + n)
+  build trie of small string - build  trie using all the small strings in the smaller string. this is not suffix trie. just trie
+     in suffix tire, we build it for every char. but here we do just one for each string.
+	we look for *, end of small string. if *, is there, its valid, else not.
+    time- creation - O(ns) - n-length of small strings list. s- length of biggest string
+		  searhing - O(bs) - b-length of big string s-length of small string - for each in big string, check if its in trie. 
+		  O(ns + bs)
+	space	 O(ns) 
+
+airport connections
+  list of airports names, each name is length of 3.
+  list of routes for connections - tuples. list of length 2. one way direction of flights(directed)
+  starting point - we start from here
+  find the min of new airport routes, we need to add in order to travel to every other airport
+  
+  time - we are sortig un reachable airports based on their score - Alog A - A is length of airports
+		DFS - O(V+E) - traversing graphs
+		O(A+R+AlogA) - A is no of airports and R is routes (edges)
+  space - O(A+R) graph
+  
+  
+single cycle check
+ given a list of integer - return if there is a single cycle. each interger represents no of jupms. + - forwars and - backward.
+   time O(n) space O(1)
+ have counter and increment it on every change.
+ if cunter =n , we must have travveled back to start of it, else fail
+ if any point we come back to index, before travelling all the n, then fail. 
+ 
+topological sort
+ approach 1:
+ dfs - create a graph. using given items as vertices and their dependent connections as edges
+       traverse - start from any node, mark it as in progress and dfs into any of its dependent nodes, check if it has dependencies, if so mark as in prgress and dfs for it. continue untill we find a node which does not have any dependencies. pick this and add it to final array. Mark this node as visited.
+	   during dfs, ensure we dont pick visited nodes again.
+	   During dfs, if we encounter a dependecny back to a node which we already processed(marked as progress), it means then this graph has a cycle. Topo sort cannot be obtained for graph which has cycle.
+	   time - O(v+e)   - we applied dfs.
+	   space - O(v+e) 
+ approach 2:
+  - this is similar to first method, but instead of going through random nodes, we will keep track of nodes which dont have prerequisite.
+  - so while creating the graph, we keep track of the no of prerequisite of each node. so we will know which node has 0 prerequisite
+  - we start with directly adding the nodes with no prerequisite into its own, no prerequisite array
+  - we pick a node from the no-prerequisite array, and add it to the final array.
+  - this means that we must remove the dependencies edges which connect this node to other nodes. 
+  - literally,  we erase edges, and now we recalculate the no of prerequisite of remaining graph. and update the no-prerequisite array with nodes with 0 prerequisite.
+  - repeat above step of picking node form prerequisite array. erase its dependencies in graph, recalculate etc. 
+  - this process continues untill we remove all nodes from graph. 
+  - if there was a cycle, then we will end up in a stage, where no-prerequisite will be empty, but still we will have vertices remaining in graph.
+     time- O(v+e)
+	 space - O(v+e)
+  
+
+
+pointer - SAME BST, STRING INTERLEAVING, 
+
+
+
+
+
+
+
+=========================
+
+min heap and mah heap
+
+build:
+take first parent index - len-1 -1/2 floor
+sift down(first parentindex, len-1,  array
+return array 
+
+sift up(index, list)
+get parent index - i-1/2 floor
+while list(parentindex)!=null && list(parentindex) > list(index)
+		swap(parentindex, index)
+		index = parentindex
+		parentindex = index-1/2 floor
+
+
+sift down(index, endindex, list)
+child1 = index*2 +1
+while child1 index <= endindex 
+child2 = index*2 +2 <=endindex ? index*2 +2 : -1
+child1 val = list(child1) ! = null ? list(child1) : -1
+child2 val = list(child2) !=nulll ? list(child2) : -1
+minchild = 0;
+if(child1val < child2val) 
+minchild = child1val
+else
+minchild = child2val
+if(list(index) > list(minchild)
+	swap
+	index = minchild
+	child1 = minchild * 2+1
+else
+ return; 	
+ 
+		
+delete
+swap root with last element
+removed elem = pop from heap
+sift down(0,end index, list)
+return removed elem
+ 
+insert
+list.add - add in last 
+sift up(new index, list)
+
+
+
+
+parent i 
+child 2n+1, 2n+2
+
+
+child i 
+parent i-1/2 floor
+
+
+swap
+
+
+
+Linked list:
+
+ <-  1  <-   2  <-    3 
+         ->      ->     ->
+	head			tail
+heads previous points to null and tails next points to null.
+
+removing a node - 
+update pointers in order
+1) check if this is not head or tail
+2) if prev is not null, get the previous nodes next ptr and -> point it to what removing nodes next is pointing to
+		node.prev.next = node.next
+3) then do this for the next node
+		node.next.prev = node.prev
+4) if we are dealing with head or tail for removals,
+	for head, point the head to head.next - head = head.next
+    for tail, point tail - tail = tail.prev	
+
+remove node with value :
+if we remove the node, then we will not have the pointer to next node
+so before removing, have a temp which points to next node   - temp = node.next
+
+Insertion:
+1) insert before
+first check if we are dealing with a linkedlist with just one node. head and tail point to same node. and we are trying to insert the same node as new node, we should not do anything.  
+if node to insert is not head/tail, but it is already there in linked list.
+  first remove the node from linked list.
+  start insertion
+  lets say we want to insert node 3 between 1 and 2. or like before 2 in this case.
+  the take prev of 2 and make it as prev of 3
+  then 3.next = 2
+  now we need to fix ptr of 2.
+    first check if 2 was head of linkedlist. if so 3 must become head.
+  now 1s next must point to 3
+  and 2s prev must point to 3
+  we need to change 4 pointers along with head and tail if req
+  
+search - time O(N) space O(1)
+remove - time O(1) space O(1)
+removeAllNodewithValue(int val) time O(N) space O(1)
+insert - time O(1) space O(1)
+insertAtPositionP time O(P) space(1)
+  - we need to traverse until position P
+  
+2)
+given head node, remove kth node from end of single linked list
+  - if it was a double linkedlist it would have been trivial. traverse till tail, then go back 4 steps to find node.
+2 pointer approach
+Given a single linkedlist, i want to find the kth node from end. note that in linked list we cannot directly get element
+based on index. so we might need to traverse entire linked list and then find the index.
+Now here we want to find kth node from end. So we might want to travel to end but still how can we come back from end as we dont
+have any pointer to previous from the end.
+We can use two pointer approach.
+Initialize two Node variables first and second. point both to head of linkedlist.
+Traverse k nodes from head, moving second ptr at every node. (k step with second variable)
+Once we traverse k nodes, Now first pointer will still be at head, but second pointer will be at node after kth node. 
+   start counter at 1 and go till counter <=k
+then traverse remaining by moving both the variables untill second points to null.
+Once we reach end of list(reached null in end), first variable must point to the kth node from end.
+This is because, initially we made second pointer k nodes ahead of first, now when both start travelling, the first will always be k nodes behind first.
+Now remove the node pointing to first ptr and update req pointers.
+
+time O(N) - we just traversed n nodes 
+space O(1)
+
+3) find loop in lk
+normally tail of lk should point to null. if it points back to some node in linked list, we call it loop.
+given a single lk, we need find loop.
+  traverse entire node, add nodes into hashmap. if there was a node which we already visited, it means this is start of loop.
+  this takes extra space. can we do with better space ?
+have 2 pointers first and second pointing to head.
+move the first ptr by one step. move the second by two steps.
+At some point if both meet at same node, then it means that we have a circle.
+Now lets say that from head to start of loop, distance is D. the distance from start of loop to meeting point is P.
+Therefore, 
+ total distance travelled by first pointer will be = X = D + P  --> eq(1)
+ total distance travelled by second pointer will be = 2X = 2D + 2P  --> eq(2)
+ Now we want to find bwt meeting point and start of loop. lets say R.
+Lets say the distance of entire lk is T.
+T = 2D + 2P -P  ==> total distanc travelled by second - P  = will be the length of lk which is T
+T = 2D + P  --> eq(3)
+Now we need R.
+Using the first pointer we can derive that 
+R = T -(P+D) --> eq(4)
+=> total length -  length travelled by first
+allpying 3 in 4,
+R = T - (P+D)
+R = (2D+P) - (P+D)
+R = 2D + P - D -P
+R = D
+
+So we arrive that R=D. We need to travel from head to D distance. But still we dont know the actual value of D. 
+
+How do we find D ?
+SO in initial phase, when slow and fast meet, we know the remaining to reach the loop connector distance is equal to D.
+SO at this point, we move any one of the pointers to head again. lets say fast.
+and start moving fast by 1 step from head and move the slow ptr one step from place whre both met.
+When these 2 points meet again, its going to be our, start of loop. as first will travel D and second will travel R and both are equal by above equation.
+
+time - O(N)
+space - O(1)
+
+reverse a lk
+have 3 pointers : p1 p2 and p3
+now we will want to reverse p2. we we make p2.next =p1.
+then move the 3 pointers to one step right.
+continue the same. 
+we need 3 pointers because, once we do p2.next=p1, then we will not have hold of node which was next to p2 which is p3.
+to hold the values, we use 3 pointers. the node in task, one before it and one after it.
+
+for head, p1 null , p2 head, p3 next to head.
+	init = 
+	p1 = null
+	p2 = node
+	
+	logic = 
+	p3 = p2.next
+	p2.next = p1
+	p1 = p2
+	p2 = p3
+we continue until p2 is not null. return p1 which is new head.
+this is inplace logic, where using 3 pointers we change. the extra temp pointers are req for lk kind of problems. 
+why did we init p3 inside while loop ? why not declare p3 and reinit in last like p1 and p2
+  we assign p3 as p2.next, so if we do out of while, we need to have extra check
+  similarly, in last line we might need to check p3 is not null before assigning, p3=p3.next
+  to minimize all these checks, we did it inside while loop as the null check is in while condition.
+time O(N)
+space O(1)
+
+Merge two sorted singly linked list in place
+
+idea is simple, we iterate both lk and pick smaller nodes and for a new one. 
+we can do this in iterative and recursive.
+we pick one of the lk as base.
+we iterate both and compare nodes, when ever the value in the second is lesser than base, we need to insert before base node.
+  change req pointers
+if value in second is greater than base, then we increment base pointer to its next node and continue comparison.
+
+we need 3 pointers.
+ptr to node in base lk  p1 
+ptr to node in second lk  p2 
+ptr to node.prev of node in base lk  prev
+
+now when we found a insert is req, we need to move ptr in the below order to ensure we dont miss any nodes
+prev.next = p2 - if prev is null, we dont need this
+prev = p2
+p2 = p2.next
+prev.next = p1
+when we dont need to insert as base lk node is smaller then second node,
+prev = p1
+p1 = p1.next
+
+if p1 or p2 becomes null(meaning reached end), then every node in other lk comes behind the one which ended with null.
+
+time O(N+M)
+space O(1)
+
+for recursive soln, space O(N+M) - calls in stack
+
+shift linked list by k positions
+traverse lk and find its length
+position of k = totoalLen - k
+
+now we need to get access to 4 positions.
+head, tail, position of k, next node of kth node.
+point tail to head
+make next node of kth as head
+make next of node to point to null.
+
+time O(N) 
+space O(1)
+
+if k=0, no change
+if k=30(where 30 is larger than length of array) - we need to do modulo with length of array and reminder is new k
+if k= -2, -ve num, we need to grap first 2 nodes and put in back
+  position formula changes, position of k = 0 + k (remove -ve symbol) = k, if k=-30, we do mod of 30 and take rem from first
+  
+
+
+LRU cache
+1) initialize cache with maxSize()
+2) if a new element needs to be inserted always insert in front, so it will be most recently used
+3) if while inserting, it exceeds size of cache, remove least recently used entry(entry in end)
+4) if we access an already present entry, update its value and move it to top. this is the most recently used entry now
+5) it can never exceed its maxSize()
+
+We make a combination of hashmap and doubly linkedlist
+each key in hashmap will hold the cache key and value will hold a doubly linkedlist node which corresponds to entry in lk
+input:
+a - 1
+b - 2
+c - 3
+
+map : 
+c - [c,3] head 
+b - [b,2]
+a - [a,1] tail
+
+c was lastly added so we mark it as head and a which was addeed first will be tail.
+if we want to insert a new key/value pair,
+1) we check if its already in map
+2) if not exists, 
+     - if map is is not max size
+		then we increment current map size, 
+		add new entry in map with key and dlk node. now we need to make this node ad mru 
+		make this new node the head of dlk
+		
+	 - if map reached max, 
+	     remove tail 
+		 point tail.prev as tail
+		 remove the tail mapped node from map
+		 add our new entry and make it head.
+3) if exists,
+      update again and make this node as head. if it was tail, update new tail as well.
+if we need to get a node
+pick it from map and make node as mru. make as head.
+
+time O(1)
+space O(1)
+
+
+Search:
+Binary search:
+given an sorted array of int as input, and target integer, find if this is there in array and its position.
+given the input is sorted, if we start by finding the middle element, then we can compare if our target is lesser or greater.
+Now based on this we can eliminate one half of the search. Now we pick the remaining of the array and update start and end continue search.
+we find mid by - (start+edn)/2  -  if the mid value is equal to our int, we return its end and end the logic.
+if value is not mid and value is lesser than mid, we make our end ptr one step before the middle ptr.
+if value had been grt than middle, then we would have moved start ptr, one step next to mid.
+now we have new start/end, then we calculate mid again for this and continue untill we find the number or untill start<=end.
+
+if start > end, then it means we have traversed entire array and we have not found the match
+time : O(log N)
+space : O(1) - iterative and O(logN) - for recursive due to memory on call stack.
+so implement iterative
+
+Find 3 largest numbers:
+List is not sorted. given a list of integers, without sorting it, find the max 3 largest numbers.
+it needs to handle duplicate use case as well. if input is  - [3,4,2,1,3]  - op = [3,3,4]
+ - can we just sort array and return last 3 elements ? 
+  - the best sorting algo runs in O(n logn) time . we can do better than this.
+  
+We need to store and keep track of the 3 largest numbers.
+we declare an empty list of size 3. 
+we start iterating main array, we check if we have any number for the last element in op array. if we dont have anything, we just update it. we pick the first element in main array and update it in last of op array.
+Then we move to second element and we compare it to the largest no we have. 3rd element in op array. if its lesser than it, we compare it to second largest number and so on. 
+if the num if grt than any element in the op array, we insert it to that position and shift array to left. meaning we remove smallest element. Kind of like max heap operation with fixed k (offer and poll if size is grt then k).
+we continue till end of mail array and we have the sorted max 3 elements.
+
+time - O(n) - we traverse entire array
+space - O(1) - no new ds for input.
+
+Search in sorted matrix
+we pick the top right most element, if its grt thn our value, then we can eliminate that column.
+we come one step left and pick value before it, we check if with value,
+  - if its less then value, we eliminae the whole row before it
+  - if its grt then value, we eliminae the whole col below it
+  - we keep moving left utill we find the value
+time - O(n+m) - worst case can take time. but works better for other solns.
+space - O(1)
+
+shifted binary search:
+given sorted array is shiftet by some elements. we need to find the target int.
+We can traverse every element and find ours, but it will be O(N).
+we know its sorted, so we can use binary search. But its shifted, so we cannot directly start by taking first and last.
+
+take first and last and find middle. same formula (start+end)/2
+if middle ==  target , return
+if L <= M : (means all nos to left of M are sorted order)
+  if Target < M && Target >= L: (target lies in between L and M)
+	explore left side of middle.
+  else :
+    explore right of M (move L to one position left of M - continue)
+if L > M : (means this left part of M is not sorted - we have mix of front and back parts - but right part is sorted)	
+   if Target > M && Target <=R   (we do exact opposite of above inner if condition)
+     explore right of M.
+   else
+     explore left of M   
+time O(log N)
+space O(1) - iterative, recurisve O(log N) due to stack calls.
+
+search for range:
+we have a sorted array and duplicate values are given. we need to find our target and see if its dulicated.
+if duplicate exists, return start and end index of duplicates.
+
+we must use Binary search.
+take first and last and find middle. same formula (start+end)/2
+we continue untill we find our target number as middle.
+Once we find it, we need to find left and right extreme if the target.
+if( mid value == target , then continue below - else continue Binary search)
+if (mid==0) OR (check if front of mid, if it has diff value than target. if value is diff, we found the left extreme),
+ - we found left extreme 
+ - if not, then we need to perform Binary search in left portion untill we find a mid, where min-1 Not eql to mid, which is the left exrememe.
+same applies to right extreme.
+if (mid==endOfArray) OR (check if next of mid, if it has diff value than target. if value is diff, we found the left extreme),
+ - we found right extreme 
+ - if not, then we need to perform Binary search in right portion untill we find a mid, where min+1 Not eql to mid, which is the right exrememe.
+
+time O(log N) - 2 times O(log N)
+space O(1) iterative, O(log N) recurisve
+
+QuickSelect:
+array of distinct int which is not sorted. find kthe smallest element.
+
+we apply the quick sort to get started. 
+we pick first int as pivot, next to it as start and last as right.
+we perform quick sort and finally swap pivot and right. we know that this int is in its right position.
+we check if this is our expected int. if so we can return.
+else we compare our index of pivot with the index of k. 
+if lesser, we perform quick sort only to left of this pivot int.
+if greater we perform quick sort only to right of this pivot int.
+
+time : 
+  Worst - O(N^2) - if it eliminates only one number after each loop. we end up here
+  Best - O(N) - if we split the array into equal half in every loop. 
+  Average O(N) - lets say pivot ends up between first quaeter of araay and last quarter of array. one sub array would have been 1/4 the and other 3/4th. mathematical proof will lead to O(N)
+space : O(1)
+==================================================
+
+---==========================
+
+Dynamic Programming:
+
+Max subset sum no adjacent
+take an array of positive int and return max sum of non-adjacent elements in array.
+non-adjacent elements mean  - if u choose an element then u cannot choose its neighbours.
+create an array of same length of input array, and fill it with the greatest sum untill its index, without including neighbours but itself.
+[7 , 10, 12, 7, 9, 14]
+
+[7 , 10, 19, 19, 28, 33]
+
+33 is the max sum.
+
+(For any position, if we take max sum before it, we cannot add the current, as it will be adjacent.)
+OR
+(We can take the max sum one step before it and add the current value to it.)
+We find the max of the above 2.
+For any i in array[i],
+maxSumOf[i] = Max ( maxSumOf[i-1] , maxSumOf[i-2] + array[i] )
+Base cases - 
+maxSumOf[0] = array[0]
+maxSumOf[1] = array[1]
+applying i as 2 in above eq,
+maxSumOf[2] = Max ( maxSumOf[1] , maxSumOf[0] + array[2] )
+
+time - O(N)
+space - O(N) - we are building an array of length N.
+
+Can we do better ??????
+
+we always look at only last 2 stored values at any time, so we can just hold the last 2 values and reduce space.
+we can have pointers like first and second to hold the 2 values.
+current = Max(prev, far + array[i])
+far -> prev
+prev -> current
+
+change pointers accordingly.
+time - O(N)
+space - O(1)
+
+If we are given -ve values in array, we need to tweak formula, as we never want to add a -ve integer to a sum as it will lower the sum.
+
+No of ways to make change:
+Given an array of int representing coins, find the diff no of ways we can form the denomination
+[1,5]  denomination - 6
+2 ways  = 1 * 1 + 1 *5 , 1 * 6
+
+We need to approach this problems using a ways[].
+For the size of the denomination, we construct an array starting from 0 ... until denomination.
+now for each size, we need to find the combination of no of ways in which it can be formed with all elements.
+We start with every element in array and first find the ways in which we can form the denomination and then use this to add it to the next element and so on.
+If the size of denomination is less than the coin, then we can ignore it.
+if size is >=, then we apply ways[i] = ways[i] + ways[i-coniSize]
+Base case - ways[0] = 1. We assume that there is only 1 way to form 0 denomination. i.e not use any coin. 
+
+Now we iterate through each coin and apply the above eq.
+The idea here is, every time we loop through, we pick the current value = which is the no of ways in which we were able to form previous denomination + ways[denomination-coin] - no of ways we formed it withoout this denomination.
+
+no of ways[new coin] = ways[exclude new coin] + ways[include new coin]
+ways[i] = ways[i] + ways[i-coniSize]
+
+here exclude the coin matches to ways i, because, if we dont consider this coin, the current ways will have the ways to form the denomination excluding this coin
+Now include coin, tricky,if we include the coin, then the remaining amount to make the total will be (denomination-new coin) 
+lets say denomination is 5, coin is 2.
+Now 2 + 3 = 5  => to make 5, if we include 2, then we need to find the no of ways to make 3 using the new coin.
+In our ways array, we always start from 0. so by the time we use this logic, we will already have the ways for the logic to find the above.
+see vivek video for above explanation.
+
+space - O(N) 
+time - O(Nd) - where d is no of denomination. we are iterating through each of denomination.
+
+Min num of coins for change
+find the smallest number of coins needed to form the target. this is similar to above, but we need to find the min no of coins.
+
+[1,5]  denomination - 6
+1 * 1 + 1 *5 , 1 * 6 
+2 coins using 1 and 5, wheras 6 coins using 1.
+so we choose 2.
+
+
+build array of length of target+1, like before prblm.
+for 0 dollar, we dont need any coin. so its base case 0.
+now for each coin, we need to find the no of coins needed to reach it. 
+we fill the array with Math.max value.
+we see if coin value is greater than current denomination, else we skip those values untill we reach value <= denomination.
+for doing this, we subtract the value with coin - meaning we are using 1 new coin, and we see if its 0, if 0 its just 1 coin.
+if we have reminder, we see the min num for this reminder in array and take the min no of its coins.
+we add 1 + min no of the reminder. This gives min no for that value. we take min of this vs current value.
+we continue, for every value of n.
+we start with each denomination and iterate all n elements. and loop for all denomination.
+final result will be the value for nth denomination.
+
+
+if denomination <= amount:
+   nums[amount] = Min( nums[amount], 1+nums[amount-denomination])
+
+time - O(ND) - d is no of denomination. 
+space - O(N)
+
+Levenshtein distance:
+takes in 2 strings and returns min number of edit operations that needs to be performed on first string to obtain other.
+Insert/Delete/Update are edit operations.
+We need to build a matrix with chars in one string in cols and another in rows.
+For every element in it, we find the number of operations for the row header to form the column positions until now.
+
+
+str1 = "abc"
+str2 = "yabd"
+
+   "" y a b d
+"" 0  1 2 3 4 
+a  1  1 1 2 3
+b  2  2 2 1 2
+c  3  3 3 2 2
+We start with empty strings. how many edits ? 0 edits.
+Then we move to next item, y - with empty string, we need one insert to form y. then one more insert to form a-so 1 +1 =2 for a
+this continues for first row.
+same applies for first column.
+Now from second row, we see how many edit for a to become "". - 1
+how many edit for a to become y - 1 - substitute. this goes on. and we take the value in the last row,column.
+By building this we can arrive at below formula. 
+If the char of 2 strings are equal, then we can pick the diagonal left value, meaning the last operations needed for its before char. 
+If chars are diff, we pick the min of (up, left, diag left) +1. Meaning, we can take any min route out of previous chars value and make one change to it, as they both are not same.
+here we used r-1, c-1 in string, as we added extra "" in the matrix.
+
+if(str1[r-1]==str2[c-1]):
+   E[r][c] = E[r-1][c-1]
+else:
+   E[r][c] = 1 + min ( E[r][c-1], E[r-1][c], E[r-1][c-1])
+
+Time O(MN) - M and N are length of 2 strings.
+Space O(MN)
+we can reduce space by picking only last 2 rows, as in formula we just depend on only the last 2 rows for finding values
+Space O(min(M,N)) - we pick the min string to form the row.
+
+Max sum increasing sub sequence
+
+A sub sequence need not be adjacent in array, but in same order. 
+10, 70, 20 ,30, 50, 11, 30
+Op - 110 - logic - 10,20,30,50
+
+
+logic - 
+for every index, we start from begening of array and see if we have a number lesser than the current num.
+if so, we add the max sum of that num to our current num and see if its greater than current max sum, if grt then update. else continue to next index untill our value.
+
+The question also asks the values which are used for adding. To get that, we can track them in diff DS, but we can do it effecientluy in a new array
+This sequence arrray elements will point to the previous index which was used to add to this index to make the max sum. if no prev was added it will be null.
+initially, we start by cloning the max sum from input array. this allows us to handle negative use cases.
+input 	  =>  [8, 12, 2, 3, 15, 5, 7] 
+max sum   =>  [8, 20, 2, 5, 35, 10, 17] 
+sequence  =>  [Nul, 0, Non, 2, 1, 3, 5] 
+For any index, if we pick the element in sequence it will point to the previous element of that sequence, we can go untill we reach null.
+
+currentNum = array[i]
+otherNum = array[j] 0<= j < i
+
+if otherNum < currentNum && if sum[j] + currentNum >= sum[i]
+  update sum[i] = sum[j] + currentNum
+  sequence[i] = j
+time : O(N^2) - we do kind of a 2 for loops
+space: O(N)
+
+Longest Common Subsequence
+
+take 2 strings and get the longest common subsequence.
+subsequence need not be adjacent, it needs to be in same order.
+
+if we have 2 string ABC and AC, to find LCS, we first check from the end of the 2 strings and start removing chars
+C==C, so C is part of LCS.
+Now we take this C and prepend it to the LCS of previous LCS. Here this is our first LCS, so ignore.
+Next remaining are AB and A. now we must remove last letter from first and second and see which gives longest LCA and pick it.
+1)remove A from second string. But then there wont be any LCS for this portion as second string became empty.
+2)remove B from first string, A==A. prepend A to LCS, AC. so we get LCS as AC. we found this by removing char from either strings and see which gives max LCS.
+So at ant point, we try removing last char from the 2 strings and pick the bigger LCS of two.
+
+   ""  x   k   y    k   z  p   w
+"" ""  ""  ""  ""  ""  ""  ""  ""
+z  ""  ""  ""  ""  ""  z   z   z
+x  ""  x   x   x    x  x   x   x
+v  ""  x   x   x    x  x   x   x
+v  ""  x   x   x    x  x   x   x
+y  ""  x   x   xy   xy xy  xy  xy
+z  ""  x   x   xy   xy xyz xyz xyz
+w  ""  x   x   xy   xy xyz xyz xyzw
+
+1) In the start we pick empty char. so anything with empty will result in empty
+2  We travese through fields, if there is a match in row/col, then we pick iys left diagonal in previous row and append new char to it. Meaning, we pick the last LCS withoout this char and append new char to form new LCS.
+3) If there is no match, then as mentioned earlier, we need to remove 1 char from both strings, find LCS for them, pick the LCS which has longest length.
+4) Meaning, check right and top of char, pick LCS with bigger length.
+We arive at the formula using this.
+
+time : O(NM * min(N,M)) 
+   - O(NM) - for forming the matrix. 
+     min(N,M) - for every LCS, when we concat its another time involved.
+space: O(NM * min(N,M))
+
+1) We can improve space complexity by having only the last 2 rows of the matrix. We just need current and previous rows.
+2) Much better way would be to not store LCS in matrix, rather store pointers to backtrack to form LCS.
+
+Min number of jumps
+
+given array of int, the int at each position is the max no of nums can be made.
+find the min no of jumps to reach last position.
+
+if (arrays[j]+j >= i)
+   jumps[i] = mins(jumps[i], jumps[j]+1)
+   
+time O(N^2) - we iterate throguh each index. and for each index, we iterate through all index before it.
+space O(N)
+
+We can do it in O(N) time and O(1) space.
+
+For every index, we store the maxReach and we maintain a steps and jump variable and tweak it.
+See code for more understanding.
+At each point we know what is the maxReach from the point. its basically the element at that index + index.
+ maxReach = arrays[i] + i
+steps - when at index 0, we know that we can take no of steps=arrays[0], untill we have to take a step.
+while iterating array, we update maxReach and steps.
+3, 4, 2, 1, 2, 3, 7, 1, 1, 3
+   maxReach = arrays[0]   - initially it will be the max steps available at start index
+   steps = arrays[0] - we know we have these much steps to take untill we run out of steps.
+   jump = 0
+  for 1 <= i < len
+    maxReach = max( maxReach , arrays[i] + i) 
+	  // maxReach will always be max position which can be reached using any of before index elements
+	steps -=1
+    if(steps ==0)   // when we run out of steps, we have to make a jump.
+	  jumps +=1
+	  steps = maxReach - i // we know that we can still go to maxReach index without making jumps. so we change positions.
+	  return jumps+1 - by time we reach final index, we still need one more jump.
+
+
+ 
+water trapped
+in a container where pillars are present, we need to find the water stored between the pillars.
+
+For each index we can calculate the water stored above it.
+for any index, we need to find the tallest pillar to its left and tallest pillar to its right. the water will be trapped in between the 2 pillars. 
+leftPillar , rightPillar are the tallest in left and right.
+Now we find the smaller of these 2. Any water can be stored until this smaller level.
+We see the height of any pillar at the current position. if there is a pillar, we minus it with smaller value.
+
+we build leftMax and rightMax arrays. At any position, leftMax will hold the tallest pillar to left of this position.
+
+input - [0,8,0,0,5,0,0,10,0,0,1,1,0,3]
+we go from left to right and calculate this,
+leftMax - [0,0,8,8,8,9,8,8,10,10,10,10,10,10]
+we go from right to left and calculate this,
+rightMax - [10,10,10,10,10,10,10,3,3,3,3,3,3,0]
+water - [0,0,8,8,3,8,8,0,3,3,2,2,3,0] - we sum up the values to get result. 48
+
+minHeight = min(leftMax,rightMax)
+if(height < minHeight){
+	w = minHeight - height;
+}else 
+   w = 0
+
+time O(N)
+space O(N)
+
+Knapsack
+given array of arrays, each sub holds 2 items, 1) items value 2) items weight
+we have a max capacity of knapsack.
+fit items into knapsack, maximing value but within capacity. we only have 1 of each item.
+
+[1,2][4,3][5,6][6,7]
+10
+
+return max value you achieved and the items used
+10 - [4,3][6,7]
+
+create 2d array of the capacity values from 0 - capacity in rows
+the combination subarray in column
+
+now we need to fill the matrix fiels with the max values sum which can fir that capacity.
+1) base case is 0. 0 value as we dont have any item.
+2) for each item, can we fit all the items until now for the given capacity.
+	- if we cannot, we retain the previous rows value(value of items until previous item)
+	- if we can fit, we need to put the corresponds value in the cell.
+	  - but we need some calculation here,
+	    - lets say we have 2 items in our logic, which can fit for the capacity. which one do we choose or do we choose both ?
+		- if collective of both weights exceeds capacity, we know we cannot put both.
+		- take the current weight in picture, go to previous row, find cell value of ->( current capacity - weight)- old val
+		- add current value to this old val - we get a sum.
+		- compare this sum with the - max value we would have if we did not add the new value. 
+		 - if we did not add this, it just the value above the current cell.
+		- we compare these 2 values and pick max of it.
+		- this is similar to include + exclude in coin change problem.
+		
+      0  1  2  3  4  5  6  7  8  9  10
+[] 	  0  0  0  0  0  0  0  0  0  0  0 
+[1,2] 0  0  1  1  1  1  1  1  1  1  1
+[4,3] 0  0  1  4  4  5  5  5  5  5  5
+[5,6] 0  0  1  4  4  5  5  5  6  9  9
+[6,7] 0  0  1  4  4  5  5  6  6  9  10
+
+we get 10 as the answer.
+we need to backtrack to get the items.
+  we take final cell and compare it with previous cell, if they both are same, means we did not pick the current item.
+  if they are diffeent, then we picked current item. (if we dont pick an item, the previous cells value will be same)
+  Now go to above row, and minus the previous capacity w, value and pick the cell.(meaning we exclude this item)
+  if we had not picked the item, we will just go to above cell.
+  apply same logic. 
+we can form the items using this logic.
+we start at 10, 10!=9, so we add 6,7 
+Now go to current capacity - w, 10-7 , we go to 3rd cell in before row.
+compare its value with previous cell, 4==4, so we did not add this item. go one row ahead in same cell
+1!=4, we added this item. 4,3
+go up, 3 cells before, capacity becomes 0, we can stop. 
+  
+To form 4, we take max(1, 0+4) = 4
+
+Let v be value of item and w be weight of item, we form the values[][] matrix
+if w <= j
+  values[i][j] = max (values[i-1][j] , values[i-1][j-w] + v )
+else 
+  values[i][j] = values[i-1][j]
+  
+time - O(Nc) - N is number of items, c is capacity
+space - O(Nc)
+
+Disk stacking:
+we have list of disks, where  disk - [1,1,1] - first int - width, 2nd int - depth, 3rd - height
+we need to keep one on top of another and get max height. case is, for any disk, all disks below it must have strictly lesser, width, depth and height.
+
+to make this problem easier, we can sort the disks by any dimension. We pick height.
+we sort disks based on height.
+Nowe we create array of same length as tower. 
+For each index, we assume that this disk is at the bottom of tower and we find the max height we can reach by keeping this disk as the bottom.
+
+for every index, the min height will be the height of the disk at that index. we can just put tht disk and we get the height.
+we initialize the array with corresponding heights of disks at that position.
+
+we need to update this array and see if we can get to greater heights.
+Now for any disk in cunter position, we know all disks after it will have bigger height than this as we sorted based on height. so we can add only disks before it.
+
+so for the first disk the max height will be its height.
+for second, we look all disks to left of it, we check if its width, depth and height are smaller than current.  (height still could be same duplicate)
+  if smaller, 
+    - we add the max height of other index to max height of current index. if this sum is greater than current max, we update.
+  if not smaller, we ignore.
+
+array - [2,2,1][2,1,2][3,2,3][2,3,4][4,4,5][2,2,8]
+
+maxHeight - initialized - [1,2,3,4,5,8]
+
+[1,2,3,4,5,8]
+         6
+		 7
+		 10
+		 9 - 9 is small than 10 , so 10 stays.
+
+  currentDisk = array[i] for 0<= i <length
+  otherDisk = array[j]  for 0<= j < i
+  
+  if ( otherDisk.width < currentDisk.width && otherDisk.depth < currentDisk.depth && otherDisk.height < currentDisk.height)
+		maxHeight[i] = Max( maxHeight[i] , maxHeight[j] + currentDisk.height)
+
+Using this we can form the maxHeight array, we need tp pick the max value in this array.
+
+we can have sequence array to track the disks which are added.
+in every position i of the sequence array, we have index of the previous disk which was added on top of it.
+time - O(N^2)
+space - O(N)
+
+Numbers in PI
+
+Given a string representing first n digits of pi and list of positive int as string, write a function to return smallest number of spaces that can be added to n digits such that the resulting numbers are found in the list of int.
+
+We can either start from first or end to solve this problem.
+Lets say we start from first. we take first int, check if its in list, if so we can add a space after this. if not, we proceed to the next number.
+We check if this first 2 nos are in the list, 
+  - if so we add space, and consider the logic to the next set of numbers
+  - if not we move on to next num. like wise we go till end. Then from end we add items into cache for using it next time.
+  
+  in every item of the string, we must have tried to check if there is any combination available.
+  This means even if one logic successfully reached end, we will have reached to the point where we started, we then take the next prefix and continue to see if there is any other combination which gives lesser no of spaces.
+  
+The same could have been done by starting from end.
+
+3141592 
+list - 3141, 5, 31, 2,4159,9,42
+we start from 2, see if 2 is there in the list. 2 is there, so we add 2 to cache with space as 0.
+Then we move on to 92. here we have 2 combo , 9 and 92 - we first see if 9 is there in cache, its there, then we see if emaining is in cache, if so we takes its value, else we need to find it. 
+here we know it was 0 for 2. and 1 for 9. so we add 92 in cache with 1 space. 
+Then we move on to 592, we have first add space after 5, we already have 92 in cache, so we re use it. 1 +1 = 2 space.
+Then we check if 59 is in list, its not, then we check for 592 is there in list, its not. so our min space was 2. 
+We proceed same forward 
+
+
+time  O(N^3) - N * N * N 
+ 1) we iterate through every item 2) we continue or every index 3) string splicing is costly as its immutable in mostt languages.
+ Cache helped us recude the complexity here. else it would have been huge.
+space  O(N+M) - N is length of pi string, we will have this in cache. M is length of numbers in list. On top of this we will have recursive calls.
+
+Max Profit with k Transactions
+given array of positive int, representing prices of stocks in different days, and max number of transactions allowed to make using them. One transaction refers to buying a stock on a day and selling on another later day. find max profit which can be made.
+
+we can hold only one stock at a time. 
+
+prices[]  - [5 , 11, 3, 50 , 60 , 90]
+k = 2
+
+We represent this as a 2D array, profit[]
+
+   5  11  3  50  60  90
+0  0   0  0   0   0   0
+1  0   6  6  47  57  87
+2  0   6  6  53  63  93
+
+for any day, we can either sell a stock or not. 
+if we dont sell, then the max profit will be the max profit on previous day. we can get this using profit[]
+now if we sell it, we need to take the ( price of current day from prices []  + Max ( - price of [x] + profit[t-1][x]) ) where 0 <= x < d
+
+profit[t][d]  = Max ( profit[t][d-1] (no transaction on day) ,  prices[d] + Max(-prices[x] + profit[t-1][x]) (transaction made ) )) , 0<=x<d
+
+ 90 + 
+ x=0: -5+0 = -5
+ x=1: -11+6=-5
+ x=2: -3+6=3
+ x=3: -50+47 = -3
+ x=4: -60+57=-3
+ 
+ Here 3 is the max, so 90+3 = 93.
+ 
+ time : O(N^2 * k) - for forming the 2d matrix it takes NK. but for each cell, we perform another O(n^2) operation to calculate max of each of the value. 
+ space : O(nk)
+ 
+ Now can we do better in time complexity ?
+ try to see if we are doing any calculation multiple times.
+ We calculated untill x=4 for 93. what would have we done for its previous 63 ? 
+ we would have done untill x=3 to get it. so we had been doing this same calculation multiple times.
+ x=0: -5+0 = -5
+ x=1: -11+6=-5
+ x=2: -3+6=3
+ x=3: -50+47 = -3
+ Max would have been 3. so we took 60+3 = 63.
+ we could have stored the greates max untill every cell. so by the time we had calculated for 63, greatest max would have been 3.
+ Now we just calculate for x=4. when we get to 93, we get max as -> -3, we then take max of (3,-3) here which is 3. 
+ we can reduce the no of operations. we have changed he O(N) into a O(1) operation.
+ 
+ time O(NK)
+ space O(NK)
+ 
+ for(int i=1; i<=k;i++){
+			int maxThisFar = Integer.MIN_VALUE;
+			for(int j=1; j<prices.length;j++){				
+					maxThisFar = Math.max(maxThisFar,  matrix[i-1][j-1] - prices[j-1]);
+					matrix[i][j] = Math.max(matrix[i][j-1] , maxThisFar + prices[j]);				
+			}			
+		}
+		
+ can we reduce space complexity ? yes, we could have just used the last 2 rows instead of holding the whole matrix.
+ 
+ time O(NK)
+ space O(N) - 2 rows of N length
+
+
+Palindrome partiotioning with Min cuts
+Given non-empty string write a function that returns min no of cuts needed to perform on string, such that each remaining string is a palindrome.
+noonabbad
+
+noon abba d
+2 cuts
+
+create a 2d matrix, for each index in both row and column. 
+1) now for every index, we do a palindrom check based on the row and column numbers. 
+  - meaning, for index 0 - just n - its a palindrome
+  - for index 1 in row 1, we start from 0 to 1, no - not a palindrome
+  - for index 2 in row 1, we start from 0 to 2,noo - not a palindrome
+  - for index 3 in row 1, we start from 0 to 3,noon - it is a palindrome
+if its palindrome ,it strue, we put T. else we put F for false.
+The diagonal will always be True. as for them, we start with that letter and end with that letter.single letter is palindrome. 
+noonabbad
+for second row, we start at index 1 of j and we do as if its the start of the string.
+palindrome[]
+   0 1 2 3 4 5 6 7 8
+0  T F F T F F F F F
+1    T T F F F F F F
+2      T F F F F F F
+3        T F F F F F
+4          T F F T F   
+5            T T F F
+6              T F F
+7                T F
+8                  T
+
+for 0<=i < length(string)
+  for i<=j < length(string)
+     palindrome[i][j] = isPalindrome(string[i:j+1])
+
+now we form an array of same length of string, where each index holds the min number of cuts required, starting at index 0 until its index.
+like - fist index will have min no of splits for string "n". The second index will be for string "no" ...
+we initia with max value
+
+cuts[]
+[ max max max max max max max max max] 
+we start at first string and see if its a palindrome.
+[ 0 max max max max max max max max] 
+is "no" a palindrome ? we can get this info from palindrome[]. 
+ if its not a palindrome, the cuts will be cuts of earlier char + 1,
+[ 0 1 max max max max max max max]  
+now from now on, for each char, we see from 0th to ith position if its palindrome and get a value,
+ then we start from 1st position to ith and see if its a palindrome and get a value. 
+ now we compare it with earlier value and take min of it.
+1) Lets take noo - we know noo is not a palindrome. so default value will be 1(prev value)+1 = 2.
+2) can we form a palindrome somewhere in between this ?
+3) if we take no | o - it will not form palindrome , but if we remove n like n | oo - we can reduce number of cuts via oo.
+4) so it comes down to 1 cut. min(1,2) - 1.
+[ 0 1 2 max max max max max max]  - we get 2 by start from 0
+[ 0 1 1 max max max max max max]  - we get 1 by n | oo - so we choose min of these , which is 1.
+
+
+
+time  : O(N^3)
+  1) palindrome[] - we do a double for loop O(N^2), but for each computation, we do a string slice which is O(N) - O(N^3)
+  2) cuts[] - we do O(n^2) in forming the min value for each index
+space : O(N^2) - palindrome[] size
+
+can we do better ?
+in palindrome[] , every time we call the isPalindrome - which makes it N^3.
+ in each entry, we can decide id next chars forms a palindrome based on previous values.
+ for every string, if first and last are same, then we need to see if letters in middle form a palindrome.
+ if we already have this info of letters in middle in matrix, we can use it. this is the approach.
+ 
+ 
+Longest Increasing Subsequence
+return the longest increasing subsequence in array.
+5, 7, -24, 12, 10, 2, 3, 12, 5, 6, 35
+
+
+we use 2 arrays.
+
+length[] - each index i, we store the length of the longest increasing subsequence that ends until with element in input[] at this index.
+  - initialize the array to all 1
+  - look all the numbers that come before the index i, if the number is less than element at i,
+     - if smaller than i'th element, we can add it to count
+	    - take the length[j] and add 1 to it, and see if its greater then length[i], if so update
+		- update the sequence[] as well
+	 - if smaller, ignore 
+  - keep incrementing the count, we will finally store the count at the length'index
+sequence[] - 
+    - initialize to all None
+	- at each index, we store the index of the input that comes before this index.
+
+length -   [ 1 ,  2, 1,    3, 3, 2, 3, 4, 4, 5, 6 ]
+sequence - [None, 0, None, 1, 1, 2, 5, 6, 6, 8 ,9 ]
+
+  for 0<= i < length
+    for 0<= j < i
+	  if(input[j] < input[i])
+	     length[i] = max( length[i] , length[i] + length[j])
+		 sequence[i] = j
+		 
+   we can backtrack in sequence[] to find the input in the input[]
+   
+time : O(N^2) 
+space : O(N) 
+
+we can do better . time can become O (N log N)
+we can apply binary search which id log N operation.
+
+
+
+
+Sorting:
+Bubble sort:
+sort elements in array in ascending order
+iterate through the array multiple times, and each time we iterate, we will perform swaps to place numbers in right order.
+ - first time we iterate, at any point, we check if the current number and number next to it are in right order.
+ - is current number smaller than or equal to next one, 
+    - if smaller, then we move to next number
+	- if not smaller, we swap the numbers and move on to next number.
+ - once we reach the end of the array, we check if we performed any swaps ? 
+   - if yes, we have to redo the loop 
+   - if no swap was done, we are done with sorting.
+- after the first iter, the largets number will end up being the last. As even if it was in front, we would have automatically moved it to end.
+- so after every iter, the last element would be right list ordered. meaning, after 1st , we will know the last is the max and rightly arranged. after 2nd loop, we know that the last but 1 is in right place. 
+- so after very iter, we can avoid looping throguh the last numbers which are arranged rightly. This is a small optimization.
+
+ Note: swap occurs in place. no new space is needed.
+ 
+ 8 5 2 9 5 6 3
+after 1st iter =>  5 2 8 5 6 3 9 
+after 2nd iter => 2 5 5 6 3 8 9
+				  2 5 5 3 6 8 9
+				  2 5 3 5 6 8 9
+				  2 3 5 5 6 8 9
+				  2 5 3 5 6 8 9 - no swap. so sorting is completed.
+
+time: O(N^2) - we are looping through the array until it gets sorted. worst case it will be 2 for loops. Best case will be O(N) if the array is already sorted.
+space : O(1)
+
+Insertion sort:
+
+ 8 5 2 9 5 6 3
+ 
+ 1) we have the sorted portion in the front of the list and compare the rest of the list to this and change the sorted set
+ 2) we make sure, that at any point in time, the front sorted portion is always sorted.
+ 3) lets say we start with 8. now 8 is the front portion, we compare 5 with 8 and swap as 5 is less than 8.
+ 4) now we have 58 as front portion, we compare 2 with 8 and swap, as 2 is smaller, then we compare 2 with 5 and swap
+ 5) it becomes 258 and we ensured that this portion is sorted.
+we loop through array once, and at each position we loop back untill the front portion is sorted.
+
+ time - O(N^2) - if array was already sorted, it would have been O(N) which is best case scenario
+ space : O(1)
+
+Selection Sort:
+ 
+ 8 5 2 9 5 6 3
+
+ we divide it into 2 seperate lists within this list. one sublist represents unsorted numbers and other sublist represents sorted numbers.
+ in begening, entire list represents unsorted numbers.
+ 1) we iterate list a bunch of times, and each time we find the smallest number in the list. 
+ 2) once we have the smallest number, we swap it to front and append it to the sorted set which is in front.
+ 3) we continue until unsorted sublist becomes empty list.
+ 
+ time - O(N^2) - if array was already sorted, it would have been O(N) which is best case scenario
+ space : O(1)
+ 
+Quick Sort:
+
+we pick one value to be our pivot. This can be picked random or like first number in array.
+we iterate through rest of the array, we sort every other number just with respect to the pivot.
+ - every number smaller than pivot, will be moved to left of pivot. 
+ - every number greater than pivot, will be moved to right of pivot. 
+at the end of the iteration, pivot will be in the final sorted position in the array.
+now we can pick the list left of pivot, and perform the above of picking a pivot and sorting.
+the same applies to right of pivot. 
+we do this untill entore array is sorted
+we start with pivot as first number, we have a Left and Right pointers.
+  	
+ 8 5 2 9 5 6 3
+ P L         R
+ we continue until r<l, 
+ if num[l] > pivot && num[r] < pivot -> then we swap the 2 numbers. 
+ if num[l] < pivot, l++  (as we know its in sorted portion)
+ if num[r] > pivot, r--  (as we know its in sorted portion)
+ 8 5 2 9 5 6 3
+ P   L       R
+ 
+ 8 5 2 9 5 6 3
+ P     L     R
+ we need to swap,
+ 8 5 2 3 5 6 9
+ P     L     R
+ 
+ 8 5 2 3 5 6 9
+ P         R
+           L
+ 8 5 2 3 5 6 9
+ P         R L
+ we stop as R<L. Once R<L, we swap pivot with R.
+ 
+ 6 5 2 3 5 8 9
+ P         R L
+ 8 here is perfectly sorted and in final sorted position. all numbers to left of 8 are smaller than it, and vice versa.
+we continue the same on the lists to the left and right of pivot.
+we pick the smaller sub array first. 
+9 is only number to right. so its already sorted.
+we pick numbers to left of 8 and start. 
+ 6 5 2 3 5 8 9
+ P L     R 
+ 
+time: 
+worst case -O(N^2)-  after every iteration, if our array is split as 0 element on one sub array and rest all in other, for every loop we do, then we do O(N^2). meaning for every element, we do O(N)
+best case -  O(N log N)   - what if pivot divides array exactly into half every time we do sort.
+Average case - O( N log N) - mathematical proof is there.
+
+space : O(log N) - we are applying recursion. frames on call stack will use space. 
+   - so only we mentioned to apply sort first on smaller sub array. 
+   - by applying on smaller of two, we know at most we make O(log N) calls at once. 
+   - we call it on one sub array, then it will split into 2, then we call it on smaler of it,.. this continues. 
+   - if we had called on big, then on small, we might end up with O(N) on call stack.
+
+Merge Sort:
+Uses divide and conquer algorithm
+
+        8 5 2 9 5 6 3
+indes - 0 1 2 3 4 5 6
+
+  mid = (0+6)/2 = 3
+  
+  [ 8 5 2 9]   [5 6 3]   - 2 sub arrays
+  [ 8 5 ] [ 2 9]
+  [ 8 ] [ 5 ] [ 2 ] [ 9 ]- base case where sub arrays of length 1. compare the numbers and sort them into single array
+  [5,8] [ 2,9] - we know that both arrays are sorted. so we can compare the values and sort them easily
+  [2,5,8,9] - we could have had 2 ptrs for 5 and 2 and compare their values and sort.
+  -- we must have done same for other sub array and we need to merge them finally.
+  
+ - divides the array into 2 and conquers the two halves. 
+ - continously divides subarrays and conquers them.
+ 1) we find the mid (start+end)/2 = mid
+ 2) we split the array based on the mid and form 2 subarrays
+ 3) we continue untill they become of size 1. we then start sorting them going forward. 
+ 4) sorting becomes easy now as both the arrays are sorted.
+
+time :  O ( N log N) - we have logN number of splits for subarrays
+  1) O(N) - we split the input array into 2 sub array copies
+  2) O(N/2) = O(N) - we split the above sub array into 2 sub array copies
+  ......
+  n-1) O(N) - we merge the 2 sub arrays together.
+  n) O(N) - we merge the 2 sub arrays together.
+space : O( N log N) - we are always creating new sub arrays. 
+
+
+Array
+Two sum
+check if sum of any 2 nos in array, sums up to a given target.
+
+3 5 -4 8 11 1 -1 6
+target : 10
+we can add 11 and -1.
+
+Approach 1:
+2 forloop and iterate every number and see if we can find a sum.
+time : O(N^2)
+space : O(1)
+
+Approach 2:
+Use a hashtable. traverse array and store every element in hashtable which allows to access every element in constant time.
+now we traverse through the array and take every value and minus it with target and see if we can find this value in hashtable. 
+x + y = 10
+y = 10- x, for every value of x, we see if y in in hashtable.
+we can do this above logic in a single loop. 
+loop in , try the above eq and see if result is there in hashtable, if not, add the looped element into the hashtable.
+
+time: O(N) - we are just iterating once.
+space : O(N) - hashtable 
+
+Approach 3:
+more optimal approach would be to first sort the array. a good sorting algo like quick/heap/merge will take O( N log N) time.
+then we can find the answe in O(N) time.
+1) sort the array
+2) assign L and R pointers in start and end of array
+3) perform array[L] +array[R] = sum. compare sum with target. 
+   - If sum is less than target, increment L
+   - If sum is greater than target, decrement R
+   - continue untill L <R
+
+time : O ( N Log N) sort + O(N) search - O( N log N)
+space : O(1)
+
+Validate Subsequence
+given 2 arrays, write a function to see if second array is a subsequence of first.
+
+ 5 1 22 25 6 -1 8 10 11
+ 1 6 -1 10
+ 
+have 2 pointers, 1 for each array
+if elements in both pointers are same, we increment the second pointer and first pointer
+if elements does not match, we just increment first pointer
+we continue this until, second array is fully covered - so its a success scenario
+ or untill first array gets over without second being over, then its a not subsequence.
+ 
+time : O(N) - we itertae throguh the main araay of size N
+space : O(1)
+
+Three Number Sum:
+in a list of unsorted array, find the list of triplets from any positions whose sum is equal to target.
+
+12 3 1 2 -6 5 -8 6
+target = 0
+-8,2,6  -8,3,5  -6,1,5
+
+Approach 1: 
+we can have 3 for loops and we can find the sum and find the elements. 
+time : O(N^3)
+
+Approach 2:
+we can use hashtable approach and reduce time to O(N^2)
+ - we need to ensure to remove duplicates
+ - duplicates can come by having different order of the 3 numbers.
+ 
+Approach 3:
+1) sort the array in ascending order O(N log N) time
+2) use current, left and right pointers to find the sum and elements.
+  sum = current + left + right
+  
+3) if sum==target, 
+      add triplet to op
+	  left++
+	  right--   (we do both left++ & right-- because, once we get to target, our current is not changing, so to get to target again, just by moving left or right, we cannot get target again, need to move both)
+   if sum < target
+      left ++
+   else right--
+4) once left >= right 
+      move current to its right - current++
+	  continue above logic again.
+	  
+-8 -6 1 2 3 5 6 12
+ C  L           R
+
+time : O(N^2) - O(Nlog N) sort + O(N^2) search
+space : O(N) - this is for the op which we store.
+
+
+Smallest difference
+
+take 2 non-empty arrays of int, find pair of numbers whose absolute difference is closest to 0.
+absolute difference between -5 and  5 is 10. and between -5 and -4 is 1.
+-1 5 10 20 28 3 
+26 134 135 15 17
+1) sort both the arrays O(N log N)
+2) have 2 pointers both at start of 2 arrays.
+3) if absolute difference is 0 (if both numbers are same), return the 2 numbers. we have reached solution.
+4) else,
+   - find the difference and store the minDiffUntillNow
+   - increment the index of array which has the smaller of the two numbers. (both arrays are sorted, so we incremenet smaller value to get close to the other larger value in next array)
+5) continue untill we get diff as 0 or till one of the array is iterated fully
+
+time - O( N logN + M log M) - N and M are length of 2 arrays. We are sorting both. so we get this..
+      the search will be just O(N+M) - so this is ignored compared to above
+
+space - O(1)
+
+Move Element to End
+
+given a array of int, move all instances of a given int to end of array in place. we dont care about order of other elements.
+
+2 1 2 2 2 3 4 2 
+int - 2
+1 3 4 2 2 2 2 2
+
+2 pointer approach.
+1 pointer at start and 1 ptr at end of array.
+if, the second pointer points to our target element, decrement second pointer. (we need to point to the element which we would like to swap - we dont want to swap target from back)
+if, first pointer is not pointing to target, increment it.
+if first points to ->target and second not point to target,
+   swap
+if second pointer passes the first, we stop.
+
+2 1 2 2 2 3 4 2 
+i			  j
+
+time : O(N) - we are just iterating once. every element is visited only once.
+space : O(1)
+
+Monotonic Array
+
+-1 -5 -10 -1100 -1100 -1101 -1102 -9001
+1 1 1 2
+check whether an array is monotonic.
+monotonic - elements from left to right, must be entirely non-increasing or entirely non-decreasin.
+
+we have a direction var,  this can be increasing/decreasin/NO-directin - can be an enum
+No-direction - occurs if the 2 numbers are same.
+only if 2 numbers are diff we can come up with increasing/decreasin direction.
+
+we iterate throguh the array and every time we compute direction by comparing element and its next element.
+if we get No-direction, we try to check if the next 2 num, gives us a directin.
+once we get a valid direction, then in the upcoming direction, we check if it is same as old or breaks the old direction.
+
+time O(N)
+space O(1)
+
+OR
+
+Lets first check if array is non-decreasing
+Now check if array is non-increasing
+The above 2 sets can be done using 2 for loops easily. or can be done using same for loop with 2 diff checks in it
+this will be lot easier than above approach as its just 2 booleans to track
+
+time O(N)
+space O(1)
+
+spiral traverse
+
+taken a 2d array and return a 1d array with elements in spiral order. 
+
+[
+[1,  2,  3,  4], 
+[12, 13, 14, 5],
+[11, 16, 15, 6],
+[10, 9,  8,  7]
+]
+
+[1, 2, 3, 4, 5 ,6, 7, 8 ,9, 10, 11, 12 ,13, 14, 15 , 16 ] 
+
+   SC          EC
+SR[1,  2,  3,  4], 
+  [12, 13, 14, 5],
+  [11, 16, 15, 6],
+ER[10, 9,  8,  7]
+
+We consider each outer portion as a rectangle and we need to first traverse the outer rectangle first before coming to inner.
+We first find the SR Staring Row, ER Ending Row, SC- Staring Column, EC -Ending column
+we need to move along the rectangle and add the items.
+once over, go to inner rectangle and perform the same.
+we stop when ER > SR and EC > SC
+
+this can be implemented both iteratively and recrusively
+
+time O(N)
+space O(N) - saving solution in another array
+
+Longest peak
+
+peak is 3 consecutive int, such that they are in increasing order and it dips after the peak
+1 4 10 2 - forms a peak. all 4 elements are part of the peak. it slowly increases to 10 and reduces to 2.
+4 0 10 and 1 2 2 0 does not form.
+
+
+1 2 3 3 4 0 10 6 5 -1 -3 2 3 
+
+here we try to first find all the peaks and then find the length of the longest peak.
+iterate through the array, compare every value with its adjacent values and find peaks.we store the peak index or we calculate length of peak in same step and hold max always.
+if we start with 123, 2 is greater than 1 but not greater than 3. so it does not form a peak.
+now from the peak we go in left and right directions untill elements are strictly decreasin.
+take the count.
+
+3 3 4 0 - forms a peak.
+0 10 6 5 -1 -3 forms a peak
+the longest peak is of length 6.
+
+time : O(N) - we iterated through array first, then we just had to go to left and right of peaks.
+space : O(1) - if we dont store the peak and do it in place. 
+
+
+Four number sum
+
+find set of all 4 numbers in the array which when added forms the target.
+
+7 6 4 -1 1 2
+target sum - 16
+
+having 4 for loops to solve this would not be a better solution as it will have O(N^4) time complexity
+
+A quadraplet (4 numbers) can be expressed as a pair of sum of numbers.
+
+a b c d - 4 numbers 
+
+a + b = k 
+c + d = l
+can be expressed as k,l 
+
+we store in a hashtable, the sum and the list of pair of numbers, whose sum is equal to the sum.
+2 diffeent numbers can form the same sum. 1,2  4,-1  both form 3 as sum.
+we need to form the hashtable while iterating the array in a single shot and check for values. 
+ - else we might end up in wrong count. [7,6, 1,2]  [7,1  6,2]  - these 2 sets are same but with diffeent combo. to avoid this.
+
+7 6 4 -1 1 2 
+we start at 7, we iterate through all numbers after 7
+  - 7+6 = 13, 16-13 = 3. we check if 3 is in hashtable. its not. move on
+  - 7+4 = 11, 16-11 = 5. we check if 5 is in hashtable. its not. move on
+  ... we continue for all after 7. and as we did not add any entry in hashtable untill now, all above will not match
+- we come to second number 6, we perform same operation for all numbers after 6. nothing will generate op.
+  - now we iterate through all numbers before 6, in our case only 7.  
+    - 7+16 = 13, we add this to hashtable.  13 is key, 7,6 is value
+- we come to third number 4, we iterate throguh rest.
+   - 4 + -1 = 3, 16-3=13, we have 13 in hashtable.
+   - we pick all the pairs in hashtable value for 13. note- 13 can have multiple combination of pairs  1,12   2,10 etc
+   - for each pair in value, we add the current pair - 4,-1 to form quadraplets.
+  - now we iterate through all numbers before 4, and find sum and add them to the hashtable. this time we dont compare it to target, we just find sum and add to hashtable
+Note: we always add entries in hashtable only with numbers before it. this is to avoid duplicate quadraplets.      
+  - we continue till end.
+  
+time : O(N^2) - we are doing one for loop - and for every item, we again iterate through every element in list
+     worst case - O(N^3) - if for same sum, many pair of values are added to hashtable, we need to iterate through elements in values of hashtable to form the quadraplet.
+space : O(N^2) - hashtable can have diffeent combination of N
+
+Subarray Sort
+given an array, return the indeices of start and end of the smallest sub array within the main array, that needs to be sorted in place, so that the entire main array gets sorted in ascending order.
+
+[1, 2, 4, 7, 10, 11, 7, 12, 6, 7, 16, 18, 19]
+
+here 7,10,11,7,6,7 - needs to be sorted
+so op - 3,9
+
+this could start even from the first index. 
+tricky part is, even if one number is not in right position, but if its real position is in first, then whole array needs to be sorted.
+so final position of sorted index depends on the position of the misplaced element.
+we need to find all the unsorted numbers and 
+  - within this we need to find the smallest and largest one.
+  - find their final positions in sorted order.
+  - the final positions determine the start and end of the items to sort
+
+1) go over every element and find the unsorted ones by comparing them to their previous and next elements
+2) find the smallest and largest numbers within this.
+3) we need to find the final sorted position for the smallest and largest numbers
+4) these 2 are the start and end indeices for the set of indeices which needs to be sorted
+5) for smallest number position, start from first index and compare elements and find the index of this element
+6) for the largest number position, start from end and compare elements and find the index of this element
+7) so we need to sort all elements between the start and end indeices which we identified.
+
+time : O(N) 
+      - we find all unsorted elements in one pass O(N)
+	  - we find position of smallest and largest number - O(N)
+space : O(1)
+
+Largest Range
+take array of int, and return the smallest and largest numbers in range of int.
+A range of int, is set of numbers that come after each other in set of real int.
+2,3,4,5,6 - this forms a range.
+3,2,4,6,5 - this forms a range.
+The numbers need not be sorted or adjacent in input array.
+
+1) we could sort the array
+2) check if previous number is 1 less then current number, then we continue till for all
+3) we can find the range using this.
+
+time: O(N logN) - due to sort
+
+A better optimal solution
+[1,11,3,0,15,5,2,4,10,7,12,6]
+1) store all numbers in a hashtable and let the value be false - O(N)
+2) start from first number in array, here its 1. Mark its value as true(visited)
+  - minus 1 from it - 0 . and see 0 is in hashtable, it is. so it is the start element for now. mark value of 0 as true.
+  - minus 1 from 0. its -1. check if -1 is in hashtable, its not. so our start element is 0. 
+  - add 1 to 1. its 2. check if 2 is in hashtable, if so update hashtable and end index.
+  - continue untill we find end element that is not in hashtable.
+  - store the newly formed array
+3) start with next element, 11. check if it is not visited in hashtable. meaning, its value is false
+   - if not visited, continue the above logic and stire its range
+4) we start with 3, 3 is having true in hashtable, meaning it was already visited. so we skip it
+... continue with others.
+
+time : O(N) - we iterated and add in hastable. 
+            - next time while we iterate, we just check if its not already visited and then only visit. 
+space : O(N) - hashtable   
+
+Min Rewards:
+
+
+zig zag:
+1  3  4  10
+2  5  9  11
+6  8  12 15
+7 13  14 16
+
+output should be - 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
+
+if we need todo a diagonal traversal its simple, we just need to move one row and column down or one row and column up.
+problem arises when we need to go down, up, left or right.
+if we closely look at traversal, when we are in first column and we are going down, we go one row down.
+if we are in last row and we are going down direction, we go one step right.
+same applies for top row and last column but tracking upward direction.
+
+we need to track direction
+1) start by going down. direction is down.
+2) as we did go down in first column, we change direction and move diagonaly up,
+3) check if we are in first row or last column,
+ - if so, move right or down based if we are in first row or final column, change direction
+ - if not so, then keep moving diagonaly up
+4) same logic in first column and last row.
+5) continue the same to traverse untill final element of array
+
+time: O(N)
+space: O(N) - output array but we did not use any extra space for the algorithm
+
+
+String
+
+
+Palindrome Check:
+check if a string is a palindrome
+1) create a new string which is reverse of this . compare it to the given. if same. they are palindrome.
+time : O(N^2) - string concat operation is N^2
+space : O(N) - we are creating a new string.
+2) instead of new string, we could have added it to an array and and convert back to string
+time : O(N)
+3) recursive 
+  - is first and last letter same && is the remaining middle letters form a palindrome ?
+time : O(N)
+space : O(N) - space is allocated in stack as this is recurision 
+4) 2 pointer approach
+   have 2 pointers, one for first letter, another for last, check if both letters are same, if so move both one step in.
+   continue untill they cross
+time : O(N)
+space: O(1)
+
+left = 0
+right = length-1
+
+while left < right
+   if string[left] != string[right]
+      return false;
+   else
+     left += 1;
+	 right -= 1;
+return true
+
+Ceasar cipher encryptor
+given a string and an int k , return a new string by shifting every letter by k positions in alphabet order
+
+xyz - k=2
+
+integer can be very huge, in that case we need to use modulo
+unicode value - it takes in char and return its unicode value
+lets say the range of unicode for a--z is 97 -- 122.
+now if we just take unicode + k, it will not work for use case like z. 
+as z value is 122. ==> 122+2 = 124 - this is not unicode for b. we have gone out of range.
+
+lets say nLc as new Letter count,
+1) we ensure that key is a value within 26. if key is large number our approach will result in val grt than 122
+2) if nLc is less than 122, then we know we can directly find the char
+3) if greater than 122, we need to take the modulo and add it to 96. so its like we start from beginning and find the char
+
+key = key % 26
+nLc = int(letter) + key
+if(nLc <=122)
+  return (char) nLc
+else 
+  return (char) (96 + nLc%122)  
+
+time : O(N)
+space : O(N) - op store  
+
+
+Longest Palindromic substring
+
+given a string, return its longest palindromic substring
+
+approach:
+we can find all the substring using a double for loop - O(N^2)
+ and within each loop, for each substring we call isPalindrome method which will turn to be O(N^3)
+
+ approach:
+ in a palindrome,
+ - for odd number of chars, if we start from middle char, the left and right of it needs to be same....
+ - for even, middle will be empty string and left and right chars needs to be same ...
+ iterate through the string.
+ at each point assume that it is the middle of the palindrome and check if its a palindrome.
+ for palindrome check we hae 2 usecases,
+  1) we assume this char as middle of palindrome
+  2) we assume space between this as the middle of palindrome
+ 
+time : O(N^2) - we iterate through array and at every point O(N), we keep checking for palindrome for each char. O(N^2)
+space : O(N) - for storing the op. worst case the whole string can be a palindrome
+
+Group Anagrams
+
+take array of strings and group anagrams together.
+
+anagrams are strings which have same chars but can be in diffeent order 
+hi  == ih
+
+["yo", "act", "flop", "tac", "foo", "cat", "oy", "olfp"]
+yo - oy
+flop - olfp
+tac - cat - act
+foo
+
+approach
+sort all the strings in ascending order. 
+now we can know that any strings which are equal are anagrams.
+add in hashtable based on its logic
+
+
+iterate throguh the words, 
+sort the letters in word
+check if this is already in hashtable 
+ - if we dont have in hashtable, add word to hashtable and add the real word within an array as value in hashtable
+ - if we already have word in hashtable, append it to its anagrams group inside the value
+ 
+time: O(w n logn) - 
+      - we iterate through words - O(w)
+	  - for each word we sort letters O(n log n) - where n is the length of the longest word
+space : O(wn) - hashtable stores group of anagrams and words
+		- w is no of words
+		- where n is the length of the longest word
+
+Longest Substring without duplicates
+
+traverse the string 
+for each letter, we store the last seen index of each letter in hashtable.
+   - whenever we get to a letter, 
+   - if letter is not in hashtable, we store the correspoding index of the letter, 
+   - if letter was already there, we need to recompute the startIndex, we use the last stored index of that char to do this. 
+        - if letter was there, means we hit a duplicate and we need to stop with the substring and recompute new start index
+		- we need to pick the last seen position of this char and take its next char. so that we avoid the duplicate
+   
+   if char in hashtable
+	   startIndex = max(startIndex, lastseen[char] + 1)
+	   update the longestSubstring 
+            
+   input - clementisacap
+   last seen
+   c 0
+   l 1
+   e 2
+   m 3
+   
+  
+time : O(N) - N is length of string. we are just iterating the string and updating index
+space : O(min (N , A)) - N is length of string . A is the length of unique alphabet that is represented in string
+                       
+   
