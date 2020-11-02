@@ -351,3 +351,77 @@ class Program {
 	}
 }
 
+======================================================================================================================================================================
+	   
+Merge Sort:
+Uses divide and conquer algorithm
+
+        8 5 2 9 5 6 3
+indes - 0 1 2 3 4 5 6
+
+  mid = (0+6)/2 = 3
+  
+  [ 8 5 2 9]   [5 6 3]   - 2 sub arrays
+  [ 8 5 ] [ 2 9]
+  [ 8 ] [ 5 ] [ 2 ] [ 9 ]- base case where sub arrays of length 1. compare the numbers and sort them into single array
+  [5,8] [ 2,9] - we know that both arrays are sorted. so we can compare the values and sort them easily
+  [2,5,8,9] - we could have had 2 ptrs for 5 and 2 and compare their values and sort.
+  -- we must have done same for other sub array and we need to merge them finally.
+  
+ - divides the array into 2 and conquers the two halves. 
+ - continously divides subarrays and conquers them.
+ 1) we find the mid (start+end)/2 = mid
+ 2) we split the array based on the mid and form 2 subarrays
+ 3) we continue untill they become of size 1. we then start sorting them going forward. 
+ 4) sorting becomes easy now as both the arrays are sorted.
+
+time :  O ( N log N) - we have logN number of splits for subarrays
+  1) O(N) - we split the input array into 2 sub array copies
+  2) O(N/2) = O(N) - we split the above sub array into 2 sub array copies
+  ......
+  n-1) O(N) - we merge the 2 sub arrays together.
+  n) O(N) - we merge the 2 sub arrays together.
+space : O( N log N) - we are always creating new sub arrays. 
+
+import java.util.*;
+
+class Program {
+  public static int[] mergeSort(int[] array) {
+		if(array.length <=1)
+			return array;
+		
+		int mid = array.length/2;
+		int[] left = Arrays.copyOfRange(array,0,mid);
+		int[] right = Arrays.copyOfRange(array,mid,array.length);
+		return sort(mergeSort(left),mergeSort(right));
+  }
+	
+	private static int[] sort(int[] left, int[] right){
+		int[] result = new int[left.length + right.length];
+		int i=0;
+		int j=0;
+		int k=0;
+		while(i < left.length && j<right.length){
+			if(left[i] <= right[j]){
+				result[k] = left[i];
+				k++;
+				i++;
+			}else{
+				result[k] = right[j];
+				k++;
+				j++;
+			}
+		}
+		while(i < left.length){
+			result[k] = left[i];
+			k++;
+			i++;
+		}
+		while(j < right.length){
+			result[k] = right[j];
+			k++;
+			j++;
+		}
+		return result;
+	}
+}
