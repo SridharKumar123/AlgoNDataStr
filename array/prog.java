@@ -61,7 +61,8 @@ if elements in both pointers are same, we increment the second pointer and first
 if elements does not match, we just increment first pointer
 we continue this until, second array is fully covered - so its a success scenario
  or untill first array gets over without second being over, then its a not subsequence.
- 
+Corner case : if we try to return for true use case, and false outsde, it will not address scenaio where last element matches to form the sequence.
+	to address this, even if we return true or break for positive use case, it final line, we need to check if j==length of seq
 time : O(N) - we itertae throguh the main araay of size N
 space : O(1)
 
@@ -76,7 +77,80 @@ class Program {
 				j++;
 			}
 		}
+	  // corner case
     return j == sequence.size();
   }
 }
+=======================================================================================================================================================================
 
+Three Number Sum:
+in a list of unsorted array, find the list of triplets from any positions whose sum is equal to target.
+
+12 3 1 2 -6 5 -8 6
+target = 0
+-8,2,6  -8,3,5  -6,1,5
+
+Approach 1: 
+we can have 3 for loops and we can find the sum and find the elements. 
+time : O(N^3)
+
+Approach 2:
+we can use hashtable approach and reduce time to O(N^2)
+ - we need to ensure to remove duplicates
+ - duplicates can come by having different order of the 3 numbers.
+ 
+Approach 3:
+1) sort the array in ascending order O(N log N) time
+2) use current, left and right pointers to find the sum and elements.
+  sum = current + left + right
+  
+3) if sum==target, 
+      add triplet to op
+	  left++
+	  right--   (we do both left++ & right-- because, once we get to target, our current is not changing, so to get to target again, just by moving left or right, we cannot get target again, need to move both)
+   if sum < target
+      left ++
+   else right--
+4) once left >= right 
+      move current to its right - current++
+	  continue above logic again.
+	  
+-8 -6 1 2 3 5 6 12
+ C  L           R
+
+time : O(N^2) - O(Nlog N) sort + O(N^2) search
+space : O(N) - this is for the op which we store.
+	
+import java.util.*;
+
+class Program {
+  public static List<Integer[]> threeNumberSum(int[] array, int targetSum) {
+    if(array.length<=2){
+			return new ArrayList<Integer[]>();
+		}
+		Arrays.sort(array);
+		List<Integer[]> op = new ArrayList<Integer[]>();
+		int current = 0;
+		int left = current+1;
+		int right = array.length-1;
+		while(current <= array.length-2){			
+			int sum = array[current] + array[left] + array[right];
+			if(sum==targetSum){
+					op.add(new Integer[]{array[current] , array[left] , array[right]});
+				left++;
+				right--;
+			}else if(sum < targetSum){
+				left++;
+			}else{
+				right--;
+			}
+			if(left>=right){
+				current++;
+				left = current+1;
+				right = array.length-1;
+			}
+		}
+		
+    return op;
+  }
+}
