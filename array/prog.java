@@ -206,3 +206,52 @@ class Program {
 	
 =======================================================================================================================================================================
 	
+Move Element to End
+
+given a array of int, move all instances of a given int to end of array in place. we dont care about order of other elements.
+
+2 1 2 2 2 3 4 2 
+int - 2
+1 3 4 2 2 2 2 2
+
+2 pointer approach.
+1 pointer at start and 1 ptr at end of array.
+if, the second pointer points to our target element, decrement second pointer. (we need to point to the element which we would like to swap - we dont want to swap target from back)
+if, first pointer is not pointing to target, increment it.
+if first points to ->target and second not point to target,
+   swap
+if second pointer passes the first, we stop.
+
+2 1 2 2 2 3 4 2 
+i			  j
+
+time : O(N) - we are just iterating once. every element is visited only once.
+space : O(1)
+
+import java.util.*;
+
+class Program {
+  public static List<Integer> moveElementToEnd(List<Integer> array, int toMove) {
+    int fromLast = array.size()-1;
+		int i = 0;
+		while(i < fromLast){
+			// to handle case where all elements are same 9,9,9,9
+			while(fromLast>0 && array.get(fromLast)==toMove){
+				fromLast--;
+			}
+			// to handle case where oter while loop is valid but fromLast gets dec befote
+			if(i < fromLast && array.get(i)==toMove){
+				swap(i,fromLast,array);
+			}
+			i++;
+		}
+    return array;
+  }
+	
+	private static void swap(int i,int j, List<Integer> array){
+		int temp = array.get(i);
+		array.set(i,array.get(j));
+		array.set(j,temp);
+	}
+}
+
