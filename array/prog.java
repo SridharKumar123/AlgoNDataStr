@@ -154,3 +154,55 @@ class Program {
     return op;
   }
 }
+
+=======================================================================================================================================================================
+
+Smallest difference
+
+take 2 non-empty arrays of int, find pair of numbers whose absolute difference is closest to 0.
+absolute difference between -5 and  5 is 10. and between -5 and -4 is 1.
+-1 5 10 20 28 3 
+26 134 135 15 17
+1) sort both the arrays O(N log N)
+2) have 2 pointers both at start of 2 arrays.
+3) if absolute difference is 0 (if both numbers are same), return the 2 numbers. we have reached solution.
+4) else,
+   - find the difference and store the minDiffUntillNow
+   - increment the index of array which has the smaller of the two numbers. (both arrays are sorted, so we incremenet smaller value to get close to the other larger value in next array)
+5) continue untill we get diff as 0 or till one of the array is iterated fully
+
+time - O( N logN + M log M) - N and M are length of 2 arrays. We are sorting both. so we get this..
+      the search will be just O(N+M) - so this is ignored compared to above
+
+space - O(1)
+
+class Program {
+  public static int[] smallestDifference(int[] arrayOne, int[] arrayTwo) {
+    Arrays.sort(arrayOne);
+		Arrays.sort(arrayTwo);
+		int i=0;
+		int j=0;
+		int minDiffUntillNow = Integer.MAX_VALUE;
+		int[] min = new int[2];
+		while(i<arrayOne.length && j<arrayTwo.length){
+			int currentVal = Math.abs(arrayOne[i] - arrayTwo[j]);
+			if(currentVal < minDiffUntillNow){
+				minDiffUntillNow = currentVal;
+				min[0] = arrayOne[i];
+				min[1] = arrayTwo[j];
+			}
+			if( currentVal==0){
+				break; //return new int[]{arrayOne[i] , arrayTwo[j]};
+			}else if(arrayOne[i] < arrayTwo[j]){
+				i++;
+			}else{
+				j++;
+			}
+		}
+    return min;
+  }
+}
+
+	
+=======================================================================================================================================================================
+	
