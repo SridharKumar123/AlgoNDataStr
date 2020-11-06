@@ -255,3 +255,56 @@ class Program {
 	}
 }
 
+=======================================================================================================================================================================
+
+Monotonic Array
+
+-1 -5 -10 -1100 -1100 -1101 -1102 -9001
+1 1 1 2
+check whether an array is monotonic.
+monotonic - elements from left to right, must be entirely non-increasing or entirely non-decreasin.
+
+we have a direction var,  this can be increasing/decreasin/NO-directin - can be an enum
+No-direction - occurs if the 2 numbers are same.
+only if 2 numbers are diff we can come up with increasing/decreasin direction.
+
+we iterate throguh the array and every time we compute direction by comparing element and its next element.
+if we get No-direction, we try to check if the next 2 num, gives us a directin.
+once we get a valid direction, then in the upcoming direction, we check if it is same as old or breaks the old direction.
+
+time O(N)
+space O(1)
+
+OR
+
+Lets first check if array is non-decreasing
+Now check if array is non-increasing
+The above 2 sets can be done using 2 for loops easily. or can be done using same for loop with 2 diff checks in it
+this will be lot easier than above approach as its just 2 booleans to track
+
+time O(N)
+space O(1)
+	
+import java.util.*;
+
+class Program {
+  public static boolean isMonotonic(int[] array) {
+		if(array.length==1)
+			return true;
+    boolean nonincreasing = true;
+		boolean nondecreasing = true;
+		for(int i=0;i <array.length-1;i++){
+			if(array[i]==array[i+1]){
+				continue;
+			}
+			if(array[i] < array[i+1]){
+				nondecreasing = false;
+			}
+			if(array[i] > array[i+1]){
+				nonincreasing = false;
+			}
+		}
+    return nonincreasing || nondecreasing;
+  }
+}
+
