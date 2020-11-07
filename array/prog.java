@@ -373,3 +373,51 @@ class Program {
   }
 }
 
+=======================================================================================================================================================================
+
+Longest peak
+
+peak is 3 consecutive int, such that they are in increasing order and it dips after the peak
+1 4 10 2 - forms a peak. all 4 elements are part of the peak. it slowly increases to 10 and reduces to 2.
+4 0 10 and 1 2 2 0 does not form.
+
+
+1 2 3 3 4 0 10 6 5 -1 -3 2 3 
+
+here we try to first find all the peaks and then find the length of the longest peak.
+iterate through the array, compare every value with its adjacent values and find peaks.we store the peak index or we calculate length of peak in same step and hold max always.
+if we start with 123, 2 is greater than 1 but not greater than 3. so it does not form a peak.
+now from the peak we go in left and right directions untill elements are strictly decreasin.
+take the count.
+
+3 3 4 0 - forms a peak.
+0 10 6 5 -1 -3 forms a peak
+the longest peak is of length 6.
+
+time : O(N) - we iterated through array first, then we just had to go to left and right of peaks.
+space : O(1) - if we dont store the peak and do it in place. 
+	
+import java.util.*;
+
+class Program {
+  public static int longestPeak(int[] array) {
+		int longest = 0; 
+    for(int i=1; i<array.length-1;i++){
+			if(array[i] > array[i-1] && array[i] > array[i+1]){
+				int left = i;
+				int right = i;
+				while(left-1>=0 && array[left] > array[left-1]){
+					left--;
+				}
+				while(right+1 <= array.length-1 && array[right] > array[right+1]){
+					right++;
+				}
+				int count = right - left + 1;
+				if(count > longest){
+					longest = count;
+				}
+			}
+		}
+    return longest;
+  }
+}
