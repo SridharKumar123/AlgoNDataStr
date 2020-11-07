@@ -308,3 +308,68 @@ class Program {
   }
 }
 
+=======================================================================================================================================================================
+
+spiral traverse
+
+taken a 2d array and return a 1d array with elements in spiral order. 
+
+[
+[1,  2,  3,  4], 
+[12, 13, 14, 5],
+[11, 16, 15, 6],
+[10, 9,  8,  7]
+]
+
+[1, 2, 3, 4, 5 ,6, 7, 8 ,9, 10, 11, 12 ,13, 14, 15 , 16 ] 
+
+   SC          EC
+SR[1,  2,  3,  4], 
+  [12, 13, 14, 5],
+  [11, 16, 15, 6],
+ER[10, 9,  8,  7]
+
+We consider each outer portion as a rectangle and we need to first traverse the outer rectangle first before coming to inner.
+We first find the SR Staring Row, ER Ending Row, SC- Staring Column, EC -Ending column
+we need to move along the rectangle and add the items.
+once over, go to inner rectangle and perform the same.
+we stop when ER > SR and EC > SC
+
+this can be implemented both iteratively and recrusively
+
+time O(N)
+space O(N) - saving solution in another array
+
+import java.util.*;
+
+class Program {
+  public static List<Integer> spiralTraverse(int[][] array) {
+    int startRow = 0;
+		int endRow = array.length-1;
+		int startCol = 0;
+		int endCol = array[0].length-1;
+		List<Integer> op = new ArrayList<>();			
+		 while(startRow <= endRow && startCol <= endCol){
+			 for(int col=startCol; col<=endCol; col++){
+				 op.add(array[startRow][col]);
+			 }
+			 for(int row=startRow +1; row<=endRow; row++){
+				 op.add(array[row][endCol]);
+			 }
+			 for(int col=endCol-1; col>=startCol; col--){
+				 if(startRow==endRow) break;
+				 op.add(array[endRow][col]);
+			 }
+			 for(int row=endRow-1; row>startRow; row--){
+				 if(startCol==endCol) break;
+				 op.add(array[row][startCol]);
+			 }
+			 startRow++;
+			 endRow--;
+			 startCol++;
+			 endCol--;
+		 }
+    return op; 
+  }
+}
+
