@@ -421,3 +421,88 @@ class Program {
     return longest;
   }
 }
+
+=======================================================================================================================================================================
+
+Four number sum
+
+find set of all 4 numbers in the array which when added forms the target.
+
+7 6 4 -1 1 2
+target sum - 16
+
+having 4 for loops to solve this would not be a better solution as it will have O(N^4) time complexity
+
+A quadraplet (4 numbers) can be expressed as a pair of sum of numbers.
+
+a b c d - 4 numbers 
+
+a + b = k 
+c + d = l
+can be expressed as k,l 
+
+we store in a hashtable, the sum and the list of pair of numbers, whose sum is equal to the sum.
+2 diffeent numbers can form the same sum. 1,2  4,-1  both form 3 as sum.
+we need to form the hashtable while iterating the array in a single shot and check for values. 
+ - else we might end up in wrong count. [7,6, 1,2]  [7,1  6,2]  - these 2 sets are same but with diffeent combo. to avoid this.
+
+7 6 4 -1 1 2 
+we start at 7, we iterate through all numbers after 7
+  - 7+6 = 13, 16-13 = 3. we check if 3 is in hashtable. its not. move on
+  - 7+4 = 11, 16-11 = 5. we check if 5 is in hashtable. its not. move on
+  ... we continue for all after 7. and as we did not add any entry in hashtable untill now, all above will not match
+- we come to second number 6, we perform same operation for all numbers after 6. nothing will generate op.
+  - now we iterate through all numbers before 6, in our case only 7.  
+    - 7+16 = 13, we add this to hashtable.  13 is key, 7,6 is value
+- we come to third number 4, we iterate throguh rest.
+   - 4 + -1 = 3, 16-3=13, we have 13 in hashtable.
+   - we pick all the pairs in hashtable value for 13. note- 13 can have multiple combination of pairs  1,12   2,10 etc
+   - for each pair in value, we add the current pair - 4,-1 to form quadraplets.
+  - now we iterate through all numbers before 4, and find sum and add them to the hashtable. this time we dont compare it to target, we just find sum and add to hashtable
+Note: we always add entries in hashtable only with numbers before it. this is to avoid duplicate quadraplets.      
+  - we continue till end.
+  
+time : O(N^2) - we are doing one for loop - and for every item, we again iterate through every element in list
+     worst case - O(N^3) - if for same sum, many pair of values are added to hashtable, we need to iterate through elements in values of hashtable to form the quadraplet.
+space : O(N^2) - hashtable can have diffeent combination of N
+
+import java.util.*;
+
+class Program {
+  public static List<Integer[]> fourNumberSum(int[] array, int targetSum) {
+		List<Integer[]> op = new ArrayList<>();
+    Map<Integer,List<Integer[]>> map = new HashMap<>();
+		for(int i=0; i<array.length;i++){
+			for(int j=i+1; j<array.length;j++){	
+					int sum = array[i] + array[j];
+					if(map.containsKey(targetSum - sum)){
+						List<Integer[]> data = map.get(targetSum - sum);
+						for(Integer[] arr : data){
+							Integer[] opArray = new Integer[4];	
+							opArray[0] = arr[0];
+							opArray[1] = arr[1];
+							opArray[2] = array[i];
+							opArray[3] = array[j];
+							op.add(opArray);
+						}
+					}			
+			}
+				for(int l=0; l<i;l++){
+					int sum = array[i] + array[l];
+					if(map.containsKey(sum)){
+						List<Integer[]> data = map.get(sum);
+						data.add(new Integer[]{array[i] , array[l]});
+					}else{
+						List<Integer[]> list = new ArrayList<>();
+						Integer[] a = new Integer[]{array[i] , array[l]};
+						list.add(a);
+						map.put(sum,list);	
+					}
+				}
+			}		
+    return op;
+  }
+}
+
+=======================================================================================================================================================================
+
