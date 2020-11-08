@@ -506,3 +506,80 @@ class Program {
 
 =======================================================================================================================================================================
 
+Subarray Sort
+given an array, return the indeices of start and end of the smallest sub array within the main array, that needs to be sorted in place, so that the entire main array gets sorted in ascending order.
+
+[1, 2, 4, 7, 10, 11, 7, 12, 6, 7, 16, 18, 19]
+
+here 7,10,11,7,6,7 - needs to be sorted
+so op - 3,9
+
+this could start even from the first index. 
+tricky part is, even if one number is not in right position, but if its real position is in first, then whole array needs to be sorted.
+so final position of sorted index depends on the position of the misplaced element.
+we need to find all the unsorted numbers and 
+  - within this we need to find the smallest and largest one.
+  - find their final positions in sorted order.
+  - the final positions determine the start and end of the items to sort
+
+1) go over every element and find the unsorted ones by comparing them to their previous and next elements
+2) find the smallest and largest numbers within this.
+3) we need to find the final sorted position for the smallest and largest numbers
+4) these 2 are the start and end indeices for the set of indeices which needs to be sorted
+5) for smallest number position, start from first index and compare elements and find the index of this element
+6) for the largest number position, start from end and compare elements and find the index of this element
+7) so we need to sort all elements between the start and end indeices which we identified.
+
+time : O(N) 
+      - we find all unsorted elements in one pass O(N)
+	  - we find position of smallest and largest number - O(N)
+space : O(1)
+	
+import java.util.*;
+
+class Program {
+  public static int[] subarraySort(int[] array) {
+    int smallest  = Integer.MAX_VALUE;
+		int largest = Integer.MIN_VALUE;
+		for(int i=0; i<array.length;i++){
+			if(i>0 && i<array.length-1 
+				 && (array[i] < array[i-1] || array[i] > array[i+1])){
+				if(array[i] < smallest){
+					smallest = array[i];
+				}
+				if(array[i] > largest){
+					largest = array[i];
+				}
+			} else if(i==0 && array[i] > array[i+1]){
+				if(array[i] < smallest){
+					smallest = array[i];
+				}
+				if(array[i] > largest){
+					largest = array[i];
+				}
+			}else if(i==array.length-1 && array[i] < array[i-1]){
+				if(array[i] < smallest){
+					smallest = array[i];
+				}
+				if(array[i] > largest){
+					largest = array[i];
+				}
+			}
+		}
+		int startIndex = -1;
+		for(int i=0; i<array.length;i++){
+			if(array[i] > smallest){
+				startIndex = i;
+				break;
+			}
+		}
+		int endIndex = -1;
+		for(int i=array.length-1; i>=0;i--){
+			if(array[i] < largest){
+				endIndex = i;
+				break;
+			}
+		}
+    return new int[] {startIndex, endIndex};
+  }
+}
