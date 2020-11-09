@@ -657,3 +657,72 @@ class Program {
   }
 }
 
+=======================================================================================================================================================================
+
+zig zag:
+1  3  4  10
+2  5  9  11
+6  8  12 15
+7 13  14 16
+
+output should be - 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
+
+if we need todo a diagonal traversal its simple, we just need to move one row and column down or one row and column up.
+problem arises when we need to go down, up, left or right.
+if we closely look at traversal, when we are in first column and we are going down, we go one row down.
+if we are in last row and we are going down direction, we go one step right.
+same applies for top row and last column but tracking upward direction.
+
+we need to track direction
+1) start by going down. direction is down.
+2) as we did go down in first column, we change direction and move diagonaly up,
+3) check if we are in first row or last column,
+ - if so, move right or down based if we are in first row or final column, change direction
+ - if not so, then keep moving diagonaly up
+4) same logic in first column and last row.
+5) continue the same to traverse untill final element of array
+
+time: O(N)
+space: O(N) - output array but we did not use any extra space for the algorithm
+
+import java.util.*;
+
+class Program {
+  public static List<Integer> zigzagTraverse(List<List<Integer>> array) {
+		int row=0;
+		int col=0;
+		List<Integer> op = new ArrayList<>();
+		int height = array.size()-1;
+		int width = array.get(0).size()-1;
+		boolean goingDown = true;
+    while(row>=0 && col>=0 && row<array.size() && col<array.get(0).size()){
+			op.add(array.get(row).get(col));
+			if(goingDown){
+				if(col==0 || row == height){
+					goingDown = false;
+					if(row == height){
+						col++;
+					}else{
+						row++;
+					}
+				}else{
+					row++;
+					col--;
+				}
+			}else{
+				if(row==0 || col==width){
+					goingDown = true;
+					if(col==width){
+						row++;
+					}else{
+						col++;
+					}
+				}else{
+					row--;
+					col++;
+				}
+			}
+		}
+    return op; 
+  }
+}
