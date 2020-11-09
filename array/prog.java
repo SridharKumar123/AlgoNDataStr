@@ -583,3 +583,77 @@ class Program {
     return new int[] {startIndex, endIndex};
   }
 }
+
+=======================================================================================================================================================================
+
+Largest Range
+take array of int, and return the smallest and largest numbers in range of int.
+A range of int, is set of numbers that come after each other in set of real int.
+2,3,4,5,6 - this forms a range.
+3,2,4,6,5 - this forms a range.
+The numbers need not be sorted or adjacent in input array.
+
+1) we could sort the array
+2) check if previous number is 1 less then current number, then we continue till for all
+3) we can find the range using this.
+
+time: O(N logN) - due to sort
+
+A better optimal solution
+[1,11,3,0,15,5,2,4,10,7,12,6]
+1) store all numbers in a hashtable and let the value be false - O(N)
+2) start from first number in array, here its 1. Mark its value as true(visited)
+  - minus 1 from it - 0 . and see 0 is in hashtable, it is. so it is the start element for now. mark value of 0 as true.
+  - minus 1 from 0. its -1. check if -1 is in hashtable, its not. so our start element is 0. 
+  - add 1 to 1. its 2. check if 2 is in hashtable, if so update hashtable and end index.
+  - continue untill we find end element that is not in hashtable.
+  - store the newly formed array
+3) start with next element, 11. check if it is not visited in hashtable. meaning, its value is false
+   - if not visited, continue the above logic and stire its range
+4) we start with 3, 3 is having true in hashtable, meaning it was already visited. so we skip it
+... continue with others.
+
+time : O(N) - we iterated and add in hastable. 
+            - next time while we iterate, we just check if its not already visited and then only visit. 
+space : O(N) - hashtable   
+
+import java.util.*;
+
+class Program {
+  public static int[] largestRange(int[] array) {
+		
+		int smallest = 0;
+		int largest = 0;
+		int longestLength = 0;
+    Map<Integer,Boolean> map = new HashMap<>();
+		for(int i=0; i<array.length;i++){
+			map.put(array[i], false);
+		}
+		for(int i=0; i<array.length;i++){
+			int cur = array[i];
+			if(!map.get(cur)){
+				map.put(cur,true);				
+				int currentLength = 1;
+				int left = cur - 1;
+				int right = cur + 1;
+				while(map.containsKey(left)){					
+					map.put(left,true);
+					currentLength++;
+					left--;					
+				}				
+				while(map.containsKey(right)){					
+					map.put(right,true);
+					currentLength++;
+					right++;					
+				}
+				if(currentLength > longestLength){
+					longestLength = currentLength;
+					smallest = left +1;
+					largest = right -1;
+				}
+			}
+		}
+    return new int[] {smallest, largest};
+  }
+}
+
