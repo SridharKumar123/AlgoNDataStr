@@ -49,3 +49,58 @@ class Program {
 		return builder.toString();
   }
 }
+
+=======================================================================================================================================================================
+
+Longest Palindromic substring
+
+given a string, return its longest palindromic substring
+
+approach:
+we can find all the substring using a double for loop - O(N^2)
+ and within each loop, for each substring we call isPalindrome method which will turn to be O(N^3)
+
+ approach:
+ in a palindrome,
+ - for odd number of chars, if we start from middle char, the left and right of it needs to be same....
+ - for even, middle will be empty string and left and right chars needs to be same ...
+ iterate through the string.
+ at each point assume that it is the middle of the palindrome and check if its a palindrome.
+ for palindrome check we hae 2 usecases,
+  1) we assume this char as middle of palindrome
+  2) we assume space between this as the middle of palindrome
+ 
+time : O(N^2) - we iterate through array and at every point O(N), we keep checking for palindrome for each char. O(N^2)
+space : O(N) - for storing the op. worst case the whole string can be a palindrome
+
+import java.util.*;
+
+class Program {
+  public static String longestPalindromicSubstring(String str) {
+    String longest = String.valueOf(str.charAt(0));
+		for(int i=1; i<str.length();i++){			
+				String oddCheck = checkPalindrome(i-1,i,str);
+				if(oddCheck.length() > longest.length()){
+					longest = oddCheck;
+				}
+				String evenCheck = checkPalindrome(i-1,i+1,str);
+				if(evenCheck.length() > longest.length()){
+					longest = evenCheck;
+				}
+			}
+    return longest;
+  }
+	private static String checkPalindrome(int i, int j, String str){
+		int left = i;
+		int right = j;		
+		while(left>=0 && right<str.length()){
+			if(str.charAt(left) == str.charAt(right)){
+				left--;
+				right++;
+			}else{
+				break;
+			}			
+		}
+		return str.substring(left+1, right);
+	}
+}
