@@ -164,3 +164,56 @@ class Program {
   }
 }
 
+=======================================================================================================================================================================
+
+traverse the string 
+for each letter, we store the last seen index of each letter in hashtable.
+   - whenever we get to a letter, 
+   - if letter is not in hashtable, we store the correspoding index of the letter, 
+   - if letter was already there, we need to recompute the startIndex, we use the last stored index of that char to do this. 
+        - if letter was there, means we hit a duplicate and we need to stop with the substring and recompute new start index
+		- we need to pick the last seen position of this char and take its next char. so that we avoid the duplicate
+   
+   if char in hashtable
+	   startIndex = max(startIndex, lastseen[char] + 1)
+	   update the longestSubstring 
+            
+   input - clementisacap
+   last seen
+   c 0
+   l 1
+   e 2
+   m 3
+   
+  
+time : O(N) - N is length of string. we are just iterating the string and updating index
+space : O(min (N , A)) - N is length of string . A is the length of unique alphabet that is represented in string
+
+import java.util.*;
+
+class Program {
+  public static String longestSubstringWithoutDuplication(String str) {
+    // create map and stire values of index of each char
+		// maintain start index
+		// if char is already present, then change start to index +1
+		// longest is longest of start to current
+		Map<Character, Integer> map = new HashMap<>();
+		int startIndex = 0;
+		String longestString = "";
+		for(int i=0; i<str.length();i++){
+			char c = str.charAt(i);
+			if(map.containsKey(c)){				
+				if(map.get(c) >= startIndex){
+				startIndex = map.get(c) +1;
+				}				
+			}
+			// to ensure that we count untill i, we do i+1
+			String currentLongest = str.substring(startIndex,i+1);				
+				if(currentLongest.length() > longestString.length()){
+					longestString = currentLongest;
+				}
+			map.put(c,i);
+		}
+    return longestString;
+  }
+}
