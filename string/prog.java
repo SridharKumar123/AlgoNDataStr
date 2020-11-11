@@ -104,3 +104,63 @@ class Program {
 		return str.substring(left+1, right);
 	}
 }
+
+=======================================================================================================================================================================
+
+Group Anagrams
+
+take array of strings and group anagrams together.
+
+anagrams are strings which have same chars but can be in diffeent order 
+hi  == ih
+
+["yo", "act", "flop", "tac", "foo", "cat", "oy", "olfp"]
+yo - oy
+flop - olfp
+tac - cat - act
+foo
+
+approach
+sort all the strings in ascending order. 
+now we can know that any strings which are equal are anagrams.
+add in hashtable based on its logic
+
+
+iterate throguh the words, 
+sort the letters in word
+check if this is already in hashtable 
+ - if we dont have in hashtable, add word to hashtable and add the real word within an array as value in hashtable
+ - if we already have word in hashtable, append it to its anagrams group inside the value
+ 
+time: O(w n logn) - 
+      - we iterate through words - O(w)
+	  - for each word we sort letters O(n log n) - where n is the length of the longest word
+space : O(wn) - hashtable stores group of anagrams and words
+		- w is no of words
+		- where n is the length of the longest word	
+
+import java.util.*;
+
+class Program {
+  public static List<List<String>> groupAnagrams(List<String> words) {
+    Map<String, List<String>> map = new HashMap<>();
+		List<List<String>> op = new ArrayList<>();
+		for(String word : words){
+			   char[] charArray = word.toCharArray();
+			   Arrays.sort(charArray);
+			   String sortedWord = new String(charArray);				 
+			   if(map.containsKey(sortedWord)){
+					 map.get(sortedWord).add(word);
+				 }else{
+					 List<String> input = new ArrayList<>();
+					 input.add(word);
+					 map.put(sortedWord, input);
+				 }
+		}
+		for(Map.Entry<String,List<String>> current : map.entrySet()){
+			op.add(current.getValue());
+		}
+    return op;
+  }
+}
+
