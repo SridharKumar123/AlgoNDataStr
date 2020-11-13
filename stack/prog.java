@@ -2,9 +2,12 @@ Stack
 
 Min Max stack construction
  Construct a stack with basic push, pop, peek and also a getMin and getMax in constant time.
- We can use list to construct push, pop and peek. But for getMin and getMax we could use a minHeap and maxHeap. But it will be O( N log N) operation as we will add and remove as well. 
- So better approach woule be to have another list of the same size of the stack, and at each point of this list, it will have the current min and max of the current position of stack element.
- so when a new element is added, we compute new min and max based on this new and previous elements of list and create new entry, and when an element is removed, we remove the entry in this list.
+ We can use list to construct push, pop and peek. But for getMin and getMax we could use a minHeap and maxHeap. But it will be O( N log N) operation as 
+ we will add and remove as well. 
+ So better approach woule be to have another list of the same size of the stack, and at each point of this list, it will have the current min and max 
+ of the current position of stack element.
+ so when a new element is added, we compute new min and max based on this new and previous elements of list and create new entry, and when an element is removed, 
+we remove the entry in this list.
  
 import java.util.*;
 
@@ -75,3 +78,49 @@ class Program {
     }
   }
 }
+
+=======================================================================================================================================================================
+
+Balanced Brackets
+
+([])(){}(())()()
+
+Use a stack to keep track of the open brackets, when we get a close bracket, check for open bracket which is already in the stack and pop it. 
+
+import java.util.*;
+
+class Program {
+  public static boolean balancedBrackets(String str) {
+		Map<Character,Character> map = new HashMap<>();
+		map.put(')','(');
+		map.put(']','[');
+		map.put('}','{');
+		Set<Character> charSet = new HashSet<>();
+		charSet.add('('); charSet.add('['); charSet.add('{'); charSet.add(')'); charSet.add(']'); charSet.add('}');
+    Deque<Character> stack = new ArrayDeque<>();
+		for(int i=0; i<str.length();i++){
+		    char val = str.charAt(i);
+			// to handle if any other chars other than brackets occur, we just ignore them
+		    if(!charSet.contains(val)){
+			continue;
+		    }
+		    if(map.containsKey(val)){
+			// to make sure we dont call pop on empty stack
+			if(stack.size()==0){
+			    return false;
+			}else{					
+			    if(stack.peek()==map.get(val)){
+				stack.poll();
+			    }else{
+				stack.push(val);
+			    }
+			}
+		    }else{				
+			stack.push(val);
+		    }
+		}		
+    return stack.size() ==0 ? true: false;
+  }
+}
+
+	
