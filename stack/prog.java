@@ -123,4 +123,70 @@ class Program {
   }
 }
 
+
+=======================================================================================================================================================================
+	
+Shortened path
+In linux file system, we are given a path like /foo/../bar - we need to convert it to /bar.
+.. is to move one step back.
+. is just to stay in current directory.
+/../ - in the start can be discarded as there is not higher path
+but - ../ - without / - means its a relative path. this needs to be maintained.
+if there is / in start, only then op needs to start with it.
+We can use stack for this.
+	
+import java.util.*;
+
+class Program {
+  public static String shortenPath(String path) {
+		if(path.length()==1 && path.charAt(0)=='/'){
+			return "/";
+		}
+		boolean isAbsolute = false;
+		if(path.charAt(0)=='/'){
+			isAbsolute = true;
+		}    
+		Deque<String> stack = new ArrayDeque<>();
+		StringBuilder builder = new StringBuilder();
+		for(int i=0; i<path.length();i++){
+			char c = path.charAt(i);			
+			if(c!='/'){
+				builder.append(c);
+			}
+			// last word after /
+			if(c=='/' || i==path.length()-1){
+				String val = builder.toString();
+				if(val.length()==0){
+					continue;
+				}
+				if(val.equals("..")){
+					// when .. comes at first of string
+					if(stack.size()==0 || stack.peekFirst().equals("..")){
+						// make sure it is relatve pah, else ignore
+						if(!isAbsolute){									
+							stack.push(val);
+						}						
+					}else{						
+						stack.pop();
+					}					
+				}else if(!val.equals(".")){					
+					stack.push(val);
+				}				
+				builder = new StringBuilder();
+			}
+		}
+		StringBuilder constructString = new StringBuilder();
+		if(path.charAt(0)=='/'){
+			constructString.append("/");
+		}
+	  // we pick from bottom of stack. pollLast
+		while(stack.peekLast()!=null){			
+			constructString.append(stack.pollLast());
+			if(stack.size()!=0){
+				constructString.append("/");	
+			}
+		}	
+    return constructString.toString();
+  }
+}
 	
