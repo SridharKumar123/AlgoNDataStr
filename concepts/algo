@@ -1965,3 +1965,66 @@ time : O(N) - N is length of string. we are just iterating the string and updati
 space : O(min (N , A)) - N is length of string . A is the length of unique alphabet that is represented in string
                        
    
+Stack
+
+Min Max stack construction
+ Construct a stack with basic push, pop, peek and also a getMin and getMax in constant time.
+ We can use list to construct push, pop and peek. But for getMin and getMax we could use a minHeap and maxHeap. But it will be O( N log N) operation as we will add and remove as well. 
+ So better approach woule be to have another list of the same size of the stack, and at each point of this list, it will have the current min and max of the current position of stack element.
+ so when a new element is added, we compute new min and max based on this new and previous elements of list and create new entry, and when an element is removed, we remove the entry in this list.
+ 
+ 
+Balanced Brackets
+
+([])(){}(())()()
+
+Use a stack to keep track of the open brackets, when we get a close bracket, check for open bracket which is already in the stack and pop it. 
+
+
+Shortened path
+In linux file system, we are given a path like /foo/../bar - we need to convert it to /bar.
+.. is to move one step back.
+. is just to stay in current directory.
+/../ - in the start can be discarded as there is not higher path
+but - ../ - without / - means its a relative path. this needs to be maintained.
+if there is / in start, only then op needs to start with it.
+We can use stack for this.
+
+Knuth Moris Pratt Algo:
+
+String matching - match if one string is present in another.
+here we take then pattern string, which we need to compare with the others.
+we create an array of values for this string.
+if the letters of this string are previously found in itself, we pick that position and see if there is a continous prefix of chars which are same. if not, we make that index value as -1.
+if matches, then we add that position
+
+a  e  f  a  e  d a e f a e f a 
+-1 -1 -1 0  1 -1 0 1 2 3 4 2 3
+
+we have 2 pointers j and i. j is at 0 and i at 1.
+here we saw that a is first, so -1, increment i
+e is not matching with a , so -1, increment i
+f is not matching with a , so -1, increment i
+a is matching with j's a - so pick j's index 0 and add it here, increment both i and j
+e is matching with j's e - so pick j's index 1 and add it here, increment both i and j
+d is not matching with f, so we look at index j-1, and see if we can find a value in it other than -1. here its -1, so we make j-0, i++ 
+a is matching with j's a - so pick j's index 0 and add it here, increment both i and j
+e is matching with j's e - so pick j's index 1 and add it here, increment both i and j
+f is matching with j's f - so pick j's index 2 and add it here, increment both i and j
+a is matching with j's a - so pick j's index 3 and add it here, increment both i and j
+e is matching with j's e - so pick j's index 4 and add it here, increment both i and j
+f is not matching with j's d, so we look for index at j-1 and check its value, we get 1, so we got to index 1, make it as j and see if j+1 matches our f. yes it matches, so we make f as 2. incremenet i and j
+continue matching
+
+if we dont find match, we try to see if there was any other macth by going one step back and not just go back to 0.
+
+now we need to match this with out real string.
+
+put i in string and j in our substring.
+
+if both char match, incremenet i and j
+if char does not match, go to j-1, get its value, go that that index, check letter next to that, and see if that letter matches with i's letter, if so we continue the i,j
+
+
+time O(M+N) - O(M) + O(N) - i never moves back, only j moves back and forth. so we never do the same thing twice.
+space O(M) - M is substring
