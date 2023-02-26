@@ -121,7 +121,7 @@ bestItem(w1, w2, ... wn)
    if W =0:
     return (totalValue, amunts)
    i = bestItem(w, v1, .. wn,vn)
-   a = min(wi, W)
+   a = min(wi, W). // how much to take of the best item ? if its fits into knapsack, take all, else just what fits. a is what we can take.
    totalvalue = totalvalue + a vi/wi
    wi = wi - a
    amounts[i] = amounts[i] + a
