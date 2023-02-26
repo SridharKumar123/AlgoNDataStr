@@ -45,3 +45,14 @@ _____________________________________
   we can sort the patients by increasing order of time. 
   each step we pick the first patient. 
  Sort will take  O(n log n) . and finding the wiatingTime for n items takes n. Sototal O(n log n).
+ 
+ Celebration Party Problem
+ _____________________________________
+ 
+Children have come to a celebration . Organize them into the minimum possible number of groups such that age of two children in 
+same group differs by atmost 2.
+We want to keep the number of groups, to minimum.
+
+We can try all possible groups and see if the groups have child whose age differ by atmost 2.
+This will work. But its running time will be atleast 2^n . where n is number of children.
+This is very huge. 
