@@ -93,4 +93,39 @@ We can start with the items which has the max value. But its total wight could b
 so we need to find the safe choice. 
 What if we start adding items which are of small wieight, this cal also be error.
 Optimal or safe choice, is to find the value per unit of each item. Then the item which has higher value per unit, will be the best one to pick.
+then we pick the next one and keep repeating. 
+
+value per unit = value/weight
+
+1) while kapsack is not full 
+2) choose item of highest value/weight
+3) if it fits into knapsack pick it all
+4) else take so mush that fits
+5) return total value and amount taken 
+
+
+bestItem(w1, w2, ... wn)
+ maxValuePerWeight =0
+ bestItem = 0
+ for i in 1 to n:
+  if wi > 0:
+   if vi/wi > maxValuePerWeight:
+    maxValuePerWeight = vi/wi
+    bestitem = i
+ return bestItem
+ 
+ knapsack(W, w1, w2.. wn):
+  amounts = [0,0,..0]
+  totalvalue =0
+  repeat n times:
+   if W =0:
+    return (totalValue, amunts)
+   i = bestItem(w, v1, .. wn,vn)
+   a = min(wi, W)
+   totalvalue = totalvalue + a vi/wi
+   wi = wi - a
+   amounts[i] = amounts[i] + a
+   W = W -a 
+  return (totalValues, amounts)
+  
 
