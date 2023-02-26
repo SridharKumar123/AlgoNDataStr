@@ -56,3 +56,26 @@ We want to keep the number of groups, to minimum.
 We can try all possible groups and see if the groups have child whose age differ by atmost 2.
 This will work. But its running time will be atleast 2^n . where n is number of children.
 This is very huge. 
+
+Algo : Covering points by segments
+ to solve the celebration problem, we want to floolow the same approach as covering points by segments.
+ We have been given a set of points in a straight line, we want to cover those points with a segment/scale which is of length 2.
+ we need to find the min number of segemnts need to cover all the points. 
+ 
+ Optimal soln will be to start with the segment in the left most point and all ponts convering the segemnet can be ignored.
+ start with the next left point and pick it as the left most of segemtn and keep repeating.
+ This is the greedy choice. 
+ 
+ Once we solve this, we can apply same logic to the children problem .
+ 
+ PointsCoveredSorted(x1, x2... xn) 
+ segments <-- empty list
+ left <-- 1
+ while left <= n:
+  (l,r) <-- (xleft, xleft +2)
+  segments.append(l,r)
+  left = left +1
+  while left<=n && right>=xleft:
+   left = left +1
+ return segments  
+ 
