@@ -131,3 +131,11 @@ bestItem(w1, w2, ... wn)
  This will take O(n ^2)
  if the items are sorted by vi or wi, then it will run in O(n log n)
   we dont need to call bestItem, as we know its sorted, always the first item is best. 
+
+Greedy choise which we opted:
+1) Put max digit first
+2) choose patient with min time first
+3) choose left most point
+4)take item with max value per unit.
+
+If items are not sorted, check if ascenein/descending sort will hekp for better time complexity .
