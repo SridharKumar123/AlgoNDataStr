@@ -44,4 +44,4 @@ _____________________________________
  Actually, this can be solved in O(n log n)
   we can sort the patients by increasing order of time. 
   each step we pick the first patient. 
- Sort will take  O(n log n) . and in n we can find the waitingTIme.
+ Sort will take  O(n log n) . and finding the wiatingTime for n items takes n. Sototal O(n log n).
