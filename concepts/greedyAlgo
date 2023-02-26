@@ -37,6 +37,6 @@ Queue of Patients:
     treated[minIndex] = 1
    return waitingTime
    
-   
+   we have 2 for loops, O(n^2)
    
  
