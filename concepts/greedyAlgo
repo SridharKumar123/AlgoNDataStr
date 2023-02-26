@@ -17,7 +17,7 @@ Largest Number in given digits:
 Queue of Patients: 
  A lot of patients have come at same time, we need to arrange the queue so that the total waiting time is minimum. Doctor can treat only one patient at a time.
  
- 1) Make a greedy choise
+ 1) Make a greedy choise (This needs to be a safe/best choice)
  2) Reduce to a smaller problem
  3) Iterate 
  
