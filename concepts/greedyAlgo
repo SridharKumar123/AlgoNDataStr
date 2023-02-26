@@ -89,3 +89,8 @@ Algo : Covering points by segments
  each of it. We need to pick the items so that the total will be max profit. we can pick ratio of items as well. consider items as flour/spices.
  
  
+We can start with the items which has the max value. But its total wight could be very huge and other items with min wight could have better average value.
+so we need to find the safe choice. 
+What if we start adding items which are of small wieight, this cal also be error.
+Optimal or safe choice, is to find the value per unit of each item. Then the item which has higher value per unit, will be the best one to pick.
+
