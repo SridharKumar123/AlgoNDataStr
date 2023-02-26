@@ -79,3 +79,6 @@ Algo : Covering points by segments
    left = left +1
  return segments  
  
+ Sort takes O(n logn) and the son takes n.
+ So O(n log n)
+ 
