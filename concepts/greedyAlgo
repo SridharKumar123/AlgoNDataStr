@@ -1,6 +1,7 @@
 Greedy Algorithm
 
-Largest Number in given digits: 
+Largest Number in given digits:
+_____________________________________
 9, 8 , 9 , 6 , 1 
 
  Correct answer 99861
@@ -15,6 +16,7 @@ Largest Number in given digits:
  we break the problem into sub problems and for each subprolem we perform the operation.
  
 Queue of Patients: 
+_____________________________________
  A lot of patients have come at same time, we need to arrange the queue so that the total waiting time is minimum. Doctor can treat only one patient at a time.
  
  1) Make a greedy choise (This needs to be a safe/best choice)
