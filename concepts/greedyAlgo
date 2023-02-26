@@ -1,1 +1,42 @@
 Greedy Algorithm
+
+Largest Number in given digits: 
+9, 8 , 9 , 6 , 1 
+
+ Correct answer 99861
+ we take the max digit and put it first, then we take the second max digit and so on.
+ 
+ Logic:
+ every time, we pick the max element.
+ then we remove that from the list.
+ In the remaining, repeat the max operation in the elements remaining in list.
+ keep repeating untill list is empty.
+ 
+ we break the problem into sub problems and for each subprolem we perform the operation.
+ 
+Queue of Patients: 
+ A lot of patients have come at same time, we need to arrange the queue so that the total waiting time is minimum. Doctor can treat only one patient at a time.
+ 
+ 1) Make a greedy choise
+ 2) Reduce to a smaller problem
+ 3) Iterate 
+ 
+ Greedy choice First treat the patient with minimum treatment time. the go on.
+ 
+ MinTotalWaitingTime(t,n)
+  waitingTime = 0
+  treated <-- array of n zeroes
+  for  i from 1 to n:
+    tMin = infinity
+    minIndex = 0
+    for j in 1 to n:
+       if treated[i]==0 && t[j]< tMin :
+         tMIn = t[j]
+         minIndex = j
+    waitingTIme = waitingTIme + (n-i) tMin
+    treated[minIndex] = 1
+   return waitingTime
+   
+   
+   
+ 
