@@ -82,3 +82,10 @@ Algo : Covering points by segments
  Sort takes O(n logn) and the son takes n.
  So O(n log n)
  
+ Maximising loot / Knapsack problem
+  _____________________________________
+  
+ We have a knapsack of weight w. It can be fileed with any items in diffeetn ratios. We have different items, its total weight availabel and the value for 
+ each of it. We need to pick the items so that the total will be max profit. we can pick ratio of items as well. consider items as flour/spices.
+ 
+ 
