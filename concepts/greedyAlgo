@@ -128,4 +128,6 @@ bestItem(w1, w2, ... wn)
    W = W -a 
   return (totalValues, amounts)
   
-
+ This will take O(n ^2)
+ if the items are sorted by vi or wi, then it will run in O(n log n)
+  we dont need to call bestItem, as we know its sorted, always the first item is best. 
