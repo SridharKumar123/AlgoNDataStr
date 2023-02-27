@@ -139,3 +139,16 @@ Greedy choise which we opted:
 4)take item with max value per unit.
 
 If items are not sorted, check if ascenein/descending sort will hekp for better time complexity .
+
+
+Greedy Method
+Problem should be solved in stages, in each stage, we will pick the inpoout and fnc the optimal soln for it. 
+we keep repeating 
+
+input a = [1,2,3,4,5]
+Algorithm Greedy(a, n) :
+ for i=0; i<n; i++ {
+ ` x = select(a);
+   if feasible(x) then 
+     soln = soln + x;
+ }
