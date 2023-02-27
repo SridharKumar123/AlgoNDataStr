@@ -155,3 +155,12 @@ Algorithm Greedy(a, n) :
    if feasible(x) then 
      soln = soln + x;
  }
+
+Job Sequencing with deadlines
+ we have a set of jobs and their deadline. each job have its own profit/cost. 
+ here dealine means that, this job needs to be completed before that time. if deadline is 2, then he can wait for 2 hrs to complete the job. 
+ if within the first 2 hrs, we dont run it, then the job cannot be run.
+ Each job takes 1 hour to run. at a time only 1 job can be run. 
+ pick the jobs, so that we get max profit.
+ 
+ 
