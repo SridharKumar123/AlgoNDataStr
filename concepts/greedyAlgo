@@ -136,6 +136,7 @@ bestItem(w1, w2, ... wn)
   we dont need to call bestItem, as we know its sorted, always the first item is best. 
 
 Greedy choise which we opted:
+_____________________________________
 1) Put max digit first
 2) choose patient with min time first
 3) choose left most point
@@ -145,6 +146,7 @@ If items are not sorted, check if ascenein/descending sort will hekp for better 
 
 
 Greedy Method
+_____________________________________
 Problem should be solved in stages, in each stage, we will pick the inpoout and fnc the optimal soln for it. 
 we keep repeating 
 
@@ -157,10 +159,29 @@ Algorithm Greedy(a, n) :
  }
 
 Job Sequencing with deadlines
+_____________________________________
  we have a set of jobs and their deadline. each job have its own profit/cost. 
  here dealine means that, this job needs to be completed before that time. if deadline is 2, then he can wait for 2 hrs to complete the job. 
  if within the first 2 hrs, we dont run it, then the job cannot be run.
  Each job takes 1 hour to run. at a time only 1 job can be run. 
  pick the jobs, so that we get max profit.
+ we have a total of 3 hrs to run jobs.
  
+ Job      1. 2. 3. 4. 5
+ profit   20 15 10 5  1
+ deadline 2  2  1  3  3
+ 
+ Ensure the profits are in decrasing order sorted. so we can pick the job with max profit first. (you can use max heap)
+ pick the first job(max profit), and see if it can be fit in its deadline. here first is 1, with profit 20 and deadline 2. so it can wait untill 2 hrs.
+   mark it to run on 2nd hour as it can anyway wait for 2 hrs. (greedy choice) 
+    we could have made it run on first hour. but we want to pick optimal choice, so upcpiming jobs can use the first hr.
+ second job, has profit 15, and deadline is 2. the 2nd hour slot is already occupied, but we can still run the job in first hour as its still free.  
+   our earlier greedy choice helps here. 
+ third job, deadline is 1. 1 hr is already done, so we cannot pick this.
+ fourth job, we can pick it on slot 3.
+ fifth job, no slot, so cannot be run.
+ 
+ we picked job 2, job 1 , jpb 4
+  profit = 20 + 15 + 5 = 40
+  
  
