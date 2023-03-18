@@ -12,3 +12,6 @@ LinearSearch(Array, low, high, item)
  if Array[low] == key
   return low
  return LinearSearch(Array, low+1, high, item)  
+
+Binary Search
+ Array needs to be sorted
