@@ -1,3 +1,6 @@
 1. Break problem into non overlapping subproblems of same type
 2. Solve subproblems
 3. Combine results
+
+Linear search
+ to find an element in an array, we can start from first element and go untill last to see if the element is there.
