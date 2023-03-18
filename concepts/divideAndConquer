@@ -1,0 +1,3 @@
+1. Break problem into non overlapping subproblems of same type
+2. Solve subproblems
+3. Combine results
