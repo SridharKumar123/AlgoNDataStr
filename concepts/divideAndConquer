@@ -26,3 +26,16 @@ BinarySearch(Array, low, high, key)
   BinarySearch(Array, low, mid-1, key)
  else
   BinarySearch(Array, mid+1, high, key)
+
+Iterative version
+
+BinarySearchIt(Array, low, high, key)
+ while low <= high
+  mid = low + (high-low)/2
+  if Array[mid] == key
+   return mid
+  else if Array[mid] > key
+   high = mid -1
+  else 
+   low = mid + 1
+  return -1  or low-1 
