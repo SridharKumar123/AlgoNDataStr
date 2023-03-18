@@ -15,3 +15,14 @@ LinearSearch(Array, low, high, item)
 
 Binary Search
  Array needs to be sorted
+
+BinarySearch(Array, low, high, key)
+ if high < low
+  return low-1     // handles empty array
+ mid = low + (high-low)/2
+ if Array[mid] == key
+  return mid
+ else if Array[mid] > key
+  BinarySearch(Array, low, mid-1, key)
+ else
+  BinarySearch(Array, mid+1, high, key)
