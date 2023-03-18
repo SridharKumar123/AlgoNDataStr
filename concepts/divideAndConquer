@@ -4,3 +4,11 @@
 
 Linear search
  to find an element in an array, we can start from first element and go untill last to see if the element is there.
+Algo:
+
+LinearSearch(Array, low, high, item) 
+ if high < low
+  return NOT_FOUND
+ if Array[low] == key
+  return low
+ return LinearSearch(Array, low+1, high, item)  
