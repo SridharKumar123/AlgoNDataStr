@@ -55,3 +55,13 @@ Polynomial multiplication:
 We can now use above logic by removing the coefficeients, 
 n=3, A=(3,2,5) B=(5,1,2)
 C = AB = (15, 13,33,9,10)
+
+Naive Algo:
+
+MultPoly(A, B, n)
+product = Array[2n-1]
+for i from 0 to 2n-2:
+ product[i] = 0
+for i from 0 to n-1:
+ for j from 0 to n-1:
+  product[i+j] = product[i+j] + A[i] * B[j]
